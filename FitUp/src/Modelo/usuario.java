@@ -8,7 +8,7 @@ public class usuario {
 	String correo;
 	String contraseña;
 	String fechaNac;
-	
+	//aaaaaaaaaaaa
 	
 	public usuario(String nombre, String apellido1, String apellido2, String correo, String contraseña, String fechaNac) {
 		this.nombre = nombre;
