@@ -82,10 +82,10 @@ public class ListadoWorkouts extends JFrame {
         contentPane.setLayout(null);
         setContentPane(contentPane);
         
-        JLabel lblWorkout = new JLabel("Lista de tus workouts");
+        JLabel lblWorkout = new JLabel("Lista de tus workouts, selecciona el deseado");
         lblWorkout.setFont(new Font("Tahoma", Font.BOLD, 18));
         lblWorkout.setForeground(Color.WHITE);
-        lblWorkout.setBounds(36, 82, 284, 30);
+        lblWorkout.setBounds(36, 82, 540, 30);
         contentPane.add(lblWorkout);
         
         JButton btnCerrarSesion = new JButton("Cerrar sesión");
@@ -136,7 +136,7 @@ public class ListadoWorkouts extends JFrame {
 		table.setSelectionForeground(Color.WHITE);
 		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(35, 123, 565, 248);
+		scrollPane.setBounds(36, 123, 565, 294);
 		contentPane.add(scrollPane);
         
 		
@@ -186,15 +186,6 @@ public class ListadoWorkouts extends JFrame {
         lblLogo.setIcon(iconoEscalado);
         lblLogo.setBounds(382, -29, 250, 116);
         contentPane.add(lblLogo);
-        
-        JButton btnInicio = new JButton("Inicio");
-        btnInicio.setForeground(Color.WHITE);
-        btnInicio.setFont(new Font("Tahoma", Font.BOLD, 13));
-        btnInicio.setFocusPainted(false);
-        btnInicio.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
-        btnInicio.setBackground(new Color(50, 50, 50));
-        btnInicio.setBounds(268, 382, 100, 30);
-        contentPane.add(btnInicio);
         
 	}
 	
