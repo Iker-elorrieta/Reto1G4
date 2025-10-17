@@ -8,7 +8,7 @@ public class usuario {
 	String correo;
 	String contraseña;
 	String fechaNac;
-	////sisiususiwùi
+	String nivel;
 	
 	public usuario(String nombre, String apellido1, String apellido2, String correo, String contraseña, String fechaNac) {
 		this.nombre = nombre;
@@ -19,6 +19,9 @@ public class usuario {
 		this.fechaNac = fechaNac;
 	}
 
+	public usuario() {
+		
+	}
 
 	public String getNombre() {
 		return nombre;
