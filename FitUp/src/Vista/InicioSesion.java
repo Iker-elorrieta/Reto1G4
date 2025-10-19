@@ -1,6 +1,9 @@
 package Vista;
 
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -74,6 +77,8 @@ public class InicioSesion extends JFrame {
         textFieldNombre.setBackground(new Color(230, 230, 230));
         textFieldNombre.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         contentPane.add(textFieldNombre);
+        String phUsuario = "Introduzca el nombre de usuario";
+        setPlaceholder(textFieldNombre,phUsuario,Color.gray);
 
         // Label Contraseña
         JLabel lblContraseña = new JLabel("Contraseña:");
@@ -89,6 +94,8 @@ public class InicioSesion extends JFrame {
         textFieldContraseña.setBackground(new Color(230, 230, 230));
         textFieldContraseña.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         contentPane.add(textFieldContraseña);
+        String phContraseña = "Introduzca su contraseña";
+        setPlaceholder(textFieldContraseña,phContraseña,Color.gray);
 
         // Botón Iniciar sesión
         JButton btnInicioSesion = new JButton("Iniciar sesión");
@@ -124,10 +131,58 @@ public class InicioSesion extends JFrame {
 
             if (nombre.isEmpty() || contraseña.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Ningún campo puede estar vacío", "Error", JOptionPane.WARNING_MESSAGE);
-            } else {
+            } else if (!soloTexto(nombre) || (!contraseñaValida(contraseña))){
+                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+
+            }else {
                 JOptionPane.showMessageDialog(null, "Inicio de sesión correcto (demo)");
                 // Aquí puedes añadir la lógica real de autenticación
             }
         });
     }
+    public static void setPlaceholder(JTextField field, String placeholder, Color color) {
+        field.setForeground(color);
+        field.setText(placeholder);
+
+        field.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (field.getText().equals(placeholder)) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (field.getText().isEmpty()) {
+                    field.setForeground(Color.GRAY);
+                    field.setText(placeholder);
+                }
+            }
+        });
+    }
+    private boolean contraseñaValida(String contraseña) {
+		if (contraseña == null || contraseña.isEmpty())
+			return false;
+		boolean hasUpper = false, hasDigit = false;
+		for (char c : contraseña.toCharArray()) {
+			if (Character.isUpperCase(c))
+				hasUpper = true;
+			if (Character.isDigit(c))
+				hasDigit = true;
+			if (hasUpper && hasDigit)
+				return true;
+		}
+		return hasUpper && hasDigit;
+	}
+    private boolean soloTexto(String text) {
+		if (text == null || text.isBlank())
+			return false;
+		for (char c : text.toCharArray()) {
+			if (!Character.isLetter(c) && c != ' ')
+				return false;
+		}
+		return true;
+	}
 }

@@ -73,7 +73,7 @@ public class NuevoUsuario extends JFrame {
 		JLabel lblNombre = new JLabel("Nombre:");
 		lblNombre.setForeground(Color.WHITE);
 		lblNombre.setFont(labelFont);
-		lblNombre.setBounds(72, 96, 150, 25);
+		lblNombre.setBounds(46, 98, 150, 25);
 		
 		contentPane.add(lblNombre);
 
@@ -93,7 +93,7 @@ public class NuevoUsuario extends JFrame {
 		JLabel lblApellido1 = new JLabel("Primer apellido:");
 		lblApellido1.setForeground(Color.WHITE);
 		lblApellido1.setFont(labelFont);
-		lblApellido1.setBounds(72, 141, 150, 25);
+		lblApellido1.setBounds(46, 143, 150, 25);
 		contentPane.add(lblApellido1);
 
 		textApellido1 = new JTextField();
@@ -110,7 +110,7 @@ public class NuevoUsuario extends JFrame {
 		JLabel lblApellido2 = new JLabel("Segundo apellido:");
 		lblApellido2.setForeground(Color.WHITE);
 		lblApellido2.setFont(labelFont);
-		lblApellido2.setBounds(72, 186, 180, 25);
+		lblApellido2.setBounds(46, 188, 180, 25);
 		contentPane.add(lblApellido2);
 
 		textApellido2 = new JTextField();
@@ -127,7 +127,7 @@ public class NuevoUsuario extends JFrame {
 		JLabel lblCorreo = new JLabel("Correo electrónico:");
 		lblCorreo.setForeground(Color.WHITE);
 		lblCorreo.setFont(labelFont);
-		lblCorreo.setBounds(72, 231, 200, 25);
+		lblCorreo.setBounds(46, 233, 200, 25);
 		contentPane.add(lblCorreo);
 
 		textCorreo = new JTextField();
@@ -143,7 +143,7 @@ public class NuevoUsuario extends JFrame {
 		JLabel lblContraseña = new JLabel("Contraseña:");
 		lblContraseña.setForeground(Color.WHITE);
 		lblContraseña.setFont(labelFont);
-		lblContraseña.setBounds(72, 276, 150, 25);
+		lblContraseña.setBounds(46, 278, 150, 25);
 		contentPane.add(lblContraseña);
 
 		textContraseña = new JTextField();
@@ -157,10 +157,10 @@ public class NuevoUsuario extends JFrame {
 
 
 		// Fecha de nacimiento
-		JLabel lblFechaNac = new JLabel("Fecha de nacimiento...");
+		JLabel lblFechaNac = new JLabel("Fecha de nacimiento:");
 		lblFechaNac.setForeground(Color.WHITE);
 		lblFechaNac.setFont(labelFont);
-		lblFechaNac.setBounds(72, 321, 200, 25);
+		lblFechaNac.setBounds(46, 323, 200, 25);
 		contentPane.add(lblFechaNac);
 
 		textFechaNac = new JTextField();
