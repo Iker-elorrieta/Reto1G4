@@ -7,6 +7,9 @@ import java.awt.event.FocusEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import Controlador.Controlador;
+import Modelo.*;
+
 public class NuevoUsuario extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -17,6 +20,8 @@ public class NuevoUsuario extends JFrame {
 	private JTextField textCorreo;
 	private JTextField textContraseña;
 	private JTextField textFechaNac;
+	usuario usuario = new usuario();
+	Controlador controlador = new Controlador();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
@@ -242,6 +247,22 @@ public class NuevoUsuario extends JFrame {
 				textContraseña.setText("Formato de contraseña incorrecto");
 				setPlaceholder(textContraseña, errorContraseña,Color.RED);
 			} else {
+				
+				usuario.setNombre(nombre);
+				usuario.setApellido1(apellido1);
+				usuario.setApellido2(apellido2);
+				usuario.setContraseña(contraseña);
+				usuario.setCorreo(correo);
+				usuario.setFechaNac(fechaNac);
+				usuario.setNivel(0);
+				
+				try {
+					controlador.nuevoUsuario(usuario);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				this.setVisible(false);
 				Inicio nuevo = new Inicio("Usuario registrado con éxito");
 				nuevo.setVisible(true);

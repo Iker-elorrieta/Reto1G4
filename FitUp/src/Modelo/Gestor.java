@@ -2,7 +2,9 @@ package Modelo;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -63,9 +65,9 @@ public class Gestor {
 		QuerySnapshot querySnapShot = query.get();
         List<QueryDocumentSnapshot> workouts1 = querySnapShot.getDocuments();
         
+    	usuario w = idWorkouts();
+
         for (QueryDocumentSnapshot worko : workouts1) {
-        	
-        	usuario w = idWorkouts();
     		
         	if(w.getNivel()==(worko.getDouble("nivel").intValue())){
 			
@@ -76,16 +78,51 @@ public class Gestor {
         		workoutAnadir.setURL(worko.getString("video"));
         		workouts.add(workoutAnadir);
         		System.out.println(workouts);
-        	return workouts;
-        	
-        
         	}
-
+        }
+    	return workouts;
 	}
-		return null;
-
-
-
 	
 	
-	}}
+	public void nuevoUsuario(usuario usuario) throws Exception {
+	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
+	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+	            .setProjectId("fitup-8e726")
+	            .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
+	    Firestore db = firestoreOptions.getService();
+
+	    CollectionReference usus = db.collection("usuarios");
+
+	    // Obtener el documento con mayor ID
+	    ApiFuture<QuerySnapshot> query = usus.get();
+	    List<QueryDocumentSnapshot> documentos = query.get().getDocuments();
+
+	    int nuevoId = 100; 
+	    for (QueryDocumentSnapshot doc : documentos) {
+	        int idActual = Integer.parseInt(doc.getId());
+	        if (idActual >= nuevoId) {
+	            nuevoId = idActual + 100; 
+	        }
+	    }
+
+	    
+	    DocumentReference usuNew = usus.document(String.valueOf(nuevoId));
+
+	    Map<String, Object> usuMap = new HashMap<>();
+	    usuMap.put("nombre", usuario.getNombre());
+	    usuMap.put("apellido1", usuario.getApellido1());
+	    usuMap.put("apellido2", usuario.getApellido2());
+	    usuMap.put("correo", usuario.getCorreo());
+	    usuMap.put("contraseña", usuario.getContraseña());
+	    usuMap.put("nivel", usuario.getNivel());
+	    usuMap.put("fechaNac", usuario.getFechaNac());
+
+	    usuNew.set(usuMap); 
+	    db.close();
+	}
+
+	
+
+
+
+}

@@ -22,5 +22,11 @@ public class Controlador {
 	public ArrayList<workout> listarWorkouts() throws Exception {
 		return gestor1.listarworkouts();
 	}
+	
+	public void nuevoUsuario(usuario usuario) throws Exception {
+		Gestor gestor = new Gestor();
+		gestor.nuevoUsuario(usuario);
+		
+	}
 
 }

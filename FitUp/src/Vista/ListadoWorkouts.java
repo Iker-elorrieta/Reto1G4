@@ -108,6 +108,14 @@ public class ListadoWorkouts extends JFrame {
         btnCerrarSesion.setBounds(25, 26, 100, 30);
         contentPane.add(btnCerrarSesion);
         
+        btnCerrarSesion.addActionListener(e -> {
+        	this.setVisible(false);
+        	Inicio inicio = new Inicio(null);
+        	inicio.setVisible(true);
+        	this.dispose();
+        	
+        });
+        
         //Tabla
         
         String[] columnas = {"Nombre", "Nº ejercicios", "Nivel", "Video"};
