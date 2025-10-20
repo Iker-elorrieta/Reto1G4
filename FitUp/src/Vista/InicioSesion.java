@@ -73,7 +73,7 @@ public class InicioSesion extends JFrame {
         // Campo Usuario
         textFieldNombre = new JTextField();
         textFieldNombre.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        textFieldNombre.setBounds(280, 190, 250, 35);
+        textFieldNombre.setBounds(280, 190, 270, 35);
         textFieldNombre.setBackground(new Color(230, 230, 230));
         textFieldNombre.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         contentPane.add(textFieldNombre);
@@ -90,7 +90,7 @@ public class InicioSesion extends JFrame {
         // Campo Contraseña
         textFieldContraseña = new JPasswordField();
         textFieldContraseña.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        textFieldContraseña.setBounds(280, 250, 250, 35);
+        textFieldContraseña.setBounds(280, 250, 270, 35);
         textFieldContraseña.setBackground(new Color(230, 230, 230));
         textFieldContraseña.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         contentPane.add(textFieldContraseña);
@@ -130,13 +130,15 @@ public class InicioSesion extends JFrame {
             String contraseña = new String(textFieldContraseña.getPassword()).trim();
 
             if (nombre.isEmpty() || contraseña.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Ningún campo puede estar vacío", "Error", JOptionPane.WARNING_MESSAGE);
+            	
             } else if (!soloTexto(nombre) || (!contraseñaValida(contraseña))){
-                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
 
+            	
             }else {
-                JOptionPane.showMessageDialog(null, "Inicio de sesión correcto (demo)");
-                // Aquí puedes añadir la lógica real de autenticación
+
+            	this.setVisible(false);
+                ListadoWorkouts nuevo = new ListadoWorkouts();
+                nuevo.setVisible(true);
             }
         });
     }

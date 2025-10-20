@@ -79,12 +79,11 @@ public class NuevoUsuario extends JFrame {
 
 		textNombre = new JTextField();
 		textNombre.setFont(fieldFont);
-		textNombre.setBounds(252, 93, 300, 35);
+		textNombre.setBounds(252, 93, 347, 35);
 		textNombre.setBackground(new Color(230, 230, 230));
 		textNombre.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		textNombre.setForeground(Color.GRAY);
 		String placeholderNombre = ("Introduzca su nombre...");
-		textNombre.setText(placeholderNombre);
 		contentPane.add(textNombre);
 		setPlaceholder(textNombre, placeholderNombre,Color.gray);
        
@@ -98,7 +97,7 @@ public class NuevoUsuario extends JFrame {
 
 		textApellido1 = new JTextField();
 		textApellido1.setFont(fieldFont);
-		textApellido1.setBounds(252, 138, 300, 35);
+		textApellido1.setBounds(252, 138, 347, 35);
 		textApellido1.setBackground(new Color(230, 230, 230));
 		textApellido1.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		String placeholderApellido = ("Introduzca su primer apellido...");
@@ -115,7 +114,7 @@ public class NuevoUsuario extends JFrame {
 
 		textApellido2 = new JTextField();
 		textApellido2.setFont(fieldFont);
-		textApellido2.setBounds(252, 183, 300, 35);
+		textApellido2.setBounds(252, 183, 347, 35);
 		textApellido2.setBackground(new Color(230, 230, 230));
 		textApellido2.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textApellido2);
@@ -132,7 +131,7 @@ public class NuevoUsuario extends JFrame {
 
 		textCorreo = new JTextField();
 		textCorreo.setFont(fieldFont);
-		textCorreo.setBounds(252, 228, 300, 35);
+		textCorreo.setBounds(252, 228, 347, 35);
 		textCorreo.setBackground(new Color(230, 230, 230));
 		textCorreo.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textCorreo);
@@ -146,9 +145,9 @@ public class NuevoUsuario extends JFrame {
 		lblContraseña.setBounds(46, 278, 150, 25);
 		contentPane.add(lblContraseña);
 
-		textContraseña = new JTextField();
+		textContraseña = new JPasswordField();
 		textContraseña.setFont(fieldFont);
-		textContraseña.setBounds(252, 273, 300, 35);
+		textContraseña.setBounds(252, 273, 347, 35);
 		textContraseña.setBackground(new Color(230, 230, 230));
 		textContraseña.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textContraseña);
@@ -165,7 +164,7 @@ public class NuevoUsuario extends JFrame {
 
 		textFechaNac = new JTextField();
 		textFechaNac.setFont(fieldFont);
-		textFechaNac.setBounds(252, 318, 300, 35);
+		textFechaNac.setBounds(252, 318, 347, 35);
 		textFechaNac.setBackground(new Color(230, 230, 230));
 		textFechaNac.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textFechaNac);
@@ -213,7 +212,7 @@ public class NuevoUsuario extends JFrame {
 			String correo = textCorreo.getText().trim();
 			String contraseña = textContraseña.getText().trim();
 			String fechaNac = textFechaNac.getText().trim();
-			String error = "Formato de ";
+			String error = "Formato de texto incorrecto";
 			String errorCorreo = "Formato de correo incorrecto";
 			String errorContraseña = "Sssssres";
 
@@ -224,23 +223,23 @@ public class NuevoUsuario extends JFrame {
 					|| contraseña.isEmpty() || fechaNac.isEmpty()) {
 				lblVacio.setVisible(true);
 				
-			} else if (!SoloTexto(nombre) || !SoloTexto(apellido1) || !SoloTexto(apellido2)) {
+			} if (!SoloTexto(nombre) || !SoloTexto(apellido1) || !SoloTexto(apellido2)) {
 				if (!SoloTexto(nombre)) {					
 					textNombre.setText(error);
 					setPlaceholder(textNombre, error,Color.RED);
 					
 				} else if (!SoloTexto(apellido1)) {
-					textApellido1.setText(error);
+					textApellido1.setText("Formato de solo texto incorrecto");
 					setPlaceholder(textApellido1, error,Color.RED);					
 				}else if(!SoloTexto(apellido2)) {
-					textApellido2.setText(error);
+					textApellido2.setText("Formato de solo texto incorrecto");
 					setPlaceholder(textApellido2, error,Color.RED);
 				}
 			} else if (!CorreoValido(correo)) {
 				textCorreo.setText(errorCorreo);
 				setPlaceholder(textCorreo, errorCorreo,Color.RED);
 			} else if (!ContraseñaValida(contraseña)) {
-				textContraseña.setText(errorContraseña);
+				textContraseña.setText("Formato de contraseña incorrecto");
 				setPlaceholder(textContraseña, errorContraseña,Color.RED);
 			} else {
 				this.setVisible(false);
