@@ -46,20 +46,27 @@ public class ListadoWorkouts extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					ListadoWorkouts frame = new ListadoWorkouts();
+		
+					ListadoWorkouts frame;
+					try {
+						frame = new ListadoWorkouts();
+
+					
 					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				
 			}
 		});
 	}
 
 	/**
 	 * Create the frame.
+	 * @throws Exception 
 	 */
-	public ListadoWorkouts() {
+	public ListadoWorkouts() throws Exception {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 648, 478);
         
@@ -144,11 +151,7 @@ public class ListadoWorkouts extends JFrame {
 		contentPane.add(scrollPane);
         
 		
-		agregarWorkout(new workout("Full Body", 8, 2, "https://youtu.be/Zg9l86erX6o?si=eN-oq-5IwcUwu0yG"));
-		agregarWorkout(new workout("Piernas y Glúteos", 10, 3, "https://youtu.be/example2"));
-		agregarWorkout(new workout("Cardio Intenso", 12, 4, "https://youtu.be/example3"));
-		agregarWorkout(new workout("Cardio Intenso", 12, 4, "https://youtu.be/example3"));
-		System.out.println(usuario1);
+		agregarWorkout();
 		
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -194,9 +197,25 @@ public class ListadoWorkouts extends JFrame {
         
 	}
 	
-	private void agregarWorkout(workout w) {
-		listaWorkouts.add(w);
-		Object[] fila = { w.getNombre(), w.getNumEjercicios(), w.getNivel(), "URL tutorial" };
-		modeloTabla.addRow(fila);
+	private void agregarWorkout() throws Exception {
+	    listaWorkouts = controlador1.listarWorkouts();
+
+	    if (!listaWorkouts.isEmpty()) {
+	        for (int i = 0; i < listaWorkouts.size(); i++) {
+	            workout w = listaWorkouts.get(i);
+
+	            Object[] fila = { 
+	                w.getNombre(), 
+	                w.getNumEjercicios(), 
+	                w.getNivel(), 
+	                "URL tutorial" 
+	            };
+
+	            modeloTabla.addRow(fila);
+	        }
+	    } else {
+	        System.out.println("No hay workouts disponibles.");
+	    }
 	}
+
 }

@@ -165,7 +165,13 @@ public class ListadoEjercicios extends JFrame {
 		// Boton volver funcionalidad
 		btnVolver.addActionListener(e -> {
 			this.setVisible(false);
-			ListadoWorkouts listado = new ListadoWorkouts();
+			ListadoWorkouts listado = null;
+			try {
+				listado = new ListadoWorkouts();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			listado.setVisible(true);
 		});
 

@@ -9,7 +9,7 @@ public class usuario {
 	String correo;
 	String contraseña;
 	String fechaNac;
-	String nivel;
+	int nivel;
 	
 	public usuario(int id, String nombre, String apellido1, String apellido2, String correo, String contraseña, String fechaNac) {
 		this.id=id;
@@ -26,14 +26,14 @@ public class usuario {
 		
 	}
 
-	public String getNivel() {
+	public int getNivel() {
 		return nivel;
 	}
 	 public void setId(int id) {
 			this.id = id;
 		}
 
-	public void setNivel(String nivel) {
+	public void setNivel(int nivel) {
 		this.nivel = nivel;
 	}
 
