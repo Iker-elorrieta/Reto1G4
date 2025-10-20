@@ -7,6 +7,9 @@ import java.awt.event.FocusEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import Controlador.Controlador;
+import Modelo.Gestor;
+
 public class InicioSesion extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -132,8 +135,13 @@ public class InicioSesion extends JFrame {
 			if (nombre.trim().isEmpty() || contraseña.trim().isEmpty()) {
 				System.out.println("Rellena ambos campos");
 			} else if (!soloTexto(nombre) || (!contraseñaValida(contraseña))) {
-				System.out.println("Usuario o contraseña incorrecto");
-
+				try {
+					Controlador.inicioSesion(nombre, contraseña);
+					System.out.println("Incorrectos");
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			} else {
 
 				this.setVisible(false);
