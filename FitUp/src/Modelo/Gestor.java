@@ -10,7 +10,7 @@ import com.google.cloud.firestore.*;
 
 public class Gestor {
 	static usuario datos = new usuario();
-	public static boolean inicioSesion(usuario usuario) throws Exception {
+	public boolean inicioSesion(usuario usuario) throws Exception {
 		FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 		FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId("fitup-8e726")
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
@@ -43,7 +43,7 @@ public class Gestor {
 
 
 	@SuppressWarnings("null")
-	public static usuario idWorkouts() {
+	public usuario idWorkouts() {
 		usuario datos2 = new usuario();
 		datos2.setId(datos.getId());
 		return datos2;

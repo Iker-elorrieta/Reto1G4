@@ -16,7 +16,7 @@ public class InicioSesion extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldNombre;
 	private JPasswordField textFieldContraseña;
-
+Controlador controlador1 = new Controlador();
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
 			try {
@@ -146,7 +146,7 @@ public class InicioSesion extends JFrame {
 					usuario1.setContraseña(contraseña);
 					 
 			
-					if (Controlador.inicioSesion(usuario1)) {
+					if (controlador1.inicioSesion(usuario1)) {
 					this.setVisible(false);
 					ListadoWorkouts nuevo = new ListadoWorkouts();
 					nuevo.setVisible(true);

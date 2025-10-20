@@ -4,17 +4,16 @@ import Modelo.Gestor;
 import Modelo.usuario;
 
 public class Controlador {
+	Gestor gestor1 = new Gestor();
 
-	public static boolean inicioSesion(usuario usuario) throws Exception {
+	public boolean inicioSesion(usuario usuario) throws Exception {
 
-			return Gestor.inicioSesion(usuario);
-			
+		return gestor1.inicioSesion(usuario);
 
-}
-
-	public static usuario workoutsId() {
-		return Gestor.idWorkouts();
 	}
 
-	
+	public usuario workoutsId() {
+		return gestor1.idWorkouts();
+	}
+
 }

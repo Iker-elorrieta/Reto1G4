@@ -37,7 +37,8 @@ public class ListadoWorkouts extends JFrame {
 	private JTable table;
 	private DefaultTableModel modeloTabla; 
 	private ArrayList<workout> listaWorkouts = new ArrayList<>();
-	private usuario usuario1 = Controlador.workoutsId();;
+	Controlador controlador1 = new Controlador();
+	private usuario usuario1 = controlador1.workoutsId();
 
 	/**
 	 * Launch the application.
