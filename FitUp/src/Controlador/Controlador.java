@@ -11,4 +11,10 @@ public class Controlador {
 			
 
 }
+
+	public static usuario workoutsId() {
+		return Gestor.idWorkouts();
+	}
+
+	
 }

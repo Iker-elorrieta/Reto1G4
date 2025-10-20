@@ -1,7 +1,6 @@
 package Modelo;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.api.core.ApiFuture;
@@ -28,7 +27,10 @@ public class Gestor {
 					datos.setNombre(usu.getString("nombre"));
 					datos.setContraseña(usu.getString("contraseña"));
 					datos.setId(Integer.parseInt(usu.getId()));
-					idWorkouts(datos);
+					datos.setApellido1(usu.getString("apellido1"));
+					datos.setApellido2(usu.getString("apellido2"));
+					datos.setCorreo(usu.getString("correo"));
+					idWorkouts();
 					return true;
 				}
 			}
@@ -40,8 +42,11 @@ public class Gestor {
 	
 
 
-	private static void idWorkouts(usuario datos2) {
-		
+	@SuppressWarnings("null")
+	public static usuario idWorkouts() {
+		usuario datos2 = new usuario();
+		datos2.setId(datos.getId());
+		return datos2;
 	}
 
 

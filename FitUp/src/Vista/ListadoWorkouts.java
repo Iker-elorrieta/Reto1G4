@@ -17,6 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import Controlador.Controlador;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
@@ -34,7 +37,7 @@ public class ListadoWorkouts extends JFrame {
 	private JTable table;
 	private DefaultTableModel modeloTabla; 
 	private ArrayList<workout> listaWorkouts = new ArrayList<>();
-
+	private usuario usuario1 = Controlador.workoutsId();;
 
 	/**
 	 * Launch the application.
@@ -143,7 +146,8 @@ public class ListadoWorkouts extends JFrame {
 		agregarWorkout(new workout("Full Body", 8, 2, "https://youtu.be/Zg9l86erX6o?si=eN-oq-5IwcUwu0yG"));
 		agregarWorkout(new workout("Piernas y Glúteos", 10, 3, "https://youtu.be/example2"));
 		agregarWorkout(new workout("Cardio Intenso", 12, 4, "https://youtu.be/example3"));
-		
+		agregarWorkout(new workout("Cardio Intenso", 12, 4, "https://youtu.be/example3"));
+		System.out.println(usuario1);
 		
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -188,9 +192,7 @@ public class ListadoWorkouts extends JFrame {
         contentPane.add(lblLogo);
         
 	}
-	private void conseguirId() {
-		
-	}
+	
 	private void agregarWorkout(workout w) {
 		listaWorkouts.add(w);
 		Object[] fila = { w.getNombre(), w.getNumEjercicios(), w.getNivel(), "URL tutorial" };
