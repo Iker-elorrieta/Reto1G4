@@ -2,6 +2,7 @@ package Modelo;
 
 public class usuario {
 	
+	 int id;
 	String nombre; 
 	String apellido1;
 	String apellido2;
@@ -10,7 +11,8 @@ public class usuario {
 	String fechaNac;
 	String nivel;
 	
-	public usuario(String nombre, String apellido1, String apellido2, String correo, String contraseña, String fechaNac) {
+	public usuario(int id, String nombre, String apellido1, String apellido2, String correo, String contraseña, String fechaNac) {
+		this.id=id;
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
 		this.apellido2 = apellido2;
@@ -20,7 +22,23 @@ public class usuario {
 	}
 
 	public usuario() {
+		this.id = 0;
 		
+	}
+
+	public String getNivel() {
+		return nivel;
+	}
+	 public void setId(int id) {
+			this.id = id;
+		}
+
+	public void setNivel(String nivel) {
+		this.nivel = nivel;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getNombre() {
@@ -82,12 +100,14 @@ public class usuario {
 		this.fechaNac = fechaNac;
 	}
 
-
 	@Override
 	public String toString() {
-		return "usuario [nombre=" + nombre + ", apellido1=" + apellido1 + ", apellido2=" + apellido2 + ", correo="
-				+ correo + ", contraseña=" + contraseña + ", fechaNac=" + fechaNac + "]";
+		return "usuario [id=" + id + ", nombre=" + nombre + ", apellido1=" + apellido1 + ", apellido2=" + apellido2
+				+ ", correo=" + correo + ", contraseña=" + contraseña + ", fechaNac=" + fechaNac + ", nivel=" + nivel
+				+ "]";
 	}
+
+
 	
 	
 	

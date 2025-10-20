@@ -188,7 +188,9 @@ public class ListadoWorkouts extends JFrame {
         contentPane.add(lblLogo);
         
 	}
-	
+	private void conseguirId() {
+		
+	}
 	private void agregarWorkout(workout w) {
 		listaWorkouts.add(w);
 		Object[] fila = { w.getNombre(), w.getNumEjercicios(), w.getNivel(), "URL tutorial" };

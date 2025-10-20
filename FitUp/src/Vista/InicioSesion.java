@@ -8,8 +8,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.Controlador;
-import Modelo.Gestor;
 
+import Modelo.*;
 public class InicioSesion extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -28,6 +28,7 @@ public class InicioSesion extends JFrame {
 		});
 	}
 
+	@SuppressWarnings("unused")
 	public InicioSesion() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 648, 478);
@@ -135,20 +136,28 @@ public class InicioSesion extends JFrame {
 			if (nombre.trim().isEmpty() || contraseña.trim().isEmpty()) {
 				System.out.println("Rellena ambos campos");
 			} else if (!soloTexto(nombre) || (!contraseñaValida(contraseña))) {
-				try {
-					Controlador.inicioSesion(nombre, contraseña);
-					System.out.println("Incorrectos");
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+					
+					System.out.println("No validos");
+				
 			} else {
-
-				this.setVisible(false);
-				ListadoWorkouts nuevo = new ListadoWorkouts();
-				nuevo.setVisible(true);
+				try {
+					usuario usuario1 = new usuario();
+					usuario1.setNombre(nombre);
+					usuario1.setContraseña(contraseña);
+					 
+			
+					if (Controlador.inicioSesion(usuario1)) {
+					this.setVisible(false);
+					ListadoWorkouts nuevo = new ListadoWorkouts();
+					nuevo.setVisible(true);
+					}else {
+				System.out.println("Incorrectos");
+					
+					}
+					}catch(Exception e1) {
+				e1.printStackTrace();
 			}
-		});
+		}});
 	}
 
 	public static void setPlaceholder(JTextField field, String placeholder, Color color) {

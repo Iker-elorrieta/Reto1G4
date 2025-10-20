@@ -1,12 +1,14 @@
 package Controlador;
 
 import Modelo.Gestor;
+import Modelo.usuario;
 
 public class Controlador {
 
-	public static void inicioSesion(String nombre, String contraseña) throws Exception {
+	public static boolean inicioSesion(usuario usuario) throws Exception {
 
-			Gestor.inicioSesion(nombre,contraseña );
+			return Gestor.inicioSesion(usuario);
 			
 
-}}
+}
+}
