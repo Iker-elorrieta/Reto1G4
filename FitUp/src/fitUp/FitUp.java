@@ -5,7 +5,7 @@ import java.awt.EventQueue;
 import Controlador.Controlador;
 import Vista.Inicio;
 
-public class fitUp {
+public class FitUp {
 	public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {

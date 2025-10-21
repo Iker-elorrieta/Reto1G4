@@ -1,6 +1,6 @@
 package Modelo;
 
-public class usuario {
+public class Usuario {
 	
 	 int id;
 	String nombre; 
@@ -11,7 +11,7 @@ public class usuario {
 	String fechaNac;
 	int nivel;
 	
-	public usuario(int id, String nombre, String apellido1, String apellido2, String correo, String contraseña, String fechaNac) {
+	public Usuario(int id, String nombre, String apellido1, String apellido2, String correo, String contraseña, String fechaNac) {
 		this.id=id;
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
@@ -21,7 +21,7 @@ public class usuario {
 		this.fechaNac = fechaNac;
 	}
 
-	public usuario() {
+	public Usuario() {
 		this.id = 0;
 		
 	}

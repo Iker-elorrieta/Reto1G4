@@ -1,13 +1,13 @@
 package Modelo;
 
-public class workout {
+public class Workout {
 	String id;
 	String nombre;
 	int numEjercicios;
 	int nivel;
 	String URL;
 	
-	public workout(String nombre, int numEjercicios, int nivel, String uRL) {
+	public Workout(String nombre, int numEjercicios, int nivel, String uRL) {
 		super();
 		this.nombre = nombre;
 		this.numEjercicios = numEjercicios;
@@ -15,7 +15,7 @@ public class workout {
 		URL = uRL;
 	}
 
-	public workout() {
+	public Workout() {
 		
 	}
 	

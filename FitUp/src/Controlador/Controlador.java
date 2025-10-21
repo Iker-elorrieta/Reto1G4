@@ -3,32 +3,32 @@ package Controlador;
 import java.util.ArrayList;
 
 import Modelo.Gestor;
-import Modelo.ejercicio;
-import Modelo.usuario;
-import Modelo.workout;
+import Modelo.Ejercicio;
+import Modelo.Usuario;
+import Modelo.Workout;
 
 public class Controlador {
 	Gestor gestor1 = new Gestor();
 
-	public boolean inicioSesion(usuario usuario) throws Exception {
+	public boolean inicioSesion(Usuario usuario) throws Exception {
 
 		return gestor1.inicioSesion(usuario);
 
 	}
 
 
-	public ArrayList<workout> listarWorkouts() throws Exception {
+	public ArrayList<Workout> listarWorkouts() throws Exception {
 		return gestor1.listarworkouts();
 	}
 	
-	public void nuevoUsuario(usuario usuario) throws Exception {
+	public void nuevoUsuario(Usuario usuario) throws Exception {
 		Gestor gestor = new Gestor();
 		gestor.nuevoUsuario(usuario);
 		
 	}
 
 
-	public ArrayList<ejercicio> listarEjercicios(String idEjercicio) throws Exception {
+	public ArrayList<Ejercicio> listarEjercicios(String idEjercicio) throws Exception {
 		return gestor1.listarEjercicios(idEjercicio);
 	}
 

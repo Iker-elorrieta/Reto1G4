@@ -20,7 +20,7 @@ public class NuevoUsuario extends JFrame {
 	private JTextField textCorreo;
 	private JTextField textContraseña;
 	private JTextField textFechaNac;
-	usuario usuario = new usuario();
+	Usuario usuario = new Usuario();
 
 
 	
@@ -219,22 +219,22 @@ public class NuevoUsuario extends JFrame {
 					|| contraseña.isEmpty() || fechaNac.isEmpty()) {
 				lblVacio.setVisible(true);
 				
-			} if (!SoloTexto(nombre) || !SoloTexto(apellido1) || !SoloTexto(apellido2)) {
-				if (!SoloTexto(nombre)) {					
+			} if (!soloTexto(nombre) || !soloTexto(apellido1) || !soloTexto(apellido2)) {
+				if (!soloTexto(nombre)) {					
 					textNombre.setText(error);
 					setPlaceholder(textNombre, error,Color.RED);
 					
-				} else if (!SoloTexto(apellido1)) {
+				} else if (!soloTexto(apellido1)) {
 					textApellido1.setText("Formato de solo texto incorrecto");
 					setPlaceholder(textApellido1, error,Color.RED);					
-				}else if(!SoloTexto(apellido2)) {
+				}else if(!soloTexto(apellido2)) {
 					textApellido2.setText("Formato de solo texto incorrecto");
 					setPlaceholder(textApellido2, error,Color.RED);
 				}
-			} else if (!CorreoValido(correo)) {
+			} else if (!correoValido(correo)) {
 				textCorreo.setText(errorCorreo);
 				setPlaceholder(textCorreo, errorCorreo,Color.RED);
-			} else if (!ContraseñaValida(contraseña)) {
+			} else if (!contraseñaValida(contraseña)) {
 				textContraseña.setText("Formato de contraseña incorrecto");
 				setPlaceholder(textContraseña, errorContraseña,Color.RED);
 			} else {
@@ -269,7 +269,7 @@ public class NuevoUsuario extends JFrame {
 	}
 
 	// Métodos de validación
-	private boolean SoloTexto(String text) {
+	private boolean soloTexto(String text) {
 		if (text == null || text.isBlank())
 			return false;
 		for (char c : text.toCharArray()) {
@@ -279,7 +279,7 @@ public class NuevoUsuario extends JFrame {
 		return true;
 	}
 
-	private boolean CorreoValido(String email) {
+	private boolean correoValido(String email) {
 		if (email == null || email.isBlank())
 			return false;
 		int atIndex = email.indexOf('@');
@@ -319,7 +319,7 @@ public class NuevoUsuario extends JFrame {
 	            }
 	        });
 	    }
-	private boolean ContraseñaValida(String contraseña) {
+	private boolean contraseñaValida(String contraseña) {
 		if (contraseña == null || contraseña.isEmpty())
 			return false;
 		boolean hasUpper = false, hasDigit = false;

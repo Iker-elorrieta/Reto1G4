@@ -36,7 +36,7 @@ public class ListadoWorkouts extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	private DefaultTableModel modeloTabla; 
-	private ArrayList<workout> listaWorkouts = new ArrayList<>();
+	private ArrayList<Workout> listaWorkouts = new ArrayList<>();
 
 
 	/**
@@ -144,7 +144,7 @@ public class ListadoWorkouts extends JFrame {
                 int fila = table.rowAtPoint(e.getPoint());
                 int columna = table.columnAtPoint(e.getPoint());
                
-                workout w = listaWorkouts.get(fila);
+                Workout w = listaWorkouts.get(fila);
                 if (columna == 3) { // Columna URL
                    
                     String url = w.getURL();
@@ -205,7 +205,7 @@ public class ListadoWorkouts extends JFrame {
 	    modeloTabla.setRowCount(0);
 	    if (!listaWorkouts.isEmpty()) {
 	        for (int i = 0; i < listaWorkouts.size(); i++) {
-	            workout w = listaWorkouts.get(i);
+	            Workout w = listaWorkouts.get(i);
 
 	            Object[] fila = { 
 	                w.getNombre(), 
