@@ -179,18 +179,15 @@ public class ListadoEjercicios extends JFrame {
 	
 		private void listadoEjercicios(Controlador controlador, String idEjercicio) throws Exception {
 			listaEjercicios = controlador.listarEjercicios(idEjercicio);
-			System.out.println(idEjercicio);
 		    modeloTabla.setRowCount(0);
 		    if (!listaEjercicios.isEmpty()) {
 		        for (int i = 0; i < listaEjercicios.size(); i++) {
 		            ejercicio e = listaEjercicios.get(i);
-System.out.println(e.getNombre());
 		            Object[] fila = { 
 		                e.getNombre(), 
 		                e.getNumSeries(), 
 		                e.getDescanso(), 
 		            };
-		            System.out.println(fila);
 		            modeloTabla.addRow(fila);
 		            table.repaint();
 		        }

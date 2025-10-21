@@ -155,7 +155,6 @@ public class ListadoWorkouts extends JFrame {
                     }
                 } else {
                 	String idEjercicio = w.getId();
-                	System.out.println(idEjercicio);
                     ListadoWorkouts.this.setVisible(false);
                     ListadoEjercicios ejercicios = null;
 					try {
