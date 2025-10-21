@@ -34,8 +34,9 @@ public class Gestor {
 					datos.setApellido1(usu.getString("apellido1"));
 					datos.setApellido2(usu.getString("apellido2"));
 					datos.setCorreo(usu.getString("correo"));
-					idWorkouts();
-					listarworkouts();
+					datos.setNivel(usu.getDouble("nivel").intValue());
+
+			
 					return true;
 				}
 			}
@@ -45,43 +46,45 @@ public class Gestor {
 			 
 	}
 	
-	public usuario idWorkouts() {
-		usuario datos2 = new usuario();
-		datos2.setId(datos.getId());
-		datos2.setNivel(datos.getNivel());
-		return datos2;
-	}
-
-
-	public ArrayList listarworkouts()  throws Exception {
 	
-		FileInputStream serviceAccount = new FileInputStream("fitUp.json");
-		FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId("fitup-8e726")
-				.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
-		Firestore db = firestoreOptions.getService();
-		
-		//Tomar nivel del usuario
-		ApiFuture<QuerySnapshot> query = db.collection("workouts").get();
-		QuerySnapshot querySnapShot = query.get();
-        List<QueryDocumentSnapshot> workouts1 = querySnapShot.getDocuments();
-        
-    	usuario w = idWorkouts();
 
-        for (QueryDocumentSnapshot worko : workouts1) {
-    		
-        	if(w.getNivel()==(worko.getDouble("nivel").intValue())){
-			
-        		workout workoutAnadir = new workout();
-        		workoutAnadir.setNivel(worko.getDouble("nivel").intValue());
-        		workoutAnadir.setNombre(worko.getString("nombre"));
-        		workoutAnadir.setNumEjercicios(worko.getDouble("num_ejercicios").intValue());
-        		workoutAnadir.setURL(worko.getString("video"));
-        		workouts.add(workoutAnadir);
-        		System.out.println(workouts);
-        	}
-        }
-    	return workouts;
+
+	public ArrayList<workout> listarworkouts() throws Exception {
+
+	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
+	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance()
+	        .toBuilder()
+	        .setProjectId("fitup-8e726")
+	        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	        .build();
+	    Firestore db = firestoreOptions.getService();
+
+	    ApiFuture<QuerySnapshot> query = db.collection("workouts")
+	        .whereEqualTo("nivel", datos.getNivel())
+	        .get();
+
+	    QuerySnapshot querySnapShot = query.get();
+	    List<QueryDocumentSnapshot> workouts1 = querySnapShot.getDocuments();
+
+	    for (QueryDocumentSnapshot worko : workouts1) {
+	        
+
+	        if (datos.getNivel() == worko.getDouble("nivel").intValue()) {
+	            workout workoutAnadir = new workout();
+	            workoutAnadir.setNivel(worko.getDouble("nivel").intValue());
+	            workoutAnadir.setNombre(worko.getString("nombre"));
+	            workoutAnadir.setNumEjercicios(worko.getDouble("num_ejercicios").intValue());
+	            workoutAnadir.setURL(worko.getString("video"));
+
+	            workouts.add(workoutAnadir);
+	        } else {
+	        }
+	    }
+
+	    db.close();
+	    return workouts;
 	}
+
 	
 	
 	public void nuevoUsuario(usuario usuario) throws Exception {

@@ -37,36 +37,14 @@ public class ListadoWorkouts extends JFrame {
 	private JTable table;
 	private DefaultTableModel modeloTabla; 
 	private ArrayList<workout> listaWorkouts = new ArrayList<>();
-	Controlador controlador1 = new Controlador();
-	private usuario usuario1 = controlador1.workoutsId();
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-		
-					ListadoWorkouts frame;
-					try {
-						frame = new ListadoWorkouts();
-
-					
-					frame.setVisible(true);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				
-			}
-		});
-	}
+	private usuario usuario1 = new usuario();;
 
 	/**
 	 * Create the frame.
 	 * @throws Exception 
 	 */
-	public ListadoWorkouts() throws Exception {
+	public ListadoWorkouts(Controlador controlador) throws Exception {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 648, 478);
         
@@ -110,7 +88,7 @@ public class ListadoWorkouts extends JFrame {
         
         btnCerrarSesion.addActionListener(e -> {
         	this.setVisible(false);
-        	Inicio inicio = new Inicio(null);
+        	Inicio inicio = new Inicio(null,controlador);
         	inicio.setVisible(true);
         	this.dispose();
         	
@@ -159,7 +137,7 @@ public class ListadoWorkouts extends JFrame {
 		contentPane.add(scrollPane);
         
 		
-		agregarWorkout();
+		agregarWorkout(controlador);
 		
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -205,9 +183,9 @@ public class ListadoWorkouts extends JFrame {
         
 	}
 	
-	private void agregarWorkout() throws Exception {
-	    listaWorkouts = controlador1.listarWorkouts();
-
+	private void agregarWorkout(Controlador controlador) throws Exception {
+	    listaWorkouts = controlador.listarWorkouts();
+	    modeloTabla.setRowCount(0);
 	    if (!listaWorkouts.isEmpty()) {
 	        for (int i = 0; i < listaWorkouts.size(); i++) {
 	            workout w = listaWorkouts.get(i);

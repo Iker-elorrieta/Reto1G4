@@ -12,6 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import Controlador.Controlador;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -33,23 +36,12 @@ public class ListadoEjercicios extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ListadoEjercicios frame = new ListadoEjercicios();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the frame.
 	 */
-	public ListadoEjercicios() {
+	public ListadoEjercicios(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 648, 478);
 		setLocationRelativeTo(null);
@@ -167,7 +159,7 @@ public class ListadoEjercicios extends JFrame {
 			this.setVisible(false);
 			ListadoWorkouts listado = null;
 			try {
-				listado = new ListadoWorkouts();
+				listado = new ListadoWorkouts(controlador);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

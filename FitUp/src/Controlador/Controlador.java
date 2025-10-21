@@ -15,9 +15,6 @@ public class Controlador {
 
 	}
 
-	public usuario workoutsId() {
-		return gestor1.idWorkouts();
-	}
 
 	public ArrayList<workout> listarWorkouts() throws Exception {
 		return gestor1.listarworkouts();

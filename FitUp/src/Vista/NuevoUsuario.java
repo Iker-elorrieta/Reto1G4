@@ -21,20 +21,11 @@ public class NuevoUsuario extends JFrame {
 	private JTextField textContraseña;
 	private JTextField textFechaNac;
 	usuario usuario = new usuario();
-	Controlador controlador = new Controlador();
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-			try {
-				NuevoUsuario frame = new NuevoUsuario();
-				frame.setVisible(true);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-	}
 
-	public NuevoUsuario() {
+	
+
+	public NuevoUsuario(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 648, 478);
 		setLocationRelativeTo(null);
@@ -264,7 +255,7 @@ public class NuevoUsuario extends JFrame {
 				}
 				
 				this.setVisible(false);
-				Inicio nuevo = new Inicio("Usuario registrado con éxito");
+				Inicio nuevo = new Inicio("Usuario registrado con éxito",controlador);
 				nuevo.setVisible(true);
 			}
 		});
@@ -272,7 +263,7 @@ public class NuevoUsuario extends JFrame {
 		// Acción del botón Volver
 		btnVolver.addActionListener(e -> {
 			this.setVisible(false);
-			Inicio nuevo = new Inicio("");
+			Inicio nuevo = new Inicio("",controlador);
 			nuevo.setVisible(true);
 		});
 	}

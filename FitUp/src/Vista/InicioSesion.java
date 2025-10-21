@@ -16,20 +16,11 @@ public class InicioSesion extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldNombre;
 	private JPasswordField textFieldContraseña;
-Controlador controlador1 = new Controlador();
-	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-			try {
-				InicioSesion frame = new InicioSesion();
-				frame.setVisible(true);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-	}
+
+
 
 	@SuppressWarnings("unused")
-	public InicioSesion() {
+	public InicioSesion(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 648, 478);
 		setLocationRelativeTo(null);
@@ -124,7 +115,7 @@ Controlador controlador1 = new Controlador();
 		// Acción del botón Volver
 		btnVolver.addActionListener(e -> {
 			this.setVisible(false);
-			Inicio nuevo = new Inicio("");
+			Inicio nuevo = new Inicio("",controlador);
 			nuevo.setVisible(true);
 		});
 
@@ -146,9 +137,9 @@ Controlador controlador1 = new Controlador();
 					usuario1.setContraseña(contraseña);
 					 
 			
-					if (controlador1.inicioSesion(usuario1)) {
+					if (controlador.inicioSesion(usuario1)) {
 					this.setVisible(false);
-					ListadoWorkouts nuevo = new ListadoWorkouts();
+					ListadoWorkouts nuevo = new ListadoWorkouts(controlador);
 					nuevo.setVisible(true);
 					}else {
 				System.out.println("Incorrectos");
