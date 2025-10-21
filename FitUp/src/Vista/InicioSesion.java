@@ -55,7 +55,7 @@ public class InicioSesion extends JFrame {
 		Image imagen = icono.getImage();
 		ImageIcon iconoEscalado = new ImageIcon(imagen.getScaledInstance(300, 150, Image.SCALE_SMOOTH));
 		lblLogo.setIcon(iconoEscalado);
-		lblLogo.setBounds(257, 63, 250, 116);
+		lblLogo.setBounds(272, 53, 250, 116);
 		contentPane.add(lblLogo);
 
 		// Label Usuario
@@ -111,6 +111,11 @@ public class InicioSesion extends JFrame {
 		btnVolver.setBounds(26, 26, 100, 30);
 		btnVolver.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
 		contentPane.add(btnVolver);
+		
+		JLabel lblError = new JLabel("");
+		lblError.setForeground(new Color(255, 0, 0));
+		lblError.setBounds(283, 165, 226, 14);
+		contentPane.add(lblError);
 
 		// Acción del botón Volver
 		btnVolver.addActionListener(e -> {
@@ -126,10 +131,9 @@ public class InicioSesion extends JFrame {
 
 			if (correo.trim().isEmpty() || contraseña.trim().isEmpty()) {
 				System.out.println("Rellena ambos campos");
-			} else if ((!contraseñaValida(contraseña))) {
+			} else if ((!correoValido(correo) || !contraseñaValida(contraseña))) {
+					lblError.setText("Correo o contraseña no encontrado");
 					
-					System.out.println("No validos");
-				
 			} else {
 				try {
 					usuario usuario1 = new usuario();
@@ -189,9 +193,21 @@ public class InicioSesion extends JFrame {
 		return hasUpper && hasDigit;
 	}
 
-	private boolean soloTexto(String text) {
-
-		return text != null && text.matches("^[a-zA-Z]+$");
+	private boolean correoValido(String email) {
+		if (email == null || email.isBlank())
+			return false;
+		int atIndex = email.indexOf('@');
+		int lastAtIndex = email.lastIndexOf('@');
+		if (atIndex <= 0 || atIndex != lastAtIndex)
+			return false;
+		String localPart = email.substring(0, atIndex);
+		String domainPart = email.substring(atIndex + 1);
+		if (localPart.isEmpty() || domainPart.isEmpty())
+			return false;
+		if (!domainPart.contains(".") || domainPart.startsWith(".") || domainPart.endsWith("."))
+			return false;
+		if (email.contains(" "))
+			return false;
+		return true;
 	}
-
 }
