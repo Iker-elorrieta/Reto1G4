@@ -14,7 +14,7 @@ public class InicioSesion extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textFieldNombre;
+	private JTextField textFieldCorreo;
 	private JPasswordField textFieldContraseña;
 
 
@@ -59,21 +59,21 @@ public class InicioSesion extends JFrame {
 		contentPane.add(lblLogo);
 
 		// Label Usuario
-		JLabel lblUsuario = new JLabel("Usuario:");
+		JLabel lblUsuario = new JLabel("Email:");
 		lblUsuario.setForeground(Color.WHITE);
 		lblUsuario.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblUsuario.setBounds(140, 190, 150, 30);
 		contentPane.add(lblUsuario);
 
 		// Campo Usuario
-		textFieldNombre = new JTextField();
-		textFieldNombre.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		textFieldNombre.setBounds(280, 190, 270, 35);
-		textFieldNombre.setBackground(new Color(230, 230, 230));
-		textFieldNombre.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-		contentPane.add(textFieldNombre);
+		textFieldCorreo = new JTextField();
+		textFieldCorreo.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		textFieldCorreo.setBounds(280, 190, 270, 35);
+		textFieldCorreo.setBackground(new Color(230, 230, 230));
+		textFieldCorreo.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		contentPane.add(textFieldCorreo);
 		String phUsuario = "Introduzca el nombre de usuario";
-		setPlaceholder(textFieldNombre, phUsuario, Color.gray);
+		setPlaceholder(textFieldCorreo, phUsuario, Color.gray);
 
 		// Label Contraseña
 		JLabel lblContraseña = new JLabel("Contraseña:");
@@ -121,19 +121,19 @@ public class InicioSesion extends JFrame {
 
 		// Acción del botón Iniciar sesión
 		btnInicioSesion.addActionListener(e -> {
-			String nombre = textFieldNombre.getText().trim();
+			String correo = textFieldCorreo.getText().trim();
 			String contraseña = new String(textFieldContraseña.getPassword()).trim();
 
-			if (nombre.trim().isEmpty() || contraseña.trim().isEmpty()) {
+			if (correo.trim().isEmpty() || contraseña.trim().isEmpty()) {
 				System.out.println("Rellena ambos campos");
-			} else if (!soloTexto(nombre) || (!contraseñaValida(contraseña))) {
+			} else if ((!contraseñaValida(contraseña))) {
 					
 					System.out.println("No validos");
 				
 			} else {
 				try {
 					usuario usuario1 = new usuario();
-					usuario1.setNombre(nombre);
+					usuario1.setCorreo(correo);
 					usuario1.setContraseña(contraseña);
 					 
 			

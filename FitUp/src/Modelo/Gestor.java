@@ -28,7 +28,7 @@ public class Gestor {
         
         for (QueryDocumentSnapshot usu : usuarios) {
 			   	 
-				if(usuario.getNombre().equals(usu.getString("nombre")) && usuario.getContraseña().equals(usu.getString("contraseña"))) {
+				if(usuario.getCorreo().equals(usu.getString("correo")) && usuario.getContraseña().equals(usu.getString("contraseña"))) {
 					
 					datos.setNombre(usu.getString("nombre"));
 					datos.setContraseña(usu.getString("contraseña"));
