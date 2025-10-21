@@ -14,6 +14,8 @@ import com.google.cloud.firestore.*;
 public class Gestor {
 	 usuario datos = new usuario();
 	ArrayList<workout> workouts = new ArrayList<>();
+	workout workoutAnadir = new workout();
+	ArrayList<ejercicio> ejercicios = new ArrayList<>();
 	public boolean inicioSesion(usuario usuario) throws Exception {
 		FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 		FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId("fitup-8e726")
@@ -67,18 +69,18 @@ public class Gestor {
 	    List<QueryDocumentSnapshot> workouts1 = querySnapShot.getDocuments();
 
 	    for (QueryDocumentSnapshot worko : workouts1) {
-	        
+	    	workout workoutAnadir = new workout();
 
-	        if (datos.getNivel() == worko.getDouble("nivel").intValue()) {
-	            workout workoutAnadir = new workout();
+
+	            
+	            workoutAnadir.setId(worko.getId());
 	            workoutAnadir.setNivel(worko.getDouble("nivel").intValue());
 	            workoutAnadir.setNombre(worko.getString("nombre"));
 	            workoutAnadir.setNumEjercicios(worko.getDouble("num_ejercicios").intValue());
 	            workoutAnadir.setURL(worko.getString("video"));
 
 	            workouts.add(workoutAnadir);
-	        } else {
-	        }
+	       
 	    }
 
 	    db.close();
@@ -124,8 +126,46 @@ public class Gestor {
 	    db.close();
 	}
 
+
+
+
+	public ArrayList<ejercicio> listarEjercicios(String idEjercicio) throws Exception {
+	    ArrayList<ejercicio> ejercicios = new ArrayList<>();
+
+	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
+	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance()
+	        .toBuilder()
+	        .setProjectId("fitup-8e726")
+	        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	        .build();
+
+	    Firestore db = firestoreOptions.getService();
+
+	    ApiFuture<QuerySnapshot> future = db.collection("workouts")
+	        .document(idEjercicio)
+	        .collection("ejercicios")
+	        .get();
+
+	    QuerySnapshot querySnapshot = future.get();
+	    List<QueryDocumentSnapshot> documentos = querySnapshot.getDocuments();
+
+	    for (QueryDocumentSnapshot doc : documentos) {
+	        ejercicio ejercicioAnadir = new ejercicio();
+	        ejercicioAnadir.setId(doc.getId());
+	        ejercicioAnadir.setNombre(doc.getString("nombre"));
+	        ejercicioAnadir.setNumSeries(doc.getDouble("num_series").intValue());
+	        ejercicioAnadir.setDescanso(doc.getDouble("descanso").intValue());
+
+
+	        ejercicios.add(ejercicioAnadir);
+	    }
+
+	    db.close();
+	    return ejercicios;
+	}
+
+
 	
 
-
-
 }
+

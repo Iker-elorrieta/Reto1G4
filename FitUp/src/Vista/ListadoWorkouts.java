@@ -38,7 +38,6 @@ public class ListadoWorkouts extends JFrame {
 	private DefaultTableModel modeloTabla; 
 	private ArrayList<workout> listaWorkouts = new ArrayList<>();
 
-	private usuario usuario1 = new usuario();;
 
 	/**
 	 * Create the frame.
@@ -140,22 +139,41 @@ public class ListadoWorkouts extends JFrame {
 		agregarWorkout(controlador);
 		
 		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int fila = table.rowAtPoint(e.getPoint());
-				int columna = table.columnAtPoint(e.getPoint());
-
-				if (columna == 3) { // Columna URL
-					 workout w = listaWorkouts.get(fila); 
-					String url = w.getURL();
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int fila = table.rowAtPoint(e.getPoint());
+                int columna = table.columnAtPoint(e.getPoint());
+               
+                workout w = listaWorkouts.get(fila);
+                if (columna == 3) { // Columna URL
+                   
+                    String url = w.getURL();
+                    try {
+                        Desktop.getDesktop().browse(new URI(url));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                	String idEjercicio = w.getId();
+                	System.out.println(idEjercicio);
+                    ListadoWorkouts.this.setVisible(false);
+                    ListadoEjercicios ejercicios = null;
 					try {
-						Desktop.getDesktop().browse(new URI(url));
-					} catch (Exception ex) {
-						ex.printStackTrace();
+						ejercicios = new ListadoEjercicios(controlador, idEjercicio);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-				}
-			}
-		});
+					
+					ListadoWorkouts.this.dispose();
+                    ejercicios.setVisible(true);
+                    listaWorkouts.clear();
+                }
+                    
+                }
+            
+
+        });
 
 		// Cambiar cursor al pasar sobre la URL
 		table.addMouseMotionListener(new MouseAdapter() {
@@ -195,10 +213,10 @@ public class ListadoWorkouts extends JFrame {
 	                w.getNumEjercicios(), 
 	                w.getNivel(), 
 	                "URL tutorial" 
-	            };
-
+	            };  
 	            modeloTabla.addRow(fila);
 	        }
+	        
 	    } else {
 	        System.out.println("No hay workouts disponibles.");
 	    }

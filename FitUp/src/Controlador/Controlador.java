@@ -3,6 +3,7 @@ package Controlador;
 import java.util.ArrayList;
 
 import Modelo.Gestor;
+import Modelo.ejercicio;
 import Modelo.usuario;
 import Modelo.workout;
 
@@ -24,6 +25,11 @@ public class Controlador {
 		Gestor gestor = new Gestor();
 		gestor.nuevoUsuario(usuario);
 		
+	}
+
+
+	public ArrayList<ejercicio> listarEjercicios(String idEjercicio) throws Exception {
+		return gestor1.listarEjercicios(idEjercicio);
 	}
 
 }

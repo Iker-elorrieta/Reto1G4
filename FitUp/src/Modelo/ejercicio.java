@@ -1,14 +1,17 @@
 package Modelo;
 
 public class ejercicio extends workout {
-
+	
 	String nombre;
 	int numSeries;
-	float descanso;
+	int descanso;
 	String foto;
 	
+	public ejercicio() {
+		
+	}
 	public ejercicio(String nombre, int numEjercicios, int nivel, String uRL, String nombre2, int numSeries,
-			float descanso, String foto) {
+			int descanso, String foto) {
 		super(nombre, numEjercicios, nivel, uRL);
 		nombre = nombre2;
 		this.numSeries = numSeries;
@@ -36,7 +39,7 @@ public class ejercicio extends workout {
 		return descanso;
 	}
 
-	public void setDescanso(float descanso) {
+	public void setDescanso(int descanso) {
 		this.descanso = descanso;
 	}
 

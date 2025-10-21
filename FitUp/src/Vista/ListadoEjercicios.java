@@ -14,6 +14,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controlador.Controlador;
+import Modelo.ejercicio;
+import Modelo.workout;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -24,6 +26,7 @@ import javax.swing.ImageIcon;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class ListadoEjercicios extends JFrame {
@@ -32,6 +35,7 @@ public class ListadoEjercicios extends JFrame {
 	private JPanel contentPane;
 	private DefaultTableModel modeloTabla;
 	private JTable table;
+	private ArrayList<ejercicio> listaEjercicios = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -40,8 +44,10 @@ public class ListadoEjercicios extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param idEjercicio 
+	 * @throws Exception 
 	 */
-	public ListadoEjercicios(Controlador controlador) {
+	public ListadoEjercicios(Controlador controlador, String idEjercicio) throws Exception {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 648, 478);
 		setLocationRelativeTo(null);
@@ -113,11 +119,13 @@ public class ListadoEjercicios extends JFrame {
 		scrollPane.setBounds(36, 123, 565, 294);
 		contentPane.add(scrollPane);
 		
+		listadoEjercicios(controlador, idEjercicio);
 		
 		//Boton volver
 		JButton btnVolver = new JButton("Volver");
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
 		btnVolver.setForeground(Color.WHITE);
@@ -164,8 +172,31 @@ public class ListadoEjercicios extends JFrame {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			
+			  ListadoEjercicios.this.dispose();
 			listado.setVisible(true);
-		});
-
+		});}
+	
+		private void listadoEjercicios(Controlador controlador, String idEjercicio) throws Exception {
+			listaEjercicios = controlador.listarEjercicios(idEjercicio);
+			System.out.println(idEjercicio);
+		    modeloTabla.setRowCount(0);
+		    if (!listaEjercicios.isEmpty()) {
+		        for (int i = 0; i < listaEjercicios.size(); i++) {
+		            ejercicio e = listaEjercicios.get(i);
+System.out.println(e.getNombre());
+		            Object[] fila = { 
+		                e.getNombre(), 
+		                e.getNumSeries(), 
+		                e.getDescanso(), 
+		            };
+		            System.out.println(fila);
+		            modeloTabla.addRow(fila);
+		            table.repaint();
+		        }
+		    } else {
+		        System.out.println("No hay workouts disponibles.");
+		    }
+		
 	}
 }
