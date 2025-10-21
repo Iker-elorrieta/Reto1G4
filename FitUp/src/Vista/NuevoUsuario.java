@@ -3,6 +3,9 @@ package Vista;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,6 +24,7 @@ public class NuevoUsuario extends JFrame {
 	private JTextField textContraseña;
 	private JTextField textFechaNac;
 	usuario usuario = new usuario();
+	
 
 
 	
@@ -150,7 +154,6 @@ public class NuevoUsuario extends JFrame {
 		String placeholdercontraseña = "Introduce tu contraseña...";
 		setPlaceholder(textContraseña, placeholdercontraseña,Color.gray);
 
-
 		// Fecha de nacimiento
 		JLabel lblFechaNac = new JLabel("Fecha de nacimiento:");
 		lblFechaNac.setForeground(Color.WHITE);
@@ -164,8 +167,8 @@ public class NuevoUsuario extends JFrame {
 		textFechaNac.setBackground(new Color(230, 230, 230));
 		textFechaNac.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textFechaNac);
-		String fecha = "Introduce tu fecha de nacimiento";
-		setPlaceholder(textFechaNac, fecha,Color.gray);
+		String placeholderfecha = "Introduce tu fecha de nacimiento";
+		setPlaceholder(textFechaNac, placeholderfecha,Color.gray);
 
 
 		// Botón Registrarse
@@ -202,64 +205,84 @@ public class NuevoUsuario extends JFrame {
 
 		// Acción del botón Registrarse
 		btnRegistrarse.addActionListener(e -> {
-			String nombre = textNombre.getText().trim();
-			String apellido1 = textApellido1.getText().trim();
-			String apellido2 = textApellido2.getText().trim();
-			String correo = textCorreo.getText().trim();
-			String contraseña = textContraseña.getText().trim();
-			String fechaNac = textFechaNac.getText().trim();
-			String error = "Formato de texto incorrecto";
-			String errorCorreo = "Formato de correo incorrecto";
-			String errorContraseña = "Sssssres";
+		    String nombre = textNombre.getText().trim();
+		    String apellido1 = textApellido1.getText().trim();
+		    String apellido2 = textApellido2.getText().trim();
+		    String correo = textCorreo.getText().trim();
+		    String contraseña = textContraseña.getText().trim();
+		    String fechaNac = textFechaNac.getText().trim();
 
-			
-		   
-			
-			if (nombre.isEmpty() || apellido1.isEmpty() || apellido2.isEmpty() || correo.isEmpty()
-					|| contraseña.isEmpty() || fechaNac.isEmpty()) {
-				lblVacio.setVisible(true);
-				
-			} if (!SoloTexto(nombre) || !SoloTexto(apellido1) || !SoloTexto(apellido2)) {
-				if (!SoloTexto(nombre)) {					
-					textNombre.setText(error);
-					setPlaceholder(textNombre, error,Color.RED);
-					
-				} else if (!SoloTexto(apellido1)) {
-					textApellido1.setText("Formato de solo texto incorrecto");
-					setPlaceholder(textApellido1, error,Color.RED);					
-				}else if(!SoloTexto(apellido2)) {
-					textApellido2.setText("Formato de solo texto incorrecto");
-					setPlaceholder(textApellido2, error,Color.RED);
-				}
-			} else if (!CorreoValido(correo)) {
-				textCorreo.setText(errorCorreo);
-				setPlaceholder(textCorreo, errorCorreo,Color.RED);
-			} else if (!ContraseñaValida(contraseña)) {
-				textContraseña.setText("Formato de contraseña incorrecto");
-				setPlaceholder(textContraseña, errorContraseña,Color.RED);
-			} else {
-				
-				usuario.setNombre(nombre);
-				usuario.setApellido1(apellido1);
-				usuario.setApellido2(apellido2);
-				usuario.setContraseña(contraseña);
-				usuario.setCorreo(correo);
-				usuario.setFechaNac(fechaNac);
-				usuario.setNivel(0);
-				
-				try {
-					controlador.nuevoUsuario(usuario);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				this.setVisible(false);
-				Inicio nuevo = new Inicio("Usuario registrado con éxito",controlador);
-				nuevo.setVisible(true);
-			}
+		    lblVacio.setVisible(false); // Ocultar aviso inicial
+
+		    boolean todosVacios = (nombre.isEmpty() || nombre.equals("Introduzca su nombre...")) &&
+		                          (apellido1.isEmpty() || apellido1.equals("Introduzca su primer apellido...")) &&
+		                          (apellido2.isEmpty() || apellido2.equals("Introduce tu segundo apellido...")) &&
+		                          (correo.isEmpty() || correo.equals("Introduce tu correo electrónico...")) &&
+		                          (contraseña.isEmpty() || contraseña.equals("Introduce tu contraseña...")) &&
+		                          (fechaNac.isEmpty() || fechaNac.equals("Introduce tu fecha de nacimiento"));
+
+		    if (todosVacios) {
+		        lblVacio.setVisible(true);
+		        return; 
+		    }
+
+		    boolean error = false;
+
+		    if (!nombre.isEmpty() && !nombre.equals("Introduzca su nombre...") && !soloTexto(nombre)) {
+		        setPlaceholder(textNombre, "Formato de texto incorrecto", Color.RED);
+		        error = true;
+		    }
+
+		    if (!apellido1.isEmpty() && !apellido1.equals("Introduzca su primer apellido...") && !soloTexto(apellido1)) {
+		        setPlaceholder(textApellido1, "Formato de texto incorrecto", Color.RED);
+		        error = true;
+		    }
+
+		    if (!apellido2.isEmpty() && !apellido2.equals("Introduce tu segundo apellido...") && !soloTexto(apellido2)) {
+		        setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
+		        error = true;
+		    }
+
+		    if (!correo.isEmpty() && !correo.equals("Introduce tu correo electrónico...") && !correoValido(correo)) {
+		        setPlaceholder(textCorreo, "Formato de correo incorrecto", Color.RED);
+		        error = true;
+		    }
+
+		    if (!contraseña.isEmpty() && !contraseña.equals("Introduce tu contraseña...") && !contraseñaValida(contraseña)) {
+		        setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
+		        error = true;
+		    }
+
+		    if (!fechaNac.isEmpty() && !fechaNac.equals("Introduce tu fecha de nacimiento") && !fechaValida(fechaNac)) {
+		        setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
+		        error = true;
+		    }
+
+		    // Si hubo errores, salir
+		    if (error) return;
+
+		    //Registrar usuario 
+		    usuario.setNombre(nombre);
+		    usuario.setApellido1(apellido1);
+		    usuario.setApellido2(apellido2);
+		    usuario.setContraseña(contraseña);
+		    usuario.setCorreo(correo);
+		    usuario.setFechaNac(fechaNac);
+		    usuario.setNivel(0);
+
+		    try {
+		        controlador.nuevoUsuario(usuario);
+		    } catch (Exception e1) {
+		        e1.printStackTrace();
+		    }
+
+		    this.setVisible(false);
+		    Inicio nuevo = new Inicio("Usuario registrado con éxito", controlador);
+		    nuevo.setVisible(true);
 		});
 
+
+		
 		// Acción del botón Volver
 		btnVolver.addActionListener(e -> {
 			this.setVisible(false);
@@ -269,7 +292,7 @@ public class NuevoUsuario extends JFrame {
 	}
 
 	// Métodos de validación
-	private boolean SoloTexto(String text) {
+	private boolean soloTexto(String text) {
 		if (text == null || text.isBlank())
 			return false;
 		for (char c : text.toCharArray()) {
@@ -279,7 +302,7 @@ public class NuevoUsuario extends JFrame {
 		return true;
 	}
 
-	private boolean CorreoValido(String email) {
+	private boolean correoValido(String email) {
 		if (email == null || email.isBlank())
 			return false;
 		int atIndex = email.indexOf('@');
@@ -319,7 +342,7 @@ public class NuevoUsuario extends JFrame {
 	            }
 	        });
 	    }
-	private boolean ContraseñaValida(String contraseña) {
+	private boolean contraseñaValida(String contraseña) {
 		if (contraseña == null || contraseña.isEmpty())
 			return false;
 		boolean hasUpper = false, hasDigit = false;
@@ -332,5 +355,17 @@ public class NuevoUsuario extends JFrame {
 				return true;
 		}
 		return hasUpper && hasDigit;
+	}
+	
+	private boolean fechaValida(String fecha) {
+		
+		  DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+	        try {
+	            LocalDate fecha2 = LocalDate.parse(fecha, formato);
+	            return true; 
+	        } catch (DateTimeParseException e) {
+	            return false; 
+	        }
 	}
 }
