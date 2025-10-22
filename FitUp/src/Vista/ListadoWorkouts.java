@@ -10,6 +10,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,7 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import Backups.DatosWorkout;
 import Controlador.Controlador;
 
 import javax.swing.JLabel;
@@ -37,7 +38,6 @@ public class ListadoWorkouts extends JFrame {
 	private JTable table;
 	private DefaultTableModel modeloTabla; 
 	private ArrayList<Workout> listaWorkouts = new ArrayList<>();
-
 
 	/**
 	 * Create the frame.
@@ -220,21 +220,16 @@ public class ListadoWorkouts extends JFrame {
 	private void agregarWorkout(Controlador controlador) throws Exception {
 	    listaWorkouts = controlador.listarWorkouts();
 	    modeloTabla.setRowCount(0);
-	    if (!listaWorkouts.isEmpty()) {
-	        for (int i = 0; i < listaWorkouts.size(); i++) {
-	            Workout w = listaWorkouts.get(i);
-
-	            Object[] fila = { 
-	                w.getNombre(), 
-	                w.getNumEjercicios(), 
-	                w.getNivel(), 
-	                "URL tutorial" 
-	            };  
-	            modeloTabla.addRow(fila);
-	        }
-	        
-	    } else {
-	        System.out.println("No hay workouts disponibles.");
+	
+	    for (Workout w : listaWorkouts) {
+	       
+	        Object[] fila = {
+	            w.getNombre(),
+	            w.getNumEjercicios(),
+	            w.getNivel(),
+	            "URL tutorial"
+	        };
+	        modeloTabla.addRow(fila);
 	    }
-	}
+ }
 }

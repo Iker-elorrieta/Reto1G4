@@ -152,6 +152,7 @@ public class ModificarUsuario extends JFrame {
 		String placeholderfecha = "Introduce tu fecha de nacimiento";
 		setPlaceholder(textFechaNac, placeholderfecha,Color.gray);
 
+		
 
 		// Botón Registrarse
 		JButton btnModificar = new JButton("Modificar");
@@ -253,6 +254,10 @@ public class ModificarUsuario extends JFrame {
 		    }
 
 		    try {
+		        // asegurar que el correo del usuario a modificar está establecido
+		        if ((usuario.getCorreo() == null || usuario.getCorreo().isEmpty()) && controlador.getUsuarioActual() != null) {
+		            usuario.setCorreo(controlador.getUsuarioActual().getCorreo());
+		        }
 		        controlador.modificarUsuario(usuario);
 		    } catch (Exception e1) {
 		        e1.printStackTrace();
@@ -267,7 +272,13 @@ public class ModificarUsuario extends JFrame {
 		// Acción del botón Volver
 		btnVolver.addActionListener(e -> {
 			this.setVisible(false);
-			Inicio nuevo = new Inicio("",controlador);
+			ListadoWorkouts nuevo = null;
+			try {
+				nuevo = new ListadoWorkouts(controlador);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			nuevo.setVisible(true);
 		});
 	}

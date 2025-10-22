@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.cloud.FirestoreClient;
+
 
 
 
@@ -21,6 +19,12 @@ public class Gestor {
 	ArrayList<Workout> workouts = new ArrayList<>();
 	Workout workoutAnadir = new Workout();
 	ArrayList<Ejercicio> ejercicios = new ArrayList<>();
+	
+	// Devolver el usuario actualmente logueado (puede ser vacío si no hay sesión)
+	public Usuario getDatos() {
+		return datos;
+	}
+	
 	public boolean inicioSesion(Usuario usuario) throws Exception {
 		FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 		FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId("fitup-8e726")
@@ -57,6 +61,9 @@ public class Gestor {
 
 	public ArrayList<Workout> listarworkouts() throws Exception {
 
+	    // Crear una lista local para evitar acumular duplicados en la lista de instancia
+	    ArrayList<Workout> resultado = new ArrayList<>();
+
 	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance()
 	        .toBuilder()
@@ -73,7 +80,7 @@ public class Gestor {
 	    List<QueryDocumentSnapshot> workouts1 = querySnapShot.getDocuments();
 
 	    for (QueryDocumentSnapshot worko : workouts1) {
-	    	Workout workoutAnadir = new Workout();
+	        Workout workoutAnadir = new Workout();
 
 
 	            
@@ -83,12 +90,12 @@ public class Gestor {
 	            workoutAnadir.setNumEjercicios(worko.getDouble("num_ejercicios").intValue());
 	            workoutAnadir.setURL(worko.getString("video"));
 
-	            workouts.add(workoutAnadir);
-	       
+	            resultado.add(workoutAnadir);
 	    }
 
 	    db.close();
-	    return workouts;
+
+	    return resultado;
 	}
 
 	
@@ -179,29 +186,73 @@ public class Gestor {
 		    Firestore db = firestoreOptions.getService();
 
 		    CollectionReference usus = db.collection("usuarios");
-		    Query query = usus.whereEqualTo("correo", datos.correo);
-		    ApiFuture<QuerySnapshot> query2 = usus.get();
-		    
+		    // Determinar correo para buscar el documento: preferir el correo proporcionado en el objeto
+		    String correoBuscado = usuario.getCorreo();
+		    if (correoBuscado == null || correoBuscado.isEmpty()) {
+		        // si no se proporciona correo, intentar usar el correo del usuario logueado en este gestor
+		        correoBuscado = datos.getCorreo();
+		    }
+		    if (correoBuscado == null || correoBuscado.isEmpty()) {
+		        // Nada que hacer si no hay correo para identificar el documento
+		        db.close();
+		        return;
+		    }
 
-		    	/* Map<String, Object> usuMap = new HashMap<>();
-		    	 if(!usuario.getNombre().isEmpty() && usuario.getCorreo().equals(query)) {
-					    usuMap.put("nombre", usuario.getNombre());
-		    	 }
-		    	 if(!usuario.getApellido1().isEmpty() && usuario.getCorreo().equals(query)) {
-					    usuMap.put("apellido1", usuario.getApellido1());
-		    	 }
-		    	 if(!usuario.getApellido2().isEmpty() && usuario.getCorreo().equals(query)) {
-					    usuMap.put("apellido2", usuario.getApellido2());
-		    	 } 
-		    	 if(!usuario.getContraseña().isEmpty() && usuario.getCorreo().equals(query)) {
-					    usuMap.put("contraseña", usuario.getContraseña());
-		    	 }
-		    	 if(!usuario.getFechaNac().isEmpty() && usuario.getCorreo().equals(query)) {
-					    usuMap.put("fechaNac", usuario.getFechaNac());
-		    	 }
-		    
-		   
-		    db.close();	*/	
+		    ApiFuture<QuerySnapshot> queryFuture = usus.whereEqualTo("correo", correoBuscado).get();
+		    List<QueryDocumentSnapshot> encontrados = queryFuture.get().getDocuments();
+		    if (encontrados.isEmpty()) {
+		        // No existe el usuario; cerrar y salir
+		        db.close();
+		        return;
+		    }
+
+		    for (QueryDocumentSnapshot doc : encontrados) {
+		        DocumentReference docRef = usus.document(doc.getId());
+		        Map<String, Object> updates = new HashMap<>();
+		        // Solo añadir claves si vienen con valor no vacío / no nulo
+		        if (usuario.getNombre() != null && !usuario.getNombre().isEmpty()) {
+		            updates.put("nombre", usuario.getNombre());
+		        }
+		        if (usuario.getApellido1() != null && !usuario.getApellido1().isEmpty()) {
+		            updates.put("apellido1", usuario.getApellido1());
+		        }
+		        if (usuario.getApellido2() != null && !usuario.getApellido2().isEmpty()) {
+		            updates.put("apellido2", usuario.getApellido2());
+		        }
+		        if (usuario.getContraseña() != null && !usuario.getContraseña().isEmpty()) {
+		            updates.put("contraseña", usuario.getContraseña());
+		        }
+		        if (usuario.getFechaNac() != null && !usuario.getFechaNac().isEmpty()) {
+		            updates.put("fechaNac", usuario.getFechaNac());
+		        }
+		        
+
+		        if (!updates.isEmpty()) {
+                    ApiFuture<com.google.cloud.firestore.WriteResult> writeResult = docRef.update(updates);
+                    writeResult.get();
+
+                    if (updates.containsKey("nombre")) {
+                        datos.setNombre((String) updates.get("nombre"));
+                    }
+                    if (updates.containsKey("apellido1")) {
+                        datos.setApellido1((String) updates.get("apellido1"));
+                    }
+                    if (updates.containsKey("apellido2")) {
+                        datos.setApellido2((String) updates.get("apellido2"));
+                    }
+                    if (updates.containsKey("contraseña")) {
+                        datos.setContraseña((String) updates.get("contraseña"));
+                    }
+                    if (updates.containsKey("fechaNac")) {
+                        datos.setFechaNac((String) updates.get("fechaNac"));
+                    }
+                   
+                        
+                    
+                }
+		    }
+
+		    db.close();
 	}
 	
 	public ArrayList<Series> listarSeries( String idEjercicio) throws Exception {
@@ -244,4 +295,3 @@ public class Gestor {
 	
 
 }
-

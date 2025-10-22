@@ -13,14 +13,17 @@ public class Controlador {
 
 	}
 
+	// Devolver el usuario actualmente en sesión (puede ser vacío si no hay sesión)
+	public Usuario getUsuarioActual() {
+		return gestor1.getDatos();
+	}
 
 	public ArrayList<Workout> listarWorkouts() throws Exception {
 		return gestor1.listarworkouts();
 	}
 	
 	public void nuevoUsuario(Usuario usuario) throws Exception {
-		Gestor gestor = new Gestor();
-		gestor.nuevoUsuario(usuario);
+			gestor1.nuevoUsuario(usuario);
 		
 	}
 
@@ -33,8 +36,7 @@ public class Controlador {
 		return gestor1.listarSeries(idEjercicio);
 	}
 	public void modificarUsuario(Usuario usuario) throws Exception {
-		Gestor gestor = new Gestor();
-		gestor.modificarUsuario(usuario);		
+			gestor1.modificarUsuario(usuario);		
 	}
 
 }
