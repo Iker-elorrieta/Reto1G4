@@ -179,11 +179,9 @@ public class Gestor {
 		    CollectionReference usus = db.collection("usuarios");
 		    Query query = usus.whereEqualTo("correo", datos.correo);
 		    ApiFuture<QuerySnapshot> query2 = usus.get();
-		    List<QueryDocumentSnapshot> documentos = ((QuerySnapshot) query.get()).getDocuments();
 		    
 
-		    for(QueryDocumentSnapshot usuMod : documentos) {
-		    	 Map<String, Object> usuMap = new HashMap<>();
+		    	/* Map<String, Object> usuMap = new HashMap<>();
 		    	 if(!usuario.getNombre().isEmpty() && usuario.getCorreo().equals(query)) {
 					    usuMap.put("nombre", usuario.getNombre());
 		    	 }
@@ -199,10 +197,9 @@ public class Gestor {
 		    	 if(!usuario.getFechaNac().isEmpty() && usuario.getCorreo().equals(query)) {
 					    usuMap.put("fechaNac", usuario.getFechaNac());
 		    	 }
-		    	 usuMod.getReference().update(usuMap); 
-		    }
+		    
 		   
-		    db.close();		
+		    db.close();	*/	
 	}
 
 
