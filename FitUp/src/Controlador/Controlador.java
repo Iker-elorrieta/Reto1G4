@@ -32,4 +32,10 @@ public class Controlador {
 		return gestor1.listarEjercicios(idEjercicio);
 	}
 
+
+	public void modificarUsuario(usuario usuario) throws Exception {
+		Gestor gestor = new Gestor();
+		gestor.modificarUsuario(usuario);		
+	}
+
 }

@@ -1,6 +1,7 @@
 package Modelo;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
+
 
 
 public class Gestor {
@@ -162,6 +164,45 @@ public class Gestor {
 
 	    db.close();
 	    return ejercicios;
+	}
+
+
+
+	//MOdificar usuario
+	public void modificarUsuario(usuario usuario) throws Exception {
+		 FileInputStream serviceAccount = new FileInputStream("fitUp.json");
+		    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+		            .setProjectId("fitup-8e726")
+		            .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
+		    Firestore db = firestoreOptions.getService();
+
+		    CollectionReference usus = db.collection("usuarios");
+		    Query query = usus.whereEqualTo("correo", datos.correo);
+		    ApiFuture<QuerySnapshot> query2 = usus.get();
+		    List<QueryDocumentSnapshot> documentos = ((QuerySnapshot) query.get()).getDocuments();
+		    
+
+		    for(QueryDocumentSnapshot usuMod : documentos) {
+		    	 Map<String, Object> usuMap = new HashMap<>();
+		    	 if(!usuario.getNombre().isEmpty() && usuario.getCorreo().equals(query)) {
+					    usuMap.put("nombre", usuario.getNombre());
+		    	 }
+		    	 if(!usuario.getApellido1().isEmpty() && usuario.getCorreo().equals(query)) {
+					    usuMap.put("apellido1", usuario.getApellido1());
+		    	 }
+		    	 if(!usuario.getApellido2().isEmpty()) {
+					    usuMap.put("apellido2", usuario.getApellido2());
+		    	 } 
+		    	 if(!usuario.getContraseña().isEmpty()) {
+					    usuMap.put("contraseña", usuario.getContraseña());
+		    	 }
+		    	 if(!usuario.getFechaNac().isEmpty()) {
+					    usuMap.put("fechaNac", usuario.getFechaNac());
+		    	 }
+		    	 usuMod.getReference().update(usuMap); 
+		    }
+		   
+		    db.close();		
 	}
 
 

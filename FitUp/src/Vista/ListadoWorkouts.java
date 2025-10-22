@@ -2,7 +2,6 @@ package Vista;
 
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.EventQueue;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -198,6 +197,23 @@ public class ListadoWorkouts extends JFrame {
         lblLogo.setBounds(382, -29, 250, 116);
         contentPane.add(lblLogo);
         
+        JButton btnModificar = new JButton("Modificar perfil");
+        btnModificar.setForeground(Color.WHITE);
+        btnModificar.setFont(new Font("Tahoma", Font.BOLD, 13));
+        btnModificar.setFocusPainted(false);
+        btnModificar.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
+        btnModificar.setBackground(new Color(50, 50, 50));
+        btnModificar.setBounds(180, 26, 109, 30);
+        contentPane.add(btnModificar);
+        
+        btnModificar.addActionListener( e-> {
+        	this.setVisible(false);
+        	ModificarUsuario modUsuario = new ModificarUsuario(controlador);
+        	this.dispose();
+        	modUsuario.setVisible(true);
+        }
+        );
+        
 	}
 	
 	private void agregarWorkout(Controlador controlador) throws Exception {
@@ -220,5 +236,4 @@ public class ListadoWorkouts extends JFrame {
 	        System.out.println("No hay workouts disponibles.");
 	    }
 	}
-
 }

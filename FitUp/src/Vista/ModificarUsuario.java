@@ -1,0 +1,334 @@
+package Vista;
+
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import Controlador.Controlador;
+import Modelo.*;
+
+public class ModificarUsuario extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textNombre;
+	private JTextField textApellido1;
+	private JTextField textApellido2;
+	private JTextField textContraseña;
+	private JTextField textFechaNac;
+	usuario usuario = new usuario();
+	
+
+
+	
+
+	public ModificarUsuario(Controlador controlador) {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 648, 478);
+		setLocationRelativeTo(null);
+		setResizable(false);
+
+		// Fondo con degradado oscuro
+		contentPane = new JPanel() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				Graphics2D g2 = (Graphics2D) g;
+				int width = getWidth();
+				int height = getHeight();
+				Color color1 = new Color(10, 10, 10);
+				Color color2 = new Color(60, 60, 60);
+				GradientPaint gp = new GradientPaint(0, 0, color1, 0, height, color2);
+				g2.setPaint(gp);
+				g2.fillRect(0, 0, width, height);
+			}
+		};
+
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(null);
+		setContentPane(contentPane);
+
+		// Logo
+		JLabel lblLogo = new JLabel();
+		ImageIcon icono = new ImageIcon("FitUp_Logo_SinFondo.png");
+		Image imagen = icono.getImage();
+		ImageIcon iconoEscalado = new ImageIcon(imagen.getScaledInstance(300, 150, Image.SCALE_SMOOTH));
+		lblLogo.setIcon(iconoEscalado);
+		lblLogo.setBounds(262, 0, 300, 102);
+		contentPane.add(lblLogo);
+
+		Font labelFont = new Font("Tahoma", Font.BOLD, 16);
+		Font fieldFont = new Font("Tahoma", Font.PLAIN, 15);
+
+		// Nombre
+		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setForeground(Color.WHITE);
+		lblNombre.setFont(labelFont);
+		lblNombre.setBounds(47, 143, 150, 25);
+		
+		contentPane.add(lblNombre);
+
+		textNombre = new JTextField();
+		textNombre.setFont(fieldFont);
+		textNombre.setBounds(253, 138, 347, 35);
+		textNombre.setBackground(new Color(230, 230, 230));
+		textNombre.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		textNombre.setForeground(Color.GRAY);
+		String placeholderNombre = ("Introduzca su nombre...");
+		contentPane.add(textNombre);
+		setPlaceholder(textNombre, placeholderNombre,Color.gray);
+       
+
+		// Primer apellido
+		JLabel lblApellido1 = new JLabel("Primer apellido:");
+		lblApellido1.setForeground(Color.WHITE);
+		lblApellido1.setFont(labelFont);
+		lblApellido1.setBounds(47, 188, 150, 25);
+		contentPane.add(lblApellido1);
+
+		textApellido1 = new JTextField();
+		textApellido1.setFont(fieldFont);
+		textApellido1.setBounds(253, 183, 347, 35);
+		textApellido1.setBackground(new Color(230, 230, 230));
+		textApellido1.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		String placeholderApellido = ("Introduzca su primer apellido...");
+		contentPane.add(textApellido1);
+		setPlaceholder(textApellido1, placeholderApellido,Color.gray);
+
+	
+		// Segundo apellido
+		JLabel lblApellido2 = new JLabel("Segundo apellido:");
+		lblApellido2.setForeground(Color.WHITE);
+		lblApellido2.setFont(labelFont);
+		lblApellido2.setBounds(47, 233, 180, 25);
+		contentPane.add(lblApellido2);
+
+		textApellido2 = new JTextField();
+		textApellido2.setFont(fieldFont);
+		textApellido2.setBounds(253, 228, 347, 35);
+		textApellido2.setBackground(new Color(230, 230, 230));
+		textApellido2.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		contentPane.add(textApellido2);
+		String placeholderApellido2 = "Introduce tu segundo apellido...";
+		setPlaceholder(textApellido2, placeholderApellido2,Color.gray);
+
+		// Contraseña
+		JLabel lblContraseña = new JLabel("Contraseña:");
+		lblContraseña.setForeground(Color.WHITE);
+		lblContraseña.setFont(labelFont);
+		lblContraseña.setBounds(47, 279, 150, 25);
+		contentPane.add(lblContraseña);
+
+		textContraseña = new JPasswordField();
+		textContraseña.setFont(fieldFont);
+		textContraseña.setBounds(253, 274, 347, 35);
+		textContraseña.setBackground(new Color(230, 230, 230));
+		textContraseña.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		contentPane.add(textContraseña);
+		String placeholdercontraseña = "Introduce tu contraseña...";
+		setPlaceholder(textContraseña, placeholdercontraseña,Color.gray);
+
+		// Fecha de nacimiento
+		JLabel lblFechaNac = new JLabel("Fecha de nacimiento:");
+		lblFechaNac.setForeground(Color.WHITE);
+		lblFechaNac.setFont(labelFont);
+		lblFechaNac.setBounds(47, 325, 200, 25);
+		contentPane.add(lblFechaNac);
+
+		textFechaNac = new JTextField();
+		textFechaNac.setFont(fieldFont);
+		textFechaNac.setBounds(253, 320, 347, 35);
+		textFechaNac.setBackground(new Color(230, 230, 230));
+		textFechaNac.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		contentPane.add(textFechaNac);
+		String placeholderfecha = "Introduce tu fecha de nacimiento";
+		setPlaceholder(textFechaNac, placeholderfecha,Color.gray);
+
+
+		// Botón Registrarse
+		JButton btnModificar = new JButton("Modificar");
+		btnModificar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnModificar.setBackground(new Color(50, 50, 50));
+		btnModificar.setForeground(Color.WHITE);
+		btnModificar.setFocusPainted(false);
+		btnModificar.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
+		btnModificar.setBounds(268, 381, 130, 30);
+		contentPane.add(btnModificar);
+
+		// Botón Volver
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnVolver.setBackground(new Color(50, 50, 50));
+		btnVolver.setForeground(Color.WHITE);
+		btnVolver.setFocusPainted(false);
+		btnVolver.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
+		btnVolver.setBounds(26, 26, 100, 30);
+		contentPane.add(btnVolver);
+
+		JLabel lblMsgError = new JLabel("");
+		lblMsgError.setForeground(new Color(255, 0, 0));
+		lblMsgError.setBounds(262, 103, 290, 18);
+		contentPane.add(lblMsgError);
+
+
+		// Acción del botón Modificar
+		btnModificar.addActionListener(e -> {
+		    String nombre = textNombre.getText().trim();
+		    String apellido1 = textApellido1.getText().trim();
+		    String apellido2 = textApellido2.getText().trim();
+		    String contraseña = textContraseña.getText().trim();
+		    String fechaNac = textFechaNac.getText().trim();
+
+		    boolean todosVacios = (nombre.isEmpty() || nombre.equals("Introduzca su nombre...")) &&
+                    (apellido1.isEmpty() || apellido1.equals("Introduzca su primer apellido...")) &&
+                    (apellido2.isEmpty() || apellido2.equals("Introduce tu segundo apellido...")) &&
+                    (contraseña.isEmpty() || contraseña.equals("Introduce tu contraseña...")) &&
+                    (fechaNac.isEmpty() || fechaNac.equals("Introduce tu fecha de nacimiento"));
+		    if (todosVacios) {
+		    	lblMsgError.setVisible(true);
+		    	lblMsgError.setForeground(Color.RED);
+		    	lblMsgError.setText("Debes modificar algún campo");
+		    	return; 
+		    	}
+		    boolean error = false;
+
+		    if (!nombre.isEmpty() && !nombre.equals("Introduzca su nombre...") && !soloTexto(nombre)) {
+		        setPlaceholder(textNombre, "Formato de texto incorrecto", Color.RED);
+		        error = true;
+		    }
+		    	
+
+		    if (!apellido1.isEmpty() && !apellido1.equals("Introduzca su primer apellido...") && !soloTexto(apellido1)) {
+		        setPlaceholder(textApellido1, "Formato de texto incorrecto", Color.RED);
+		        error = true;
+		    }
+
+		    if (!apellido2.isEmpty() && !apellido2.equals("Introduce tu segundo apellido...") && !soloTexto(apellido2)) {
+		        setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
+		        error = true;
+		    }
+
+		    if (!contraseña.isEmpty() && !contraseña.equals("Introduce tu contraseña...") && !contraseñaValida(contraseña)) {
+		        setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
+		        error = true;
+		    }
+
+		    if (!fechaNac.isEmpty() && !fechaNac.equals("Introduce tu fecha de nacimiento") && !fechaValida(fechaNac)) {
+		        setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
+		        error = true;
+		    }
+
+		    // Si hubo errores, salir
+		    if (error) return;
+		    
+
+		    //Modificar los datos
+		    if (!nombre.isEmpty() && !nombre.equals("Introduzca su nombre...") && soloTexto(nombre)) {
+			    usuario.setNombre(nombre);
+
+		    }
+		    	
+		    if (!apellido1.isEmpty() && !apellido1.equals("Introduzca su primer apellido...") && soloTexto(apellido1)) {
+		    	usuario.setApellido1(apellido1);
+		    }
+
+		    if (!apellido2.isEmpty() && !apellido2.equals("Introduce tu segundo apellido...") && soloTexto(apellido2)) {
+			    usuario.setApellido2(apellido2);
+		    }
+
+		    if (!contraseña.isEmpty() && !contraseña.equals("Introduce tu contraseña...") && contraseñaValida(contraseña)) {
+			    usuario.setContraseña(contraseña);
+		    }
+
+		    if (!fechaNac.isEmpty() && !fechaNac.equals("Introduce tu fecha de nacimiento") && fechaValida(fechaNac)) {
+			    usuario.setFechaNac(fechaNac);
+		    }
+
+		    try {
+		        controlador.modificarUsuario(usuario);
+		    } catch (Exception e1) {
+		        e1.printStackTrace();
+		    }
+
+		    lblMsgError.setText("Datos modificados con exito");
+		    lblMsgError.setForeground(Color.GREEN);
+		});
+
+
+		
+		// Acción del botón Volver
+		btnVolver.addActionListener(e -> {
+			this.setVisible(false);
+			Inicio nuevo = new Inicio("",controlador);
+			nuevo.setVisible(true);
+		});
+	}
+
+	// Métodos de validación
+	private boolean soloTexto(String text) {
+		if (text == null || text.isBlank())
+			return false;
+		for (char c : text.toCharArray()) {
+			if (!Character.isLetter(c) && c != ' ')
+				return false;
+		}
+		return true;
+	}
+
+	 public static void setPlaceholder(JTextField field, String placeholder, Color color) {
+	        field.setForeground(color);
+	        field.setText(placeholder);
+
+	        field.addFocusListener(new FocusAdapter() {
+	            @Override
+	            public void focusGained(FocusEvent e) {
+	                if (field.getText().equals(placeholder)) {
+	                    field.setText("");
+	                    field.setForeground(Color.BLACK);
+	                }
+	            }
+
+	            @Override
+	            public void focusLost(FocusEvent e) {
+	                if (field.getText().isEmpty()) {
+	                    field.setForeground(Color.GRAY);
+	                    field.setText(placeholder);
+	                }
+	            }
+	        });
+	    }
+	private boolean contraseñaValida(String contraseña) {
+		if (contraseña == null || contraseña.isEmpty())
+			return false;
+		boolean hasUpper = false, hasDigit = false;
+		for (char c : contraseña.toCharArray()) {
+			if (Character.isUpperCase(c))
+				hasUpper = true;
+			if (Character.isDigit(c))
+				hasDigit = true;
+			if (hasUpper && hasDigit)
+				return true;
+		}
+		return hasUpper && hasDigit;
+	}
+	
+	private boolean fechaValida(String fecha) {
+		
+		  DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+	        try {
+	            LocalDate fecha2 = LocalDate.parse(fecha, formato);
+	            return true; 
+	        } catch (DateTimeParseException e) {
+	            return false; 
+	        }
+	}
+}
