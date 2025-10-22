@@ -214,18 +214,20 @@ public class NuevoUsuario extends JFrame {
 		    String fechaNac = textFechaNac.getText().trim();
 
 		    lblVacio.setVisible(false); // Ocultar aviso inicial
+	    	boolean terminado = false;
 
-		    boolean todosVacios = (nombre.isEmpty() || nombre.equals("Introduzca su nombre...")) &&
-		                          (apellido1.isEmpty() || apellido1.equals("Introduzca su primer apellido...")) &&
-		                          (apellido2.isEmpty() || apellido2.equals("Introduce tu segundo apellido...")) &&
-		                          (correo.isEmpty() || correo.equals("Introduce tu correo electrónico...")) &&
-		                          (contraseña.isEmpty() || contraseña.equals("Introduce tu contraseña...")) &&
+		    do {
+		    boolean todosVacios = (nombre.isEmpty() || nombre.equals("Introduzca su nombre...")) ||
+		                          (apellido1.isEmpty() || apellido1.equals("Introduzca su primer apellido..."))||
+		                          (apellido2.isEmpty() || apellido2.equals("Introduce tu segundo apellido...")) ||
+		                          (correo.isEmpty() || correo.equals("Introduce tu correo electrónico...")) ||
+		                          (contraseña.isEmpty() || contraseña.equals("Introduce tu contraseña...")) ||
 		                          (fechaNac.isEmpty() || fechaNac.equals("Introduce tu fecha de nacimiento"));
 
 		    if (todosVacios) {
 		        lblVacio.setVisible(true);
 		        return; 
-		    }
+		    } else {
 
 
 		    if (!soloTexto(nombre)) {
@@ -261,7 +263,7 @@ public class NuevoUsuario extends JFrame {
 		    usuario.setFechaNac(fechaNac);
 		    usuario.setNivel(0);
 		    
-
+		    terminado = true;
 		    try {
 		        controlador.nuevoUsuario(usuario);
 		    } catch (Exception e1) {
@@ -272,7 +274,7 @@ public class NuevoUsuario extends JFrame {
 		    Inicio nuevo = new Inicio("Usuario registrado con éxito", controlador);
 		    nuevo.setVisible(true);
 		    }
-		});
+		    }}while(terminado = false);});
 
 
 		
