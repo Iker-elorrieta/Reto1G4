@@ -227,42 +227,32 @@ public class NuevoUsuario extends JFrame {
 		        return; 
 		    }
 
-		    boolean error = false;
 
-		    if (!nombre.isEmpty() && !nombre.equals("Introduzca su nombre...") && !soloTexto(nombre)) {
+		    if (!soloTexto(nombre)) {
 		        setPlaceholder(textNombre, "Formato de texto incorrecto", Color.RED);
-		        error = true;
 		    }
 
-		    if (!apellido1.isEmpty() && !apellido1.equals("Introduzca su primer apellido...") && !soloTexto(apellido1)) {
+		    else if (!soloTexto(apellido1)) {
 		        setPlaceholder(textApellido1, "Formato de texto incorrecto", Color.RED);
-		        error = true;
 		    }
 
-		    if (!apellido2.isEmpty() && !apellido2.equals("Introduce tu segundo apellido...") && !soloTexto(apellido2)) {
+		    else if (!soloTexto(apellido2)) {
 		        setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
-		        error = true;
 		    }
 
-		    if (!correo.isEmpty() && !correo.equals("Introduce tu correo electrónico...") && !correoValido(correo)) {
+		    else if (!correoValido(correo)) {
 		        setPlaceholder(textCorreo, "Formato de correo incorrecto", Color.RED);
-		        error = true;
 		    }
 
-		    if (!contraseña.isEmpty() && !contraseña.equals("Introduce tu contraseña...") && !contraseñaValida(contraseña)) {
+		    else if (!contraseñaValida(contraseña)) {
 		        setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
-		        error = true;
 		    }
 
-		    if (!fechaNac.isEmpty() && !fechaNac.equals("Introduce tu fecha de nacimiento") && !fechaValida(fechaNac)) {
+		    else if (!fechaValida(fechaNac)) {
 		        setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
-		        error = true;
-		    }
+		    }else {
 
-		    // Si hubo errores, salir
-		    if (error) return;
-
-		    //Registrar usuario 
+		    
 		    usuario.setNombre(nombre);
 		    usuario.setApellido1(apellido1);
 		    usuario.setApellido2(apellido2);
@@ -270,6 +260,7 @@ public class NuevoUsuario extends JFrame {
 		    usuario.setCorreo(correo);
 		    usuario.setFechaNac(fechaNac);
 		    usuario.setNivel(0);
+		    
 
 		    try {
 		        controlador.nuevoUsuario(usuario);
@@ -280,6 +271,7 @@ public class NuevoUsuario extends JFrame {
 		    this.setVisible(false);
 		    Inicio nuevo = new Inicio("Usuario registrado con éxito", controlador);
 		    nuevo.setVisible(true);
+		    }
 		});
 
 
