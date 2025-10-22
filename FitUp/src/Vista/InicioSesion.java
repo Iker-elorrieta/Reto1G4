@@ -142,13 +142,12 @@ public class InicioSesion extends JFrame {
 					 
 			
 					if (controlador.inicioSesion(usuario1)) {
-					this.setVisible(false);
-					ListadoWorkouts nuevo = new ListadoWorkouts(controlador);
-					nuevo.setVisible(true);
+						this.setVisible(false);
+						ListadoWorkouts nuevo = new ListadoWorkouts(controlador);
+						nuevo.setVisible(true);
 					}else {
-				System.out.println("Incorrectos");
-					
-					}
+						System.out.println("Incorrectos");
+						}
 					}catch(Exception e1) {
 				e1.printStackTrace();
 			}

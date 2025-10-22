@@ -1,7 +1,12 @@
 package Modelo;
 
-public class Series extends Ejercicio{
+import java.io.Serializable;
 
+public class Series extends Ejercicio implements Serializable{
+
+	/**
+	 * 
+	 */
 	private int duracion;
 	private int repeticiones;
 	

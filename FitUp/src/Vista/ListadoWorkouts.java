@@ -138,6 +138,14 @@ public class ListadoWorkouts extends JFrame {
 		
 		agregarWorkout(controlador);
 		
+		controlador.ejecutarExportacion();
+
+		if(controlador.ejecutarExportacion() == true) {
+			System.out.println("Backup ejecutado con exito");
+		} else {
+			System.out.println("Error al ejecutar el backup");
+		}
+
 		table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

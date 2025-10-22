@@ -1,12 +1,20 @@
 package Modelo;
 
+import java.io.Serializable;
 
-public class Workout {
+
+public class Workout implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String id;
 	String nombre;
 	int numEjercicios;
 	int nivel;
 	String URL;
+	
+
 	
 	public Workout(String nombre, int numEjercicios, int nivel, String uRL) {
 		super();
