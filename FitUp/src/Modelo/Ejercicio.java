@@ -2,10 +2,10 @@ package Modelo;
 
 public class Ejercicio extends Workout {
 	
-	String nombre;
-	int numSeries;
-	int descanso;
-	String foto;
+	private String nombre;
+	private int numSeries;
+	private int descanso;
+	private String foto;
 	
 	public Ejercicio() {
 		

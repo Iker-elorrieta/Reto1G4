@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Controlador.Controlador;
 import Modelo.Ejercicio;
+import Modelo.Series;
 import Modelo.Workout;
 
 import javax.swing.JScrollPane;
@@ -36,6 +37,8 @@ public class ListadoEjercicios extends JFrame {
 	private DefaultTableModel modeloTabla;
 	private JTable table;
 	private ArrayList<Ejercicio> listaEjercicios = new ArrayList<>();
+	private ArrayList<Series> listaSeries = new ArrayList<>();
+
 
 	/**
 	 * Launch the application.
@@ -120,6 +123,7 @@ public class ListadoEjercicios extends JFrame {
 		contentPane.add(scrollPane);
 		
 		listadoEjercicios(controlador, idEjercicio);
+		listadoSeries(controlador, idEjercicio);
 		
 		//Boton volver
 		JButton btnVolver = new JButton("Volver");
@@ -194,6 +198,10 @@ public class ListadoEjercicios extends JFrame {
 		    } else {
 		        System.out.println("No hay workouts disponibles.");
 		    }
-		
 	}
+		
+		 public void listadoSeries(Controlador controlador, String idEjercicio) throws Exception {
+		    	listaSeries = controlador.listarSeries(idEjercicio);
+		    	System.out.println(listaSeries);
+		    }
 }

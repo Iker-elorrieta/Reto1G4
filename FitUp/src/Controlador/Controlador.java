@@ -2,10 +2,7 @@ package Controlador;
 
 import java.util.ArrayList;
 
-import Modelo.Gestor;
-import Modelo.Ejercicio;
-import Modelo.Usuario;
-import Modelo.Workout;
+import Modelo.*;
 
 public class Controlador {
 	Gestor gestor1 = new Gestor();
@@ -32,7 +29,9 @@ public class Controlador {
 		return gestor1.listarEjercicios(idEjercicio);
 	}
 
-
+	public ArrayList<Series> listarSeries(String idEjercicio) throws Exception {
+		return gestor1.listarSeries(idEjercicio);
+	}
 	public void modificarUsuario(Usuario usuario) throws Exception {
 		Gestor gestor = new Gestor();
 		gestor.modificarUsuario(usuario);		

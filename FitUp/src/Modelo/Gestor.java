@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.cloud.FirestoreClient;
 
 
 
@@ -50,7 +54,6 @@ public class Gestor {
 	}
 	
 	
-
 
 	public ArrayList<Workout> listarworkouts() throws Exception {
 
@@ -199,6 +202,42 @@ public class Gestor {
 		    
 		   
 		    db.close();	*/	
+	}
+	
+	public ArrayList<Series> listarSeries( String idEjercicio) throws Exception {
+	    ArrayList<Series> series = new ArrayList<>();
+
+		
+	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
+	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance()
+	        .toBuilder()
+	        .setProjectId("fitup-8e726")
+	        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	        .build();
+
+	    Firestore db = firestoreOptions.getService();
+
+	    ApiFuture<QuerySnapshot> future = db.collection("workouts")
+	        .document(idEjercicio)
+	        .collection("ejercicios").document().collection("series")
+	        .get();
+	    
+	    QuerySnapshot querySnapshot = future.get();
+	    List<QueryDocumentSnapshot> documentos = querySnapshot.getDocuments();
+
+	    for (QueryDocumentSnapshot doc : documentos) {
+	        Series serieAnadir = new Series();
+	        serieAnadir.setId(doc.getId());
+	        serieAnadir.setNombre(doc.getString("duracion"));
+	        serieAnadir.setNumSeries(doc.getDouble("repeticiones").intValue());
+
+	        series.add(serieAnadir);
+	        System.out.println(series);
+	    }
+
+	    db.close();
+	    return series;
+		    
 	}
 
 

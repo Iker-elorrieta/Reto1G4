@@ -7,6 +7,7 @@ import java.awt.event.FocusEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import Backups.DatosWorkout;
 import Controlador.Controlador;
 
 import Modelo.*;
@@ -143,6 +144,9 @@ public class InicioSesion extends JFrame {
 			
 					if (controlador.inicioSesion(usuario1)) {
 					this.setVisible(false);
+					DatosWorkout hilos = new DatosWorkout();
+	            	Thread hilo = new Thread(hilos);
+	            	hilo.start();
 					ListadoWorkouts nuevo = new ListadoWorkouts(controlador);
 					nuevo.setVisible(true);
 					}else {

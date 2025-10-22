@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Backups.DatosWorkout;
 import Controlador.Controlador;
 
 import javax.swing.JLabel;
@@ -162,7 +163,7 @@ public class ListadoWorkouts extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
+				
 					ListadoWorkouts.this.dispose();
                     ejercicios.setVisible(true);
                     listaWorkouts.clear();
