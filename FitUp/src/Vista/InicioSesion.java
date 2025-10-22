@@ -136,7 +136,7 @@ public class InicioSesion extends JFrame {
 					
 			} else {
 				try {
-					usuario usuario1 = new usuario();
+					Usuario usuario1 = new Usuario();
 					usuario1.setCorreo(correo);
 					usuario1.setContraseña(contraseña);
 					 
@@ -210,4 +210,6 @@ public class InicioSesion extends JFrame {
 			return false;
 		return true;
 	}
+	
+
 }

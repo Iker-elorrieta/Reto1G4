@@ -22,7 +22,7 @@ public class ModificarUsuario extends JFrame {
 	private JTextField textApellido2;
 	private JTextField textContraseña;
 	private JTextField textFechaNac;
-	usuario usuario = new usuario();
+	Usuario usuario = new Usuario();
 	
 
 

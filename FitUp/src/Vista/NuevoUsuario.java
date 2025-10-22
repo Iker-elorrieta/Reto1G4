@@ -23,8 +23,9 @@ public class NuevoUsuario extends JFrame {
 	private JTextField textCorreo;
 	private JTextField textContraseña;
 	private JTextField textFechaNac;
-	usuario usuario = new usuario();
 	
+	Usuario usuario = new Usuario();
+
 
 
 	

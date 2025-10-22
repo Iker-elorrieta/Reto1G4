@@ -1,7 +1,6 @@
 package Modelo;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +13,11 @@ import com.google.cloud.firestore.*;
 
 
 public class Gestor {
-	 usuario datos = new usuario();
-	ArrayList<workout> workouts = new ArrayList<>();
-	workout workoutAnadir = new workout();
-	ArrayList<ejercicio> ejercicios = new ArrayList<>();
-	public boolean inicioSesion(usuario usuario) throws Exception {
+	 Usuario datos = new Usuario();
+	ArrayList<Workout> workouts = new ArrayList<>();
+	Workout workoutAnadir = new Workout();
+	ArrayList<Ejercicio> ejercicios = new ArrayList<>();
+	public boolean inicioSesion(Usuario usuario) throws Exception {
 		FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 		FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder().setProjectId("fitup-8e726")
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
@@ -53,7 +52,7 @@ public class Gestor {
 	
 
 
-	public ArrayList<workout> listarworkouts() throws Exception {
+	public ArrayList<Workout> listarworkouts() throws Exception {
 
 	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance()
@@ -71,7 +70,7 @@ public class Gestor {
 	    List<QueryDocumentSnapshot> workouts1 = querySnapShot.getDocuments();
 
 	    for (QueryDocumentSnapshot worko : workouts1) {
-	    	workout workoutAnadir = new workout();
+	    	Workout workoutAnadir = new Workout();
 
 
 	            
@@ -91,7 +90,7 @@ public class Gestor {
 
 	
 	
-	public void nuevoUsuario(usuario usuario) throws Exception {
+	public void nuevoUsuario(Usuario usuario) throws Exception {
 	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
 	            .setProjectId("fitup-8e726")
@@ -131,8 +130,8 @@ public class Gestor {
 
 
 
-	public ArrayList<ejercicio> listarEjercicios(String idEjercicio) throws Exception {
-	    ArrayList<ejercicio> ejercicios = new ArrayList<>();
+	public ArrayList<Ejercicio> listarEjercicios(String idEjercicio) throws Exception {
+	    ArrayList<Ejercicio> ejercicios = new ArrayList<>();
 
 	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance()
@@ -152,7 +151,7 @@ public class Gestor {
 	    List<QueryDocumentSnapshot> documentos = querySnapshot.getDocuments();
 
 	    for (QueryDocumentSnapshot doc : documentos) {
-	        ejercicio ejercicioAnadir = new ejercicio();
+	        Ejercicio ejercicioAnadir = new Ejercicio();
 	        ejercicioAnadir.setId(doc.getId());
 	        ejercicioAnadir.setNombre(doc.getString("nombre"));
 	        ejercicioAnadir.setNumSeries(doc.getDouble("num_series").intValue());
@@ -169,7 +168,7 @@ public class Gestor {
 
 
 	//MOdificar usuario
-	public void modificarUsuario(usuario usuario) throws Exception {
+	public void modificarUsuario(Usuario usuario) throws Exception {
 		 FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 		    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
 		            .setProjectId("fitup-8e726")

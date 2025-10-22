@@ -14,8 +14,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Controlador.Controlador;
-import Modelo.ejercicio;
-import Modelo.workout;
+import Modelo.Ejercicio;
+import Modelo.Workout;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -35,7 +35,7 @@ public class ListadoEjercicios extends JFrame {
 	private JPanel contentPane;
 	private DefaultTableModel modeloTabla;
 	private JTable table;
-	private ArrayList<ejercicio> listaEjercicios = new ArrayList<>();
+	private ArrayList<Ejercicio> listaEjercicios = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -182,7 +182,7 @@ public class ListadoEjercicios extends JFrame {
 		    modeloTabla.setRowCount(0);
 		    if (!listaEjercicios.isEmpty()) {
 		        for (int i = 0; i < listaEjercicios.size(); i++) {
-		            ejercicio e = listaEjercicios.get(i);
+		            Ejercicio e = listaEjercicios.get(i);
 		            Object[] fila = { 
 		                e.getNombre(), 
 		                e.getNumSeries(), 

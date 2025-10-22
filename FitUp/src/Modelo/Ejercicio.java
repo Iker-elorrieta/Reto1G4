@@ -1,16 +1,16 @@
 package Modelo;
 
-public class ejercicio extends workout {
+public class Ejercicio extends Workout {
 	
 	String nombre;
 	int numSeries;
 	int descanso;
 	String foto;
 	
-	public ejercicio() {
+	public Ejercicio() {
 		
 	}
-	public ejercicio(String nombre, int numEjercicios, int nivel, String uRL, String nombre2, int numSeries,
+	public Ejercicio(String nombre, int numEjercicios, int nivel, String uRL, String nombre2, int numSeries,
 			int descanso, String foto) {
 		super(nombre, numEjercicios, nivel, uRL);
 		nombre = nombre2;
