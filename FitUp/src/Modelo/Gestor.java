@@ -190,13 +190,13 @@ public class Gestor {
 		    	 if(!usuario.getApellido1().isEmpty() && usuario.getCorreo().equals(query)) {
 					    usuMap.put("apellido1", usuario.getApellido1());
 		    	 }
-		    	 if(!usuario.getApellido2().isEmpty()) {
+		    	 if(!usuario.getApellido2().isEmpty() && usuario.getCorreo().equals(query)) {
 					    usuMap.put("apellido2", usuario.getApellido2());
 		    	 } 
-		    	 if(!usuario.getContraseña().isEmpty()) {
+		    	 if(!usuario.getContraseña().isEmpty() && usuario.getCorreo().equals(query)) {
 					    usuMap.put("contraseña", usuario.getContraseña());
 		    	 }
-		    	 if(!usuario.getFechaNac().isEmpty()) {
+		    	 if(!usuario.getFechaNac().isEmpty() && usuario.getCorreo().equals(query)) {
 					    usuMap.put("fechaNac", usuario.getFechaNac());
 		    	 }
 		    	 usuMod.getReference().update(usuMap); 
