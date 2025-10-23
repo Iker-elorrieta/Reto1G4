@@ -25,8 +25,11 @@ public class Controlador {
 	}
 	
 	public void nuevoUsuario(Usuario usuario) throws Exception {
-			gestor1.nuevoUsuario(usuario);
-		
+		gestor1.nuevoUsuario(usuario);
+	}
+
+	public boolean correoExiste(String correo) throws Exception {
+	    return gestor1.correoExiste(correo);
 	}
 
 

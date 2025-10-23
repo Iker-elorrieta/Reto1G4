@@ -215,6 +215,7 @@ public class NuevoUsuario extends JFrame {
 
 		    lblVacio.setVisible(false); // Ocultar aviso inicial
 	    	boolean terminado = false;
+	    	boolean correoValido = false;
 
 		    do {
 		    boolean todosVacios = (nombre.isEmpty() || nombre.equals("Introduzca su nombre...")) ||
@@ -240,40 +241,47 @@ public class NuevoUsuario extends JFrame {
 
 		    else if (!soloTexto(apellido2)) {
 		        setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
-		    }
+		        
+		    } else
+				try {
+					if (!correoValido(correo, controlador)) {
+					    setPlaceholder(textCorreo, "Formato de correo incorrecto o ya registrado", Color.RED);
+					}
+					
+					else if (!contraseñaValida(contraseña)) {
+					    setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
+					}
 
-		    else if (!correoValido(correo)) {
-		        setPlaceholder(textCorreo, "Formato de correo incorrecto", Color.RED);
-		    }
+					else if (!fechaValida(fechaNac)) {
+					    setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
+					}else {
 
-		    else if (!contraseñaValida(contraseña)) {
-		        setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
-		    }
+					
+					usuario.setNombre(nombre);
+					usuario.setApellido1(apellido1);
+					usuario.setApellido2(apellido2);
+					usuario.setContraseña(contraseña);
+					usuario.setCorreo(correo);
+					usuario.setFechaNac(fechaNac);
+					usuario.setNivel(0);
+					
+					terminado = true;
+					try {
+					    controlador.nuevoUsuario(usuario);
+					} catch (Exception e1) {
+					    e1.printStackTrace();
+					}
 
-		    else if (!fechaValida(fechaNac)) {
-		        setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
-		    }else {
+					this.setVisible(false);
+					Inicio nuevo = new Inicio("Usuario registrado con éxito", controlador);
+					nuevo.setVisible(true);
+					}
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
-		    
-		    usuario.setNombre(nombre);
-		    usuario.setApellido1(apellido1);
-		    usuario.setApellido2(apellido2);
-		    usuario.setContraseña(contraseña);
-		    usuario.setCorreo(correo);
-		    usuario.setFechaNac(fechaNac);
-		    usuario.setNivel(0);
-		    
-		    terminado = true;
-		    try {
-		        controlador.nuevoUsuario(usuario);
-		    } catch (Exception e1) {
-		        e1.printStackTrace();
-		    }
-
-		    this.setVisible(false);
-		    Inicio nuevo = new Inicio("Usuario registrado con éxito", controlador);
-		    nuevo.setVisible(true);
-		    }
+				
 		    }}while(terminado = false);});
 
 
@@ -297,22 +305,27 @@ public class NuevoUsuario extends JFrame {
 		return true;
 	}
 
-	private boolean correoValido(String email) {
-		if (email == null || email.isBlank())
-			return false;
-		int atIndex = email.indexOf('@');
-		int lastAtIndex = email.lastIndexOf('@');
-		if (atIndex <= 0 || atIndex != lastAtIndex)
-			return false;
-		String localPart = email.substring(0, atIndex);
-		String domainPart = email.substring(atIndex + 1);
-		if (localPart.isEmpty() || domainPart.isEmpty())
-			return false;
-		if (!domainPart.contains(".") || domainPart.startsWith(".") || domainPart.endsWith("."))
-			return false;
-		if (email.contains(" "))
-			return false;
-		return true;
+	private boolean correoValido(String email, Controlador controlador) throws Exception {
+	    if (email == null || email.isBlank()) return false;
+
+	    // Validación de formato
+	    int atIndex = email.indexOf('@');
+	    int lastAtIndex = email.lastIndexOf('@');
+	    if (atIndex <= 0 || atIndex != lastAtIndex) return false;
+
+	    String localPart = email.substring(0, atIndex);
+	    String domainPart = email.substring(atIndex + 1);
+	    if (localPart.isEmpty() || domainPart.isEmpty()) return false;
+	    if (!domainPart.contains(".") || domainPart.startsWith(".") || domainPart.endsWith(".")) return false;
+	    if (email.contains(" ")) return false;
+
+	    // Validación de correo ya registrado
+	    if (controlador.correoExiste(email)) {
+	        setPlaceholder(textCorreo, "Correo ya registrado", Color.RED);
+	        return false;
+	    }
+
+	    return true;
 	}
 
 	 public static void setPlaceholder(JTextField field, String placeholder, Color color) {

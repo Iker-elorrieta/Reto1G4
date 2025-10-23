@@ -114,34 +114,51 @@ public class Gestor {
 	    Firestore db = firestoreOptions.getService();
 
 	    CollectionReference usus = db.collection("usuarios");
-
-	    // Obtener el documento con mayor ID
+	    
 	    ApiFuture<QuerySnapshot> query = usus.get();
 	    List<QueryDocumentSnapshot> documentos = query.get().getDocuments();
-
-	    int nuevoId = 100; 
-	    for (QueryDocumentSnapshot doc : documentos) {
-	        int idActual = Integer.parseInt(doc.getId());
-	        if (idActual >= nuevoId) {
-	            nuevoId = idActual + 100; 
-	        }
-	    }
-
 	    
-	    DocumentReference usuNew = usus.document(String.valueOf(nuevoId));
+        	// Obtener el documento con mayor ID
+    	    int nuevoId = 100; 
+    	    for (QueryDocumentSnapshot doc : documentos) {
+    	        int idActual = Integer.parseInt(doc.getId());
+    	        if (idActual >= nuevoId) {
+    	            nuevoId = idActual + 100; 
+    	        }
+    	    }
 
-	    Map<String, Object> usuMap = new HashMap<>();
-	    usuMap.put("nombre", usuario.getNombre());
-	    usuMap.put("apellido1", usuario.getApellido1());
-	    usuMap.put("apellido2", usuario.getApellido2());
-	    usuMap.put("correo", usuario.getCorreo());
-	    usuMap.put("contraseña", usuario.getContraseña());
-	    usuMap.put("nivel", usuario.getNivel());
-	    usuMap.put("fechaNac", usuario.getFechaNac());
+    	    
+    	    DocumentReference usuNew = usus.document(String.valueOf(nuevoId));
 
-	    usuNew.set(usuMap); 
-	    db.close();
+    	    Map<String, Object> usuMap = new HashMap<>();
+    	    usuMap.put("nombre", usuario.getNombre());
+    	    usuMap.put("apellido1", usuario.getApellido1());
+    	    usuMap.put("apellido2", usuario.getApellido2());
+    		usuMap.put("correo", usuario.getCorreo());
+    	    usuMap.put("contraseña", usuario.getContraseña());
+    	    usuMap.put("nivel", usuario.getNivel());
+    	    usuMap.put("fechaNac", usuario.getFechaNac());
+
+    	    usuNew.set(usuMap); 
+    	    db.close();
+
 	}
+	
+	public boolean correoExiste(String correo) throws Exception {
+	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
+	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+	            .setProjectId("fitup-8e726")
+	            .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
+	    Firestore db = firestoreOptions.getService();
+
+	    CollectionReference usus = db.collection("usuarios");
+	    ApiFuture<QuerySnapshot> query = usus.whereEqualTo("correo", correo).get();
+
+	    boolean existe = !query.get().isEmpty();
+	    db.close();
+	    return existe;
+	}
+
 
 
 
