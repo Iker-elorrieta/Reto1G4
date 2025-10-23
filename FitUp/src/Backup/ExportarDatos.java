@@ -24,14 +24,19 @@ public class ExportarDatos {
 	 public static void main(String[] args) {
 	        try {
 	            ExportarDatos exportador = new ExportarDatos();
-	            exportador.exportarDatosAFirebase();
+	            exportador.exportarDatos();
 	            System.out.println("Exportación finalizada correctamente.");
+	            
+	            CrearXML xmlCreator = new CrearXML();
+	            xmlCreator.generarXML();
+	            System.out.println("Generación de XML finalizada correctamente.");
+	            
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
 	    }
 	 
-	 public void exportarDatosAFirebase() throws Exception {
+	 public void exportarDatos() throws Exception {
 	        FileInputStream serviceAccount = new FileInputStream("fitUp.json");
 	        FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
 	                .setProjectId("fitup-8e726")
@@ -85,7 +90,7 @@ public class ExportarDatos {
 
 	            for (QueryDocumentSnapshot ejDoc : ejerciciosDocs) {
 	                Ejercicio ej = new Ejercicio();
-	                ej.setId(ejDoc.getId());
+	                ej.setId(Integer.parseInt(ejDoc.getId()));
 	                ej.setNombre(ejDoc.getString("nombre"));
 
 	                Double numSeriesDouble = ejDoc.getDouble("num_series");

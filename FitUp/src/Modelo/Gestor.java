@@ -185,7 +185,7 @@ public class Gestor {
 
 	    for (QueryDocumentSnapshot doc : documentos) {
 	        Ejercicio ejercicioAnadir = new Ejercicio();
-	        ejercicioAnadir.setId(doc.getId());
+	        ejercicioAnadir.setId(Integer.parseInt(doc.getId()));
 	        ejercicioAnadir.setNombre(doc.getString("nombre"));
 	        ejercicioAnadir.setNumSeries(doc.getDouble("num_series").intValue());
 	        ejercicioAnadir.setDescanso(doc.getDouble("descanso").intValue());
@@ -302,8 +302,8 @@ public class Gestor {
 	    for (QueryDocumentSnapshot doc : documentos) {
 	        Series serieAnadir = new Series();
 	        serieAnadir.setId(doc.getId());
-	        serieAnadir.setNombre(doc.getString("duracion"));
-	        serieAnadir.setNumSeries(doc.getDouble("repeticiones").intValue());
+	        serieAnadir.setDuracion(Integer.parseInt(doc.getString("duracion")));
+	        serieAnadir.setRepeticiones(doc.getDouble("repeticiones").intValue());
 
 	        series.add(serieAnadir);
 	        System.out.println(series);

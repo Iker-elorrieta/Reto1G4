@@ -219,6 +219,8 @@ public class ModificarUsuario extends JFrame {
 
 		    if (!contraseña.isEmpty() && !contraseña.equals("Introduce tu contraseña...") && !contraseñaValida(contraseña)) {
 		        setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
+		        lblMsgError.setVisible(true);
+		    	lblMsgError.setText("Formato de contraseña incorrecto");
 		        error = true;
 		    }
 
@@ -274,7 +276,7 @@ public class ModificarUsuario extends JFrame {
 			this.setVisible(false);
 			ListadoWorkouts nuevo = null;
 			try {
-				nuevo = new ListadoWorkouts(controlador);
+				nuevo = new ListadoWorkouts(controlador, "");
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

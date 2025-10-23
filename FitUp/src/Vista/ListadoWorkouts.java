@@ -43,7 +43,7 @@ public class ListadoWorkouts extends JFrame {
 	 * Create the frame.
 	 * @throws Exception 
 	 */
-	public ListadoWorkouts(Controlador controlador) throws Exception {
+	public ListadoWorkouts(Controlador controlador, String backupExito) throws Exception {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 648, 478);
         
@@ -138,13 +138,6 @@ public class ListadoWorkouts extends JFrame {
 		
 		agregarWorkout(controlador);
 		
-		controlador.ejecutarExportacion();
-
-		if(controlador.ejecutarExportacion() == true) {
-			System.out.println("Backup ejecutado con exito");
-		} else {
-			System.out.println("Error al ejecutar el backup");
-		}
 
 		table.addMouseListener(new MouseAdapter() {
             @Override
@@ -212,8 +205,20 @@ public class ListadoWorkouts extends JFrame {
         btnModificar.setFocusPainted(false);
         btnModificar.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
         btnModificar.setBackground(new Color(50, 50, 50));
-        btnModificar.setBounds(180, 26, 109, 30);
+        btnModificar.setBounds(185, 26, 109, 30);
         contentPane.add(btnModificar);
+        
+        JLabel lblBackupExito = new JLabel("");
+        lblBackupExito.setBounds(35, 67, 259, 14);
+        contentPane.add(lblBackupExito);
+        if(backupExito.equals("Backup y xml creados con éxito")) {
+            lblBackupExito.setText(backupExito);
+            lblBackupExito.setForeground(Color.GREEN);
+
+		} else {
+			lblBackupExito.setText(backupExito);
+			lblBackupExito.setForeground(Color.RED);
+		}
         
         btnModificar.addActionListener( e-> {
         	this.setVisible(false);

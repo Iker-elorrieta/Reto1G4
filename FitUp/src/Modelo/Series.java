@@ -2,25 +2,40 @@ package Modelo;
 
 import java.io.Serializable;
 
-public class Series extends Ejercicio implements Serializable{
+public class Series  implements Serializable{
 
 	/**
 	 * 
 	 */
+	private String id;
 	private int duracion;
 	private int repeticiones;
 	
 	public Series() {
-		super();
 	}
 	
-	public Series(String nombre, int numEjercicios, int nivel, String uRL, String nombre2, int numSeries, int descanso,
-			String foto, int duracion, int repeticiones) {
-		super(nombre, numEjercicios, nivel, uRL, nombre2, numSeries, descanso, foto);
+	
+	
+	public Series(String id, int duracion, int repeticiones) {
+		super();
+		this.id = id;
 		this.duracion = duracion;
 		this.repeticiones = repeticiones;
 	}
-	
+
+
+	public String getId() {
+		return id;
+	}
+
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
+
 	public int getDuracion() {
 		return duracion;
 	}

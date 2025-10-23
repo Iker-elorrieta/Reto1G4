@@ -81,7 +81,7 @@ public class ListadoEjercicios extends JFrame {
 
 		// Tabla
 
-		String[] columnas = { "Nombre", "Nº series", "Descanso", "Foto" };
+		String[] columnas = { "Nombre", "Nº series", "Descanso" };
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -171,7 +171,7 @@ public class ListadoEjercicios extends JFrame {
 			this.setVisible(false);
 			ListadoWorkouts listado = null;
 			try {
-				listado = new ListadoWorkouts(controlador);
+				listado = new ListadoWorkouts(controlador, "");
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

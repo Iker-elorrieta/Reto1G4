@@ -27,9 +27,6 @@ public class NuevoUsuario extends JFrame {
 	Usuario usuario = new Usuario();
 
 
-
-	
-
 	public NuevoUsuario(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 648, 478);
@@ -215,7 +212,6 @@ public class NuevoUsuario extends JFrame {
 
 		    lblVacio.setVisible(false); // Ocultar aviso inicial
 	    	boolean terminado = false;
-	    	boolean correoValido = false;
 
 		    do {
 		    boolean todosVacios = (nombre.isEmpty() || nombre.equals("Introduzca su nombre...")) ||
@@ -249,6 +245,8 @@ public class NuevoUsuario extends JFrame {
 					}
 					
 					else if (!contraseñaValida(contraseña)) {
+						lblVacio.setText("Formato de contraseña incorrecto");
+					    lblVacio.setVisible(true);
 					    setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
 					}
 

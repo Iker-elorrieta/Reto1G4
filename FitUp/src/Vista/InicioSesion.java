@@ -129,8 +129,8 @@ public class InicioSesion extends JFrame {
 			String correo = textFieldCorreo.getText().trim();
 			String contraseña = new String(textFieldContraseña.getPassword()).trim();
 
-			if (correo.trim().isEmpty() || contraseña.trim().isEmpty()) {
-				System.out.println("Rellena ambos campos");
+			if (correo.equals(phUsuario) || contraseña.equals(phContraseña)) {
+				lblError.setText("Rellena ambos campos");
 			} else if ((!correoValido(correo) || !contraseñaValida(contraseña))) {
 					lblError.setText("Correo o contraseña no encontrado");
 					
@@ -142,11 +142,19 @@ public class InicioSesion extends JFrame {
 					 
 			
 					if (controlador.inicioSesion(usuario1)) {
-						this.setVisible(false);
-						ListadoWorkouts nuevo = new ListadoWorkouts(controlador);
-						nuevo.setVisible(true);
+						controlador.ejecutarExportacion();
+						if(controlador.ejecutarExportacion() == true) {
+							this.setVisible(false);
+							ListadoWorkouts nuevo = new ListadoWorkouts(controlador, "Backup y xml creados con éxito");
+							nuevo.setVisible(true);
+						} else {
+							this.setVisible(false);
+							ListadoWorkouts nuevo = new ListadoWorkouts(controlador, "Fallo en la creación del backup y xml");
+							nuevo.setVisible(true);
+							}
+						
 					}else {
-						System.out.println("Incorrectos");
+						lblError.setText("Correo o contraseña incorrectos");
 						}
 					}catch(Exception e1) {
 				e1.printStackTrace();
