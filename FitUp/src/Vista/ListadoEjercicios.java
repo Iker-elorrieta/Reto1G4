@@ -123,7 +123,6 @@ public class ListadoEjercicios extends JFrame {
 		contentPane.add(scrollPane);
 		
 		listadoEjercicios(controlador, idEjercicio);
-		listadoSeries(controlador, idEjercicio);
 		
 		//Boton volver
 		JButton btnVolver = new JButton("Volver");
@@ -200,8 +199,4 @@ public class ListadoEjercicios extends JFrame {
 		    }
 	}
 		
-		 public void listadoSeries(Controlador controlador, String idEjercicio) throws Exception {
-		    	listaSeries = controlador.listarSeries(idEjercicio);
-		    	System.out.println(listaSeries);
-		    }
 }

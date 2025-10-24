@@ -68,7 +68,6 @@ public class Gestor {
 
 	public ArrayList<Workout> listarworkouts() throws Exception {
 
-	    // Crear una lista local para evitar acumular duplicados en la lista de instancia
 	    ArrayList<Workout> resultado = new ArrayList<>();
 
 	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
@@ -79,31 +78,27 @@ public class Gestor {
 	        .build();
 	    Firestore db = firestoreOptions.getService();
 
-	    ApiFuture<QuerySnapshot> query = db.collection("workouts")
-	        .whereEqualTo("nivel", datos.getNivel())
-	        .get();
+	    ApiFuture<QuerySnapshot> query = db.collection("workouts").get();
+	    List<QueryDocumentSnapshot> documents = query.get().getDocuments();
 
-	    QuerySnapshot querySnapShot = query.get();
-	    List<QueryDocumentSnapshot> workouts1 = querySnapShot.getDocuments();
-
-	    for (QueryDocumentSnapshot worko : workouts1) {
-	        Workout workoutAnadir = new Workout();
-
-
-	            
-	            workoutAnadir.setId(worko.getId());
-	            workoutAnadir.setNivel(worko.getDouble("nivel").intValue());
-	            workoutAnadir.setNombre(worko.getString("nombre"));
-	            workoutAnadir.setNumEjercicios(worko.getDouble("num_ejercicios").intValue());
-	            workoutAnadir.setURL(worko.getString("video"));
-
+	    for (QueryDocumentSnapshot doc : documents) {
+	        int nivelWorko = doc.getDouble("nivel").intValue();
+	        if (nivelWorko <= datos.getNivel()) {
+	            Workout workoutAnadir = new Workout();
+	            workoutAnadir.setId(doc.getId());
+	            workoutAnadir.setNivel(nivelWorko);
+	            workoutAnadir.setNombre(doc.getString("nombre"));
+	            workoutAnadir.setNumEjercicios(doc.getDouble("num_ejercicios").intValue());
+	            workoutAnadir.setURL(doc.getString("video"));
 	            resultado.add(workoutAnadir);
+	        }
 	    }
 
 	    db.close();
 
 	    return resultado;
 	}
+
 
 	
 	public void nuevoUsuario(Usuario usuario) throws Exception {
@@ -268,9 +263,7 @@ public class Gestor {
                     }
                     if (updates.containsKey("fechaNac")) {
                         datos.setFechaNac((String) updates.get("fechaNac"));
-                    }
-                   
-                        
+                    }                  
                     
                 }
 		    }
@@ -278,7 +271,9 @@ public class Gestor {
 		    db.close();
 	}
 	
-	public ArrayList<Series> listarSeries( String idEjercicio) throws Exception {
+	//Metodo que servira en un futuro para las series de los ejercicios
+	
+	/*public ArrayList<Series> listarSeries( String idEjercicio) throws Exception {
 	    ArrayList<Series> series = new ArrayList<>();
 
 		
@@ -312,7 +307,7 @@ public class Gestor {
 	    db.close();
 	    return series;
 		    
-	}
+	}*/
 	
 
 

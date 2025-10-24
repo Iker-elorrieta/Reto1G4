@@ -83,12 +83,14 @@ public class Inicio extends JFrame {
         btnNuevoUsuario.addActionListener(e -> {
         	this.setVisible(false);
         	NuevoUsuario nuevo = new NuevoUsuario(controlador1);
+        	this.dispose();
         	nuevo.setVisible(true);
         });
         
         btnInicioSesion.addActionListener(e -> {
         	this.setVisible(false);
         	InicioSesion nuevo = new InicioSesion(controlador1);
+        	this.dispose();
         	nuevo.setVisible(true);
         });
     }

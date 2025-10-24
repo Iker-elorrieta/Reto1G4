@@ -69,6 +69,7 @@ public class CrearXML {
 
 
             datosParaGuardar.add(h);
+            db.close();
         }
 
         // --- Crear XML ---

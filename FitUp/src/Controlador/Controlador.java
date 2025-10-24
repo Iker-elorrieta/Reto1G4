@@ -37,9 +37,6 @@ public class Controlador {
 		return gestor1.listarEjercicios(idEjercicio);
 	}
 
-	public ArrayList<Series> listarSeries(String idEjercicio) throws Exception {
-		return gestor1.listarSeries(idEjercicio);
-	}
 	public void modificarUsuario(Usuario usuario) throws Exception {
 			gestor1.modificarUsuario(usuario);		
 	}
