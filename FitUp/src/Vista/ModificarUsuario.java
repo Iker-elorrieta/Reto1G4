@@ -338,7 +338,7 @@ public class ModificarUsuario extends JFrame {
 		  DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	        try {
-	            LocalDate fecha2 = LocalDate.parse(fecha, formato);
+	            LocalDate.parse(fecha, formato);
 	            return true; 
 	        } catch (DateTimeParseException e) {
 	            return false; 

@@ -19,7 +19,6 @@ public class InicioSesion extends JFrame {
 
 
 
-	@SuppressWarnings("unused")
 	public InicioSesion(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 648, 478);

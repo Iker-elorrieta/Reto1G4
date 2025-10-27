@@ -1,7 +1,6 @@
 package Vista;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,8 +14,6 @@ import javax.swing.table.DefaultTableModel;
 
 import Controlador.Controlador;
 import Modelo.Ejercicio;
-import Modelo.Series;
-import Modelo.Workout;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -37,7 +34,6 @@ public class ListadoEjercicios extends JFrame {
 	private DefaultTableModel modeloTabla;
 	private JTable table;
 	private ArrayList<Ejercicio> listaEjercicios = new ArrayList<>();
-	private ArrayList<Series> listaSeries = new ArrayList<>();
 
 
 	/**
@@ -83,6 +79,11 @@ public class ListadoEjercicios extends JFrame {
 
 		String[] columnas = { "Nombre", "Nº series", "Descanso" };
 		modeloTabla = new DefaultTableModel(columnas, 0) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false; // No permitir edición directa

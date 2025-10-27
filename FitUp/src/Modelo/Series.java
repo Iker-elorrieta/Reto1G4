@@ -7,6 +7,9 @@ public class Series  implements Serializable{
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+
+	
 	private String id;
 	private int duracion;
 	private int repeticiones;

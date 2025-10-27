@@ -211,11 +211,9 @@ public class NuevoUsuario extends JFrame {
 		    String fechaNac = textFechaNac.getText().trim();
 
 		    lblVacio.setVisible(false); // Ocultar aviso inicial
-	    	boolean terminado = false;
 
-		    do {
 		    boolean todosVacios = (nombre.isEmpty() || nombre.equals("Introduzca su nombre...")) ||
-		                          (apellido1.isEmpty() || apellido1.equals("Introduzca su primer apellido..."))||
+		                          (apellido1.isEmpty() || apellido1.equals("Introduzca su primer apellido...")) ||
 		                          (apellido2.isEmpty() || apellido2.equals("Introduce tu segundo apellido...")) ||
 		                          (correo.isEmpty() || correo.equals("Introduce tu correo electrónico...")) ||
 		                          (contraseña.isEmpty() || contraseña.equals("Introduce tu contraseña...")) ||
@@ -226,69 +224,53 @@ public class NuevoUsuario extends JFrame {
 		        return; 
 		    } else {
 
+		        if (!soloTexto(nombre)) {
+		            setPlaceholder(textNombre, "Formato de texto incorrecto", Color.RED);
+		        } else if (!soloTexto(apellido1)) {
+		            setPlaceholder(textApellido1, "Formato de texto incorrecto", Color.RED);
+		        } else if (!soloTexto(apellido2)) {
+		            setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
+		        } else {
+		            try {
+		                if (!correoValido(correo, controlador)) {
+		                    setPlaceholder(textCorreo, "Formato de correo incorrecto o ya registrado", Color.RED);
+		                } else if (!contraseñaValida(contraseña)) {
+		                    lblVacio.setText("Formato de contraseña incorrecto");
+		                    lblVacio.setVisible(true);
+		                    setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
+		                } else if (!fechaValida(fechaNac)) {
+		                    setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
+		                } else {
+		                    usuario.setNombre(nombre);
+		                    usuario.setApellido1(apellido1);
+		                    usuario.setApellido2(apellido2);
+		                    usuario.setContraseña(contraseña);
+		                    usuario.setCorreo(correo);
+		                    usuario.setFechaNac(fechaNac);
+		                    usuario.setNivel(0);
 
-		    if (!soloTexto(nombre)) {
-		        setPlaceholder(textNombre, "Formato de texto incorrecto", Color.RED);
+		                    try {
+		                        controlador.nuevoUsuario(usuario);
+		                    } catch (Exception e1) {
+		                        e1.printStackTrace();
+		                    }
+
+		                    this.setVisible(false);
+		                    Inicio nuevo = new Inicio("Usuario registrado con éxito", controlador);
+		                    nuevo.setVisible(true);
+		                }
+		            } catch (Exception e1) {
+		                e1.printStackTrace();
+		            }
+		        }
 		    }
+		}); 
 
-		    else if (!soloTexto(apellido1)) {
-		        setPlaceholder(textApellido1, "Formato de texto incorrecto", Color.RED);
-		    }
-
-		    else if (!soloTexto(apellido2)) {
-		        setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
-		        
-		    } else
-				try {
-					if (!correoValido(correo, controlador)) {
-					    setPlaceholder(textCorreo, "Formato de correo incorrecto o ya registrado", Color.RED);
-					}
-					
-					else if (!contraseñaValida(contraseña)) {
-						lblVacio.setText("Formato de contraseña incorrecto");
-					    lblVacio.setVisible(true);
-					    setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
-					}
-
-					else if (!fechaValida(fechaNac)) {
-					    setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
-					}else {
-
-					
-					usuario.setNombre(nombre);
-					usuario.setApellido1(apellido1);
-					usuario.setApellido2(apellido2);
-					usuario.setContraseña(contraseña);
-					usuario.setCorreo(correo);
-					usuario.setFechaNac(fechaNac);
-					usuario.setNivel(0);
-					
-					terminado = true;
-					try {
-					    controlador.nuevoUsuario(usuario);
-					} catch (Exception e1) {
-					    e1.printStackTrace();
-					}
-
-					this.setVisible(false);
-					Inicio nuevo = new Inicio("Usuario registrado con éxito", controlador);
-					nuevo.setVisible(true);
-					}
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				
-		    }}while(terminado = false);});
-
-
-		
 		// Acción del botón Volver
-		btnVolver.addActionListener(e -> {
-			this.setVisible(false);
-			Inicio nuevo = new Inicio("",controlador);
-			nuevo.setVisible(true);
+		btnVolver.addActionListener(ex -> {
+		    this.setVisible(false);
+		    Inicio nuevo = new Inicio("", controlador);
+		    nuevo.setVisible(true);
 		});
 	}
 
@@ -368,7 +350,7 @@ public class NuevoUsuario extends JFrame {
 		  DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	        try {
-	            LocalDate fecha2 = LocalDate.parse(fecha, formato);
+	            LocalDate.parse(fecha, formato);
 	            return true; 
 	        } catch (DateTimeParseException e) {
 	            return false; 
