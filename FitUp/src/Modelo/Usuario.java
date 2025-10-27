@@ -1,16 +1,25 @@
 package Modelo;
 
-public class usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
 	
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	 int id;
 	String nombre; 
 	String apellido1;
 	String apellido2;
 	String correo;
 	String contraseña;
 	String fechaNac;
+	int nivel;
 	
-	
-	public usuario(String nombre, String apellido1, String apellido2, String correo, String contraseña, String fechaNac) {
+	public Usuario(int id, String nombre, String apellido1, String apellido2, String correo, String contraseña, String fechaNac) {
+		this.id=id;
 		this.nombre = nombre;
 		this.apellido1 = apellido1;
 		this.apellido2 = apellido2;
@@ -19,6 +28,25 @@ public class usuario {
 		this.fechaNac = fechaNac;
 	}
 
+	public Usuario() {
+		this.id = 0;
+		
+	}
+
+	public int getNivel() {
+		return nivel;
+	}
+	 public void setId(int id) {
+			this.id = id;
+		}
+
+	public void setNivel(int nivel) {
+		this.nivel = nivel;
+	}
+
+	public int getId() {
+		return id;
+	}
 
 	public String getNombre() {
 		return nombre;
@@ -79,12 +107,14 @@ public class usuario {
 		this.fechaNac = fechaNac;
 	}
 
-
 	@Override
 	public String toString() {
-		return "usuario [nombre=" + nombre + ", apellido1=" + apellido1 + ", apellido2=" + apellido2 + ", correo="
-				+ correo + ", contraseña=" + contraseña + ", fechaNac=" + fechaNac + "]";
+		return "usuario [id=" + id + ", nombre=" + nombre + ", apellido1=" + apellido1 + ", apellido2=" + apellido2
+				+ ", correo=" + correo + ", contraseña=" + contraseña + ", fechaNac=" + fechaNac + ", nivel=" + nivel
+				+ "]";
 	}
+
+
 	
 	
 	

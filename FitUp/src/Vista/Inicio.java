@@ -5,24 +5,17 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import Controlador.Controlador;
+
 public class Inicio extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     BufferedImage mImagen = null;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                Inicio frame = new Inicio(null);
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+    
 
-    public Inicio(String registrado) {
+    public Inicio(String registrado,Controlador controlador1) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 648, 478);
 
@@ -89,13 +82,15 @@ public class Inicio extends JFrame {
         
         btnNuevoUsuario.addActionListener(e -> {
         	this.setVisible(false);
-        	NuevoUsuario nuevo = new NuevoUsuario();
+        	NuevoUsuario nuevo = new NuevoUsuario(controlador1);
+        	this.dispose();
         	nuevo.setVisible(true);
         });
         
         btnInicioSesion.addActionListener(e -> {
         	this.setVisible(false);
-        	InicioSesion nuevo = new InicioSesion();
+        	InicioSesion nuevo = new InicioSesion(controlador1);
+        	this.dispose();
         	nuevo.setVisible(true);
         });
     }
