@@ -4,10 +4,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
@@ -57,7 +59,9 @@ public class ExportarDatos {
 	            u.setApellido2(doc.getString("apellido2"));
 	            u.setCorreo(doc.getString("correo"));
 	            u.setContraseña(doc.getString("contraseña"));
-	            u.setFechaNac(doc.getString("fechaNac"));
+	            Timestamp timestamp = doc.getTimestamp("fechaNac");
+	            Date fecha = timestamp != null ? timestamp.toDate() : null;
+	            u.setFechaNac(fecha);
 	            Double nivelDouble = doc.getDouble("nivel");
 	            u.setNivel(nivelDouble != null ? nivelDouble.intValue() : 0);
 	            datosParaGuardar.add(u);

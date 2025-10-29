@@ -3,6 +3,7 @@ package Modelo;
 import java.io.FileInputStream;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.*;
 
 
@@ -235,7 +237,7 @@ public class Gestor {
 		        if (usuario.getContraseña() != null && !usuario.getContraseña().isEmpty()) {
 		            updates.put("contraseña", usuario.getContraseña());
 		        }
-		        if (usuario.getFechaNac() != null && !usuario.getFechaNac().isEmpty()) {
+		        if (usuario.getFechaNac() != null) {
 		            updates.put("fechaNac", usuario.getFechaNac());
 		        }
 		        
@@ -257,7 +259,10 @@ public class Gestor {
                         datos.setContraseña((String) updates.get("contraseña"));
                     }
                     if (updates.containsKey("fechaNac")) {
-                        datos.setFechaNac((String) updates.get("fechaNac"));
+                    	Timestamp timestamp = (Timestamp) updates.get("fechaNac");
+                    	Date fecha = timestamp.toDate();
+                    	datos.setFechaNac(fecha);
+
                     }                  
                     
                 }

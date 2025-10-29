@@ -6,9 +6,12 @@ import java.awt.event.FocusEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import com.google.cloud.Timestamp;
 
 import Controlador.Controlador;
 import Modelo.*;
@@ -252,8 +255,11 @@ public class ModificarUsuario extends JFrame {
 		    }
 
 		    if (!fechaNac.isEmpty() && !fechaNac.equals("Introduce tu fecha de nacimiento") && fechaValida(fechaNac)) {
-			    usuario.setFechaNac(fechaNac);
-		    }
+		    	DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		        LocalDate fechaLocal = LocalDate.parse(fechaNac, formato);
+		        Date fechaNacDate = java.sql.Date.valueOf(fechaLocal);
+		    	usuario.setFechaNac(fechaNacDate);
+		    	}
 
 		    try {
 		        // asegurar que el correo del usuario a modificar está establecido

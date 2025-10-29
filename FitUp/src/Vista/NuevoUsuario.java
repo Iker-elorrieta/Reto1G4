@@ -6,6 +6,7 @@ import java.awt.event.FocusEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -238,15 +239,20 @@ public class NuevoUsuario extends JFrame {
 		                    lblVacio.setText("Formato de contraseña incorrecto");
 		                    lblVacio.setVisible(true);
 		                    setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
-		                } else if (!fechaValida(fechaNac)) {
-		                    setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
+		                } else if (!formatoFechaValido(fechaNac)) {
+		                    setPlaceholder(textFechaNac, "Formato de fecha incorrecto (dd/MM/yyyy)", Color.RED);
+		                } else if (!fechaNoFutura(fechaNac)) {
+		                    setPlaceholder(textFechaNac, "La fecha no puede ser posterior a hoy", Color.RED);
 		                } else {
 		                    usuario.setNombre(nombre);
 		                    usuario.setApellido1(apellido1);
 		                    usuario.setApellido2(apellido2);
 		                    usuario.setContraseña(contraseña);
 		                    usuario.setCorreo(correo);
-		                    usuario.setFechaNac(fechaNac);
+		                    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		    		        LocalDate fechaLocal = LocalDate.parse(fechaNac, formato);
+		    		        Date fechaNacDate = java.sql.Date.valueOf(fechaLocal);
+		    		    	usuario.setFechaNac(fechaNacDate);
 		                    usuario.setNivel(0);
 
 		                    try {
@@ -345,15 +351,21 @@ public class NuevoUsuario extends JFrame {
 		return hasUpper && hasDigit;
 	}
 	
-	private boolean fechaValida(String fecha) {
-		
-		  DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-	        try {
-	            LocalDate.parse(fecha, formato);
-	            return true; 
-	        } catch (DateTimeParseException e) {
-	            return false; 
-	        }
+	private boolean formatoFechaValido(String fecha) {
+	    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    try {
+	        LocalDate.parse(fecha, formato);
+	        return true;
+	    } catch (DateTimeParseException e) {
+	        return false;
+	    }
 	}
+
+	private boolean fechaNoFutura(String fecha) {
+	    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    LocalDate fechaNacimiento = LocalDate.parse(fecha, formato);
+	    return !fechaNacimiento.isAfter(LocalDate.now());
+	}
+
+
 }

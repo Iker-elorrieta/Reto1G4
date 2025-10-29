@@ -1,10 +1,12 @@
 package Modelo;
 
+import java.util.Date;
+
 public class Historico {
 
 	private int id;
 	private int completado; 
-	private String fecha;
+	private Date fecha;
 	private int tiempoTotal;
 	private Usuario usuario;
 	private Workout workout;
@@ -12,7 +14,7 @@ public class Historico {
 	
 	public Historico() {}
 	
-	public Historico(int id, int completado, String fecha, int tiempoTotal, Usuario usuario, Workout workout) {
+	public Historico(int id, int completado, Date fecha, int tiempoTotal, Usuario usuario, Workout workout) {
 		this.id = id;
 		this.completado = completado;
 		this.fecha = fecha;
@@ -37,10 +39,10 @@ public class Historico {
 	public void setCompletado(int completado) {
 		this.completado = completado;
 	}
-	public String getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
-	public void setFecha(String fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 	public int getTiempoTotal() {

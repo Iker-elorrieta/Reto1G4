@@ -2,7 +2,9 @@ package Backup;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -15,6 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.*;
 import Modelo.*;
 
@@ -45,7 +48,11 @@ public class CrearXML {
             // Campos simples
             h.setId(doc.getId() != null ? Integer.parseInt(doc.getId()) : 0);
             h.setCompletado(doc.getLong("completado") != null ? doc.getLong("completado").intValue() : 0);
-            h.setFecha(doc.getString("fecha"));
+            Timestamp timestamp = doc.getTimestamp("fecha");
+            if (timestamp != null) {
+                h.setFecha(timestamp.toDate());
+            }
+
             h.setTiempoTotal(doc.getLong("tiempoTotal") != null ? doc.getLong("tiempoTotal").intValue() : 0);
 
             // Obtener usuario como objeto
@@ -104,8 +111,11 @@ public class CrearXML {
             historicoElem.appendChild(workoutElem);
 
             // Otros campos
+            Date fecha = h.getFecha();
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            String fechaStr = formato.format(fecha);
             Element fechaElem = xmlDoc.createElement("fecha");
-            fechaElem.appendChild(xmlDoc.createTextNode(h.getFecha()));
+            fechaElem.appendChild(xmlDoc.createTextNode(fechaStr));
             historicoElem.appendChild(fechaElem);
 
             Element tiempoElem = xmlDoc.createElement("tiempoTotal");
