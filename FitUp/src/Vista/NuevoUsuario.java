@@ -236,7 +236,7 @@ public class NuevoUsuario extends JFrame {
 		                if (!correoValido(correo, controlador)) {
 		                    setPlaceholder(textCorreo, "Formato de correo incorrecto o ya registrado", Color.RED);
 		                } else if (!contraseñaValida(contraseña)) {
-		                    lblVacio.setText("Formato de contraseña incorrecto");
+		                    lblVacio.setText("1 número, 1 Mayus, 1 minus MINIMO");
 		                    lblVacio.setVisible(true);
 		                    setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
 		                } else if (!formatoFechaValido(fechaNac)) {
