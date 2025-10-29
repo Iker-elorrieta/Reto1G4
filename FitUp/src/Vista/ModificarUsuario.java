@@ -11,7 +11,6 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import com.google.cloud.Timestamp;
 
 import Controlador.Controlador;
 import Modelo.*;
