@@ -85,8 +85,8 @@ public class Gestor {
 	            workoutAnadir.setId(doc.getId());
 	            workoutAnadir.setNivel(nivelWorko);
 	            workoutAnadir.setNombre(doc.getString("nombre"));
-	            workoutAnadir.setNumEjercicios(doc.getDouble("num_ejercicios").intValue());
-	            workoutAnadir.setURL(doc.getString("video"));
+	            workoutAnadir.setNum_ejercicios(doc.getDouble("num_ejercicios").intValue());
+	            workoutAnadir.setVideo(doc.getString("video"));
 	            resultado.add(workoutAnadir);
 	        }
 	    }

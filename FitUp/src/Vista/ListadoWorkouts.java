@@ -151,7 +151,7 @@ public class ListadoWorkouts extends JFrame {
                 Workout w = listaWorkouts.get(fila);
                 if (columna == 3) { // Columna URL
                    
-                    String url = w.getURL();
+                    String url = w.getVideo();
                     try {
                         Desktop.getDesktop().browse(new URI(url));
                     } catch (Exception ex) {
@@ -241,7 +241,7 @@ public class ListadoWorkouts extends JFrame {
 	       
 	        Object[] fila = {
 	            w.getNombre(),
-	            w.getNumEjercicios(),
+	            w.getNum_ejercicios(),
 	            w.getNivel(),
 	            "URL tutorial"
 	        };

@@ -7,7 +7,7 @@ import Modelo.*;
 
 public class Controlador {
 	Gestor gestor1 = new Gestor();
-	ExportarDatos backup = new ExportarDatos();
+	BackupFirebase backup = new BackupFirebase();
 
 	public boolean inicioSesion(Usuario usuario) throws Exception {
 
@@ -45,7 +45,7 @@ public class Controlador {
 	    try {
 	        String javaHome = System.getProperty("java.home") + "\\bin\\java.exe";
 	        String classpath = System.getProperty("java.class.path");
-	        String clase = "Backup.ExportarDatos"; 
+	        String clase = "Backup.BackupFirebase"; 
 	        ProcessBuilder pb = new ProcessBuilder(
 	            "cmd.exe", "/c", javaHome, "-cp", classpath, clase
 	        );

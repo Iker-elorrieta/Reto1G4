@@ -11,19 +11,19 @@ public class Workout implements Serializable {
 	private static final long serialVersionUID = 1L;
 	String id;
 	String nombre;
-	int numEjercicios;
+	int num_ejercicios;
 	int nivel;
-	String URL;
+	String video;
 	ArrayList<Ejercicio> ejercicio;
 	
 	
-	public Workout(String id, String nombre, int numEjercicios, int nivel, String uRL, ArrayList<Ejercicio> ejercicio) {
+	public Workout(String id, String nombre, int num_ejercicios, int nivel, String video, ArrayList<Ejercicio> ejercicio) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
-		this.numEjercicios = numEjercicios;
+		this.num_ejercicios = num_ejercicios;
 		this.nivel = nivel;
-		URL = uRL;
+		this.video = video;
 		this.ejercicio = ejercicio;
 	}
 	
@@ -43,24 +43,14 @@ public class Workout implements Serializable {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	public int getNumEjercicios() {
-		return numEjercicios;
-	}
-	public void setNumEjercicios(int numEjercicios) {
-		this.numEjercicios = numEjercicios;
-	}
+	
 	public int getNivel() {
 		return nivel;
 	}
 	public void setNivel(int nivel) {
 		this.nivel = nivel;
 	}
-	public String getURL() {
-		return URL;
-	}
-	public void setURL(String uRL) {
-		URL = uRL;
-	}
+	
 	public ArrayList<Ejercicio> getEjercicio() {
 		return ejercicio;
 	}
@@ -70,13 +60,31 @@ public class Workout implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
+
+	public int getNum_ejercicios() {
+		return num_ejercicios;
+	}
+
+	public void setNum_ejercicios(int num_ejercicios) {
+		this.num_ejercicios = num_ejercicios;
+	}
+
+	public String getVideo() {
+		return video;
+	}
+
+	public void setVideo(String video) {
+		this.video = video;
+	}
+
 	@Override
 	public String toString() {
-		return "Workout [id=" + id + ", nombre=" + nombre + ", numEjercicios=" + numEjercicios + ", nivel=" + nivel
-				+ ", URL=" + URL + ", ejercicio=" + ejercicio + "]";
+		return "Workout [id=" + id + ", nombre=" + nombre + ", num_ejercicios=" + num_ejercicios + ", nivel=" + nivel
+				+ ", video=" + video + ", ejercicio=" + ejercicio + "]";
 	}
+	
+	
+	
 
 	
 	
