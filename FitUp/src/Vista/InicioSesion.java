@@ -1,8 +1,7 @@
 package Vista;
 
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -72,7 +71,7 @@ public class InicioSesion extends JFrame {
 		textFieldCorreo.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textFieldCorreo);
 		String phUsuario = "Introduzca el nombre de usuario";
-		setPlaceholder(textFieldCorreo, phUsuario, Color.gray);
+		controlador.setPlaceholder(textFieldCorreo, phUsuario, Color.gray);
 
 		// Label Contraseña
 		JLabel lblContraseña = new JLabel("Contraseña:");
@@ -89,7 +88,7 @@ public class InicioSesion extends JFrame {
 		textFieldContraseña.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textFieldContraseña);
 		String phContraseña = "Introduzca su contraseña";
-		setPlaceholder(textFieldContraseña, phContraseña, Color.gray);
+		controlador.setPlaceholder(textFieldContraseña, phContraseña, Color.gray);
 
 		// Botón Iniciar sesión
 		JButton btnInicioSesion = new JButton("Iniciar sesión");
@@ -130,7 +129,7 @@ public class InicioSesion extends JFrame {
 
 			if (correo.equals(phUsuario) || contraseña.equals(phContraseña)) {
 				lblError.setText("Rellena ambos campos");
-			} else if ((!correoValido(correo) || !contraseñaValida(contraseña))) {
+			} else if ((!controlador.correoValido(correo) || !controlador.contraseñaValida(contraseña))) {
 					lblError.setText("Correo o contraseña no encontrado");
 					
 			} else {
@@ -159,62 +158,6 @@ public class InicioSesion extends JFrame {
 				e1.printStackTrace();
 			}
 		}});
-	}
-
-	public static void setPlaceholder(JTextField field, String placeholder, Color color) {
-		field.setForeground(color);
-		field.setText(placeholder);
-
-		field.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (field.getText().equals(placeholder)) {
-					field.setText("");
-					field.setForeground(Color.BLACK);
-				}
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (field.getText().isEmpty()) {
-					field.setForeground(Color.GRAY);
-					field.setText(placeholder);
-				}
-			}
-		});
-	}
-
-	private boolean contraseñaValida(String contraseña) {
-		if (contraseña == null || contraseña.isEmpty())
-			return false;
-		boolean hasUpper = false, hasDigit = false;
-		for (char c : contraseña.toCharArray()) {
-			if (Character.isUpperCase(c))
-				hasUpper = true;
-			if (Character.isDigit(c))
-				hasDigit = true;
-			if (hasUpper && hasDigit)
-				return true;
-		}
-		return hasUpper && hasDigit;
-	}
-
-	private boolean correoValido(String email) {
-		if (email == null || email.isBlank())
-			return false;
-		int atIndex = email.indexOf('@');
-		int lastAtIndex = email.lastIndexOf('@');
-		if (atIndex <= 0 || atIndex != lastAtIndex)
-			return false;
-		String localPart = email.substring(0, atIndex);
-		String domainPart = email.substring(atIndex + 1);
-		if (localPart.isEmpty() || domainPart.isEmpty())
-			return false;
-		if (!domainPart.contains(".") || domainPart.startsWith(".") || domainPart.endsWith("."))
-			return false;
-		if (email.contains(" "))
-			return false;
-		return true;
 	}
 	
 

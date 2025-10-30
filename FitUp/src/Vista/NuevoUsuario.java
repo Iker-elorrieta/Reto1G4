@@ -1,11 +1,10 @@
 package Vista;
 
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+
 import java.util.Date;
 
 import javax.swing.*;
@@ -84,7 +83,7 @@ public class NuevoUsuario extends JFrame {
 		textNombre.setForeground(Color.GRAY);
 		String placeholderNombre = ("Introduzca su nombre...");
 		contentPane.add(textNombre);
-		setPlaceholder(textNombre, placeholderNombre,Color.gray);
+		controlador.setPlaceholder(textNombre, placeholderNombre,Color.gray);
        
 
 		// Primer apellido
@@ -101,7 +100,7 @@ public class NuevoUsuario extends JFrame {
 		textApellido1.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		String placeholderApellido = ("Introduzca su primer apellido...");
 		contentPane.add(textApellido1);
-		setPlaceholder(textApellido1, placeholderApellido,Color.gray);
+		controlador.setPlaceholder(textApellido1, placeholderApellido,Color.gray);
 
 	
 		// Segundo apellido
@@ -118,7 +117,7 @@ public class NuevoUsuario extends JFrame {
 		textApellido2.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textApellido2);
 		String placeholderApellido2 = "Introduce tu segundo apellido...";
-		setPlaceholder(textApellido2, placeholderApellido2,Color.gray);
+		controlador.setPlaceholder(textApellido2, placeholderApellido2,Color.gray);
 
 
 		// Correo electrónico
@@ -135,7 +134,7 @@ public class NuevoUsuario extends JFrame {
 		textCorreo.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textCorreo);
 		String placeholderCorreo = "Introduce tu correo electrónico...";
-		setPlaceholder(textCorreo, placeholderCorreo, Color.gray);
+		controlador.setPlaceholder(textCorreo, placeholderCorreo, Color.gray);
 
 		// Contraseña
 		JLabel lblContraseña = new JLabel("Contraseña:");
@@ -151,7 +150,7 @@ public class NuevoUsuario extends JFrame {
 		textContraseña.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textContraseña);
 		String placeholdercontraseña = "Introduce tu contraseña...";
-		setPlaceholder(textContraseña, placeholdercontraseña,Color.gray);
+		controlador.setPlaceholder(textContraseña, placeholdercontraseña,Color.gray);
 
 		// Fecha de nacimiento
 		JLabel lblFechaNac = new JLabel("Fecha de nacimiento:");
@@ -167,7 +166,7 @@ public class NuevoUsuario extends JFrame {
 		textFechaNac.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textFechaNac);
 		String placeholderfecha = "Introduce tu fecha de nacimiento";
-		setPlaceholder(textFechaNac, placeholderfecha,Color.gray);
+		controlador.setPlaceholder(textFechaNac, placeholderfecha,Color.gray);
 
 
 		// Botón Registrarse
@@ -225,24 +224,24 @@ public class NuevoUsuario extends JFrame {
 		        return; 
 		    } else {
 
-		        if (!soloTexto(nombre)) {
-		            setPlaceholder(textNombre, "Formato de texto incorrecto", Color.RED);
-		        } else if (!soloTexto(apellido1)) {
-		            setPlaceholder(textApellido1, "Formato de texto incorrecto", Color.RED);
-		        } else if (!soloTexto(apellido2)) {
-		            setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
+		        if (!controlador.soloTexto(nombre)) {
+		        	controlador.setPlaceholder(textNombre, "Formato de texto incorrecto", Color.RED);
+		        } else if (!controlador.soloTexto(apellido1)) {
+		        	controlador.setPlaceholder(textApellido1, "Formato de texto incorrecto", Color.RED);
+		        } else if (!controlador.soloTexto(apellido2)) {
+		        	controlador. setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
 		        } else {
 		            try {
-		                if (!correoValido(correo, controlador)) {
-		                    setPlaceholder(textCorreo, "Formato de correo incorrecto o ya registrado", Color.RED);
-		                } else if (!contraseñaValida(contraseña)) {
+		                if (!controlador.correoValido(correo)) {
+		                	controlador.setPlaceholder(textCorreo, "Formato de correo incorrecto o ya registrado", Color.RED);
+		                } else if (!controlador.contraseñaValida(contraseña)) {
 		                    lblVacio.setText("1 número, 1 Mayus, 1 minus MINIMO");
 		                    lblVacio.setVisible(true);
-		                    setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
-		                } else if (!formatoFechaValido(fechaNac)) {
-		                    setPlaceholder(textFechaNac, "Formato de fecha incorrecto (dd/MM/yyyy)", Color.RED);
-		                } else if (!fechaNoFutura(fechaNac)) {
-		                    setPlaceholder(textFechaNac, "La fecha no puede ser posterior a hoy", Color.RED);
+		                    controlador.setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
+		                } else if (!controlador.formatoFechaValido(fechaNac)) {
+		                	controlador.setPlaceholder(textFechaNac, "Formato de fecha incorrecto (dd/MM/yyyy)", Color.RED);
+		                } else if (!controlador.fechaNoFutura(fechaNac)) {
+		                	controlador.setPlaceholder(textFechaNac, "La fecha no puede ser posterior a hoy", Color.RED);
 		                } else {
 		                    usuario.setNombre(nombre);
 		                    usuario.setApellido1(apellido1);
@@ -278,93 +277,6 @@ public class NuevoUsuario extends JFrame {
 		    Inicio nuevo = new Inicio("", controlador);
 		    nuevo.setVisible(true);
 		});
-	}
-
-	// Métodos de validación
-	private boolean soloTexto(String text) {
-		if (text == null || text.isBlank())
-			return false;
-		for (char c : text.toCharArray()) {
-			if (!Character.isLetter(c) && c != ' ')
-				return false;
-		}
-		return true;
-	}
-
-	private boolean correoValido(String email, Controlador controlador) throws Exception {
-	    if (email == null || email.isBlank()) return false;
-
-	    // Validación de formato
-	    int atIndex = email.indexOf('@');
-	    int lastAtIndex = email.lastIndexOf('@');
-	    if (atIndex <= 0 || atIndex != lastAtIndex) return false;
-
-	    String localPart = email.substring(0, atIndex);
-	    String domainPart = email.substring(atIndex + 1);
-	    if (localPart.isEmpty() || domainPart.isEmpty()) return false;
-	    if (!domainPart.contains(".") || domainPart.startsWith(".") || domainPart.endsWith(".")) return false;
-	    if (email.contains(" ")) return false;
-
-	    // Validación de correo ya registrado
-	    if (controlador.correoExiste(email)) {
-	        setPlaceholder(textCorreo, "Correo ya registrado", Color.RED);
-	        return false;
-	    }
-
-	    return true;
-	}
-
-	 public static void setPlaceholder(JTextField field, String placeholder, Color color) {
-	        field.setForeground(color);
-	        field.setText(placeholder);
-
-	        field.addFocusListener(new FocusAdapter() {
-	            @Override
-	            public void focusGained(FocusEvent e) {
-	                if (field.getText().equals(placeholder)) {
-	                    field.setText("");
-	                    field.setForeground(Color.BLACK);
-	                }
-	            }
-
-	            @Override
-	            public void focusLost(FocusEvent e) {
-	                if (field.getText().isEmpty()) {
-	                    field.setForeground(Color.GRAY);
-	                    field.setText(placeholder);
-	                }
-	            }
-	        });
-	    }
-	private boolean contraseñaValida(String contraseña) {
-		if (contraseña == null || contraseña.isEmpty())
-			return false;
-		boolean hasUpper = false, hasDigit = false;
-		for (char c : contraseña.toCharArray()) {
-			if (Character.isUpperCase(c))
-				hasUpper = true;
-			if (Character.isDigit(c))
-				hasDigit = true;
-			if (hasUpper && hasDigit)
-				return true;
-		}
-		return hasUpper && hasDigit;
-	}
-	
-	private boolean formatoFechaValido(String fecha) {
-	    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	    try {
-	        LocalDate.parse(fecha, formato);
-	        return true;
-	    } catch (DateTimeParseException e) {
-	        return false;
-	    }
-	}
-
-	private boolean fechaNoFutura(String fecha) {
-	    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	    LocalDate fechaNacimiento = LocalDate.parse(fecha, formato);
-	    return !fechaNacimiento.isAfter(LocalDate.now());
 	}
 
 

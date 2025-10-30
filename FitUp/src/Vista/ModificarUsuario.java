@@ -1,16 +1,13 @@
 package Vista;
 
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 
 import Controlador.Controlador;
 import Modelo.*;
@@ -25,10 +22,6 @@ public class ModificarUsuario extends JFrame {
 	private JTextField textContraseña;
 	private JTextField textFechaNac;
 	Usuario usuario = new Usuario();
-	
-
-
-	
 
 	public ModificarUsuario(Controlador controlador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,7 +68,7 @@ public class ModificarUsuario extends JFrame {
 		lblNombre.setForeground(Color.WHITE);
 		lblNombre.setFont(labelFont);
 		lblNombre.setBounds(47, 143, 150, 25);
-		
+
 		contentPane.add(lblNombre);
 
 		textNombre = new JTextField();
@@ -86,8 +79,7 @@ public class ModificarUsuario extends JFrame {
 		textNombre.setForeground(Color.GRAY);
 		String placeholderNombre = ("Introduzca su nombre...");
 		contentPane.add(textNombre);
-		setPlaceholder(textNombre, placeholderNombre,Color.gray);
-       
+		controlador.setPlaceholder(textNombre, placeholderNombre, Color.gray);
 
 		// Primer apellido
 		JLabel lblApellido1 = new JLabel("Primer apellido:");
@@ -103,9 +95,8 @@ public class ModificarUsuario extends JFrame {
 		textApellido1.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		String placeholderApellido = ("Introduzca su primer apellido...");
 		contentPane.add(textApellido1);
-		setPlaceholder(textApellido1, placeholderApellido,Color.gray);
+		controlador.setPlaceholder(textApellido1, placeholderApellido, Color.gray);
 
-	
 		// Segundo apellido
 		JLabel lblApellido2 = new JLabel("Segundo apellido:");
 		lblApellido2.setForeground(Color.WHITE);
@@ -120,7 +111,7 @@ public class ModificarUsuario extends JFrame {
 		textApellido2.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textApellido2);
 		String placeholderApellido2 = "Introduce tu segundo apellido...";
-		setPlaceholder(textApellido2, placeholderApellido2,Color.gray);
+		controlador.setPlaceholder(textApellido2, placeholderApellido2, Color.gray);
 
 		// Contraseña
 		JLabel lblContraseña = new JLabel("Contraseña:");
@@ -136,7 +127,7 @@ public class ModificarUsuario extends JFrame {
 		textContraseña.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textContraseña);
 		String placeholdercontraseña = "Introduce tu contraseña...";
-		setPlaceholder(textContraseña, placeholdercontraseña,Color.gray);
+		controlador.setPlaceholder(textContraseña, placeholdercontraseña, Color.gray);
 
 		// Fecha de nacimiento
 		JLabel lblFechaNac = new JLabel("Fecha de nacimiento:");
@@ -152,9 +143,7 @@ public class ModificarUsuario extends JFrame {
 		textFechaNac.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 		contentPane.add(textFechaNac);
 		String placeholderfecha = "Introduce tu fecha de nacimiento";
-		setPlaceholder(textFechaNac, placeholderfecha,Color.gray);
-
-		
+		controlador.setPlaceholder(textFechaNac, placeholderfecha, Color.gray);
 
 		// Botón Registrarse
 		JButton btnModificar = new JButton("Modificar");
@@ -181,101 +170,106 @@ public class ModificarUsuario extends JFrame {
 		lblMsgError.setBounds(262, 103, 290, 18);
 		contentPane.add(lblMsgError);
 
-
 		// Acción del botón Modificar
 		btnModificar.addActionListener(e -> {
-		    String nombre = textNombre.getText().trim();
-		    String apellido1 = textApellido1.getText().trim();
-		    String apellido2 = textApellido2.getText().trim();
-		    String contraseña = textContraseña.getText().trim();
-		    String fechaNac = textFechaNac.getText().trim();
+			String nombre = textNombre.getText().trim();
+			String apellido1 = textApellido1.getText().trim();
+			String apellido2 = textApellido2.getText().trim();
+			String contraseña = textContraseña.getText().trim();
+			String fechaNac = textFechaNac.getText().trim();
 
-		    boolean todosVacios = (nombre.isEmpty() || nombre.equals("Introduzca su nombre...")) &&
-                    (apellido1.isEmpty() || apellido1.equals("Introduzca su primer apellido...")) &&
-                    (apellido2.isEmpty() || apellido2.equals("Introduce tu segundo apellido...")) &&
-                    (contraseña.isEmpty() || contraseña.equals("Introduce tu contraseña...")) &&
-                    (fechaNac.isEmpty() || fechaNac.equals("Introduce tu fecha de nacimiento"));
-		    if (todosVacios) {
-		    	lblMsgError.setVisible(true);
-		    	lblMsgError.setForeground(Color.RED);
-		    	lblMsgError.setText("Debes modificar algún campo");
-		    	return; 
-		    	}
-		    boolean error = false;
+			boolean todosVacios = (nombre.isEmpty() || nombre.equals("Introduzca su nombre..."))
+					&& (apellido1.isEmpty() || apellido1.equals("Introduzca su primer apellido..."))
+					&& (apellido2.isEmpty() || apellido2.equals("Introduce tu segundo apellido..."))
+					&& (contraseña.isEmpty() || contraseña.equals("Introduce tu contraseña..."))
+					&& (fechaNac.isEmpty() || fechaNac.equals("Introduce tu fecha de nacimiento"));
+			if (todosVacios) {
+				lblMsgError.setVisible(true);
+				lblMsgError.setForeground(Color.RED);
+				lblMsgError.setText("Debes modificar algún campo");
+				return;
+			}
+			boolean error = false;
 
-		    if (!nombre.isEmpty() && !nombre.equals("Introduzca su nombre...") && !soloTexto(nombre)) {
-		        setPlaceholder(textNombre, "Formato de texto incorrecto", Color.RED);
-		        error = true;
-		    }
-		    	
+			if (!nombre.isEmpty() && !nombre.equals("Introduzca su nombre...") && !controlador.soloTexto(nombre)) {
+				controlador.setPlaceholder(textNombre, "Formato de texto incorrecto", Color.RED);
+				error = true;
+			}
 
-		    if (!apellido1.isEmpty() && !apellido1.equals("Introduzca su primer apellido...") && !soloTexto(apellido1)) {
-		        setPlaceholder(textApellido1, "Formato de texto incorrecto", Color.RED);
-		        error = true;
-		    }
+			if (!apellido1.isEmpty() && !apellido1.equals("Introduzca su primer apellido...")
+					&& !controlador.soloTexto(apellido1)) {
+				controlador.setPlaceholder(textApellido1, "Formato de texto incorrecto", Color.RED);
+				error = true;
+			}
 
-		    if (!apellido2.isEmpty() && !apellido2.equals("Introduce tu segundo apellido...") && !soloTexto(apellido2)) {
-		        setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
-		        error = true;
-		    }
+			if (!apellido2.isEmpty() && !apellido2.equals("Introduce tu segundo apellido...")
+					&& !controlador.soloTexto(apellido2)) {
+				controlador.setPlaceholder(textApellido2, "Formato de texto incorrecto", Color.RED);
+				error = true;
+			}
 
-		    if (!contraseña.isEmpty() && !contraseña.equals("Introduce tu contraseña...") && !contraseñaValida(contraseña)) {
-		        setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
-		        lblMsgError.setVisible(true);
-		    	lblMsgError.setText("Formato de contraseña incorrecto");
-		        error = true;
-		    }
+			if (!contraseña.isEmpty() && !contraseña.equals("Introduce tu contraseña...")
+					&& !controlador.contraseñaValida(contraseña)) {
+				controlador.setPlaceholder(textContraseña, "Formato de contraseña incorrecto", Color.RED);
+				lblMsgError.setVisible(true);
+				lblMsgError.setText("Formato de contraseña incorrecto");
+				error = true;
+			}
 
-		    if (!fechaNac.isEmpty() && !fechaNac.equals("Introduce tu fecha de nacimiento") && !fechaValida(fechaNac)) {
-		        setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
-		        error = true;
-		    }
+			if (!fechaNac.isEmpty() && !fechaNac.equals("Introduce tu fecha de nacimiento")
+					&& !controlador.fechaValida(fechaNac)) {
+				controlador.setPlaceholder(textFechaNac, "Formato de fecha incorrecto (xx/xx/xxxx)", Color.RED);
+				error = true;
+			}
 
-		    // Si hubo errores, salir
-		    if (error) return;
-		    
+			// Si hubo errores, salir
+			if (error)
+				return;
 
-		    //Modificar los datos
-		    if (!nombre.isEmpty() && !nombre.equals("Introduzca su nombre...") && soloTexto(nombre)) {
-			    usuario.setNombre(nombre);
+			// Modificar los datos
+			if (!nombre.isEmpty() && !nombre.equals("Introduzca su nombre...") && controlador.soloTexto(nombre)) {
+				usuario.setNombre(nombre);
 
-		    }
-		    	
-		    if (!apellido1.isEmpty() && !apellido1.equals("Introduzca su primer apellido...") && soloTexto(apellido1)) {
-		    	usuario.setApellido1(apellido1);
-		    }
+			}
 
-		    if (!apellido2.isEmpty() && !apellido2.equals("Introduce tu segundo apellido...") && soloTexto(apellido2)) {
-			    usuario.setApellido2(apellido2);
-		    }
+			if (!apellido1.isEmpty() && !apellido1.equals("Introduzca su primer apellido...")
+					&& controlador.soloTexto(apellido1)) {
+				usuario.setApellido1(apellido1);
+			}
 
-		    if (!contraseña.isEmpty() && !contraseña.equals("Introduce tu contraseña...") && contraseñaValida(contraseña)) {
-			    usuario.setContraseña(contraseña);
-		    }
+			if (!apellido2.isEmpty() && !apellido2.equals("Introduce tu segundo apellido...")
+					&& controlador.soloTexto(apellido2)) {
+				usuario.setApellido2(apellido2);
+			}
 
-		    if (!fechaNac.isEmpty() && !fechaNac.equals("Introduce tu fecha de nacimiento") && fechaValida(fechaNac)) {
-		    	DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		        LocalDate fechaLocal = LocalDate.parse(fechaNac, formato);
-		        Date fechaNacDate = java.sql.Date.valueOf(fechaLocal);
-		    	usuario.setFechaNac(fechaNacDate);
-		    	}
+			if (!contraseña.isEmpty() && !contraseña.equals("Introduce tu contraseña...")
+					&& controlador.contraseñaValida(contraseña)) {
+				usuario.setContraseña(contraseña);
+			}
 
-		    try {
-		        // asegurar que el correo del usuario a modificar está establecido
-		        if ((usuario.getCorreo() == null || usuario.getCorreo().isEmpty()) && controlador.getUsuarioActual() != null) {
-		            usuario.setCorreo(controlador.getUsuarioActual().getCorreo());
-		        }
-		        controlador.modificarUsuario(usuario);
-		    } catch (Exception e1) {
-		        e1.printStackTrace();
-		    }
+			if (!fechaNac.isEmpty() && !fechaNac.equals("Introduce tu fecha de nacimiento")
+					&& controlador.fechaValida(fechaNac)) {
+				DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				LocalDate fechaLocal = LocalDate.parse(fechaNac, formato);
+				Date fechaNacDate = java.sql.Date.valueOf(fechaLocal);
+				usuario.setFechaNac(fechaNacDate);
+			}
 
-		    lblMsgError.setText("Datos modificados con exito");
-		    lblMsgError.setForeground(Color.GREEN);
+			try {
+				// asegurar que el correo del usuario a modificar está establecido
+				if ((usuario.getCorreo() == null || usuario.getCorreo().isEmpty())
+						&& controlador.getUsuarioActual() != null) {
+					usuario.setCorreo(controlador.getUsuarioActual().getCorreo());
+				}
+				controlador.modificarUsuario(usuario);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+			lblMsgError.setText("Datos modificados con exito");
+			lblMsgError.setForeground(Color.GREEN);
 		});
 
-
-		
 		// Acción del botón Volver
 		btnVolver.addActionListener(e -> {
 			this.setVisible(false);
@@ -288,65 +282,5 @@ public class ModificarUsuario extends JFrame {
 			}
 			nuevo.setVisible(true);
 		});
-	}
-
-	// Métodos de validación
-	private boolean soloTexto(String text) {
-		if (text == null || text.isBlank())
-			return false;
-		for (char c : text.toCharArray()) {
-			if (!Character.isLetter(c) && c != ' ')
-				return false;
-		}
-		return true;
-	}
-
-	 public static void setPlaceholder(JTextField field, String placeholder, Color color) {
-	        field.setForeground(color);
-	        field.setText(placeholder);
-
-	        field.addFocusListener(new FocusAdapter() {
-	            @Override
-	            public void focusGained(FocusEvent e) {
-	                if (field.getText().equals(placeholder)) {
-	                    field.setText("");
-	                    field.setForeground(Color.BLACK);
-	                }
-	            }
-
-	            @Override
-	            public void focusLost(FocusEvent e) {
-	                if (field.getText().isEmpty()) {
-	                    field.setForeground(Color.GRAY);
-	                    field.setText(placeholder);
-	                }
-	            }
-	        });
-	    }
-	private boolean contraseñaValida(String contraseña) {
-		if (contraseña == null || contraseña.isEmpty())
-			return false;
-		boolean hasUpper = false, hasDigit = false;
-		for (char c : contraseña.toCharArray()) {
-			if (Character.isUpperCase(c))
-				hasUpper = true;
-			if (Character.isDigit(c))
-				hasDigit = true;
-			if (hasUpper && hasDigit)
-				return true;
-		}
-		return hasUpper && hasDigit;
-	}
-	
-	private boolean fechaValida(String fecha) {
-		
-		  DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-	        try {
-	            LocalDate.parse(fecha, formato);
-	            return true; 
-	        } catch (DateTimeParseException e) {
-	            return false; 
-	        }
 	}
 }

@@ -1,6 +1,9 @@
 package Controlador;
 
+import java.awt.Color;
 import java.util.ArrayList;
+
+import javax.swing.JTextField;
 
 import Backup.*;
 import Modelo.*;
@@ -44,6 +47,35 @@ public class Controlador {
 	public boolean ejecutarExportacion() throws Exception {
 		return gestor1.exportarDatos();
 	}
+
+	public boolean soloTexto(String nombre) {
+		return gestor1.soloTexto(nombre);
+	}
+
+	public boolean contraseñaValida(String contraseña) {
+		return gestor1.contraseñaValida(contraseña);
+	}
+
+	public void setPlaceholder(JTextField textNombre, String string, Color color) {
+		 gestor1.setPlaceholder(textNombre, string, color);		
+	}
+
+	public boolean fechaValida(String fechaNac) {
+		return gestor1.fechaValida(fechaNac);
+	}
+
+	public boolean correoValido(String correo) {
+		return gestor1.correoValido(correo);
+	}
+
+	public boolean formatoFechaValido(String fechaNac) {
+		return gestor1.formatoFechaValido(fechaNac);
+	}
+
+	public boolean fechaNoFutura(String fechaNac) {
+		return gestor1.fechaNoFutura(fechaNac);
+	}
+
 
 	
 }
