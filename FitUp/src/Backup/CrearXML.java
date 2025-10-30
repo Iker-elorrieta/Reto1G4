@@ -32,7 +32,7 @@ public class CrearXML {
     public static final String CAMPO_USUARIO = "usuario";
     public static final String CAMPO_WORKOUT = "workout";
 
-    // CONSTANTES XML
+    // CONSTANTES de XML
     public static final String XML_RAIZ = "historicoWorkouts";
     public static final String XML_HISTORICO = "historico";
     public static final String XML_USUARIO = "usuario";
