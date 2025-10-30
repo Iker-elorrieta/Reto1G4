@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<historicoWorkouts>
+    <historico>
+        <usuario>Juan</usuario>
+        <workout>Entrenamiento de biceps - nivel 0</workout>
+        <fecha>28/02/2015</fecha>
+        <tiempoTotal>2</tiempoTotal>
+        <completado>1</completado>
+    </historico>
+    <historico>
+        <usuario>Juan</usuario>
+        <workout>Entrenamiento de triceps - nivel 0</workout>
+        <fecha>17/02/2005</fecha>
+        <tiempoTotal>2</tiempoTotal>
+        <completado>2</completado>
+    </historico>
+</historicoWorkouts>
