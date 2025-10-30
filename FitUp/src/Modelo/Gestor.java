@@ -1,6 +1,11 @@
 package Modelo;
 
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -270,7 +275,33 @@ public class Gestor {
 
 		    db.close();
 	}
-	
+
+	public boolean exportarDatos() {
+	    try {
+	        ProcessBuilder builder = new ProcessBuilder(
+	            "cmd", "/C", "java -jar backups.jar"
+	        );
+
+	        Process process = builder.start();
+	        InputStream stream = process.getInputStream();
+
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+	        String line = "";
+	        while ((line = reader.readLine()) != null) {
+	            System.out.println(line);
+	        }
+
+	        int exitCode = process.waitFor();
+	        return exitCode == 0;
+
+	    } catch (IOException | InterruptedException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+
+
 	//Metodo que servira en un futuro para las series de los ejercicios
 	
 	/*public ArrayList<Series> listarSeries( String idEjercicio) throws Exception {

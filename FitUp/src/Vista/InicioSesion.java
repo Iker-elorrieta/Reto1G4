@@ -7,7 +7,6 @@ import java.awt.event.FocusEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import Backup.BackupFirebase;
 import Controlador.Controlador;
 
 import Modelo.*;
@@ -142,12 +141,10 @@ public class InicioSesion extends JFrame {
 					 
 			
 					if (controlador.inicioSesion(usuario1)) {
-						controlador.ejecutarExportacion();
 						if(controlador.ejecutarExportacion() == true) {
 							this.setVisible(false);
 							ListadoWorkouts nuevo = new ListadoWorkouts(controlador, "Backup y xml creados con éxito");
-							BackupFirebase.generarBackupsDesdeServidor();
-							BackupFirebase.guardarHistoricoWorkoutsXML();
+	
 							nuevo.setVisible(true);
 						} else {
 							this.setVisible(false);

@@ -7,7 +7,7 @@ import Modelo.*;
 
 public class Controlador {
 	Gestor gestor1 = new Gestor();
-	BackupFirebase backup = new BackupFirebase();
+	ExportarDatos backup = new ExportarDatos();
 
 	public boolean inicioSesion(Usuario usuario) throws Exception {
 
@@ -41,26 +41,8 @@ public class Controlador {
 			gestor1.modificarUsuario(usuario);		
 	}
 
-	public boolean ejecutarExportacion() {
-	    try {
-	        String javaHome = System.getProperty("java.home") + "\\bin\\java.exe";
-	        String classpath = System.getProperty("java.class.path");
-	        String clase = "Backup.BackupFirebase"; 
-	        ProcessBuilder pb = new ProcessBuilder(
-	            "cmd.exe", "/c", javaHome, "-cp", classpath, clase
-	        );
-	        Process proceso = pb.start();
-	        int exitCode = proceso.waitFor();
-
-	        if (exitCode == 0) {
-	        	return true;
-	        } else {
-	        	return false;
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-		return false;
+	public boolean ejecutarExportacion() throws Exception {
+		return gestor1.exportarDatos();
 	}
 
 	
