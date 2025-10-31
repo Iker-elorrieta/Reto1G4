@@ -20,7 +20,6 @@ import javax.swing.border.EmptyBorder;
 
 import Controlador.Controlador;
 import Modelo.Historico;
-import Modelo.Workout;
 
 public class HistoricoWorkouts extends JFrame {
 
@@ -35,7 +34,12 @@ public class HistoricoWorkouts extends JFrame {
 
         // Panel con degradado
         contentPane = new JPanel() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
