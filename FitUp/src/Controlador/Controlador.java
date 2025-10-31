@@ -43,7 +43,16 @@ public class Controlador {
 	public void modificarUsuario(Usuario usuario) throws Exception {
 			gestor1.modificarUsuario(usuario);		
 	}
-
+	
+	public ArrayList<Historico> listarHistorico(int idUsuario) throws Exception {
+		return gestor1.listarHistorico(idUsuario);
+	}
+	
+	public int conseguirTiempoPrevisto(String idWorkout) throws Exception {
+		return gestor1.conseguirTiempoPrevisto(idWorkout);
+	}
+	
+	//Exportar datos y validaciones
 	public boolean ejecutarExportacion() throws Exception {
 		return gestor1.exportarDatos();
 	}

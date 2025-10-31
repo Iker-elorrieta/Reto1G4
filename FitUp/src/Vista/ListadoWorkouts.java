@@ -208,12 +208,21 @@ public class ListadoWorkouts extends JFrame {
         btnModificar.setFocusPainted(false);
         btnModificar.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
         btnModificar.setBackground(new Color(50, 50, 50));
-        btnModificar.setBounds(185, 26, 109, 30);
+        btnModificar.setBounds(150, 26, 109, 30);
         contentPane.add(btnModificar);
         
         JLabel lblBackupExito = new JLabel("");
         lblBackupExito.setBounds(35, 67, 259, 14);
         contentPane.add(lblBackupExito);
+        
+        JButton btnHWorkout = new JButton("Histórico");
+        btnHWorkout.setForeground(Color.WHITE);
+        btnHWorkout.setFont(new Font("Tahoma", Font.BOLD, 13));
+        btnHWorkout.setFocusPainted(false);
+        btnHWorkout.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
+        btnHWorkout.setBackground(new Color(50, 50, 50));
+        btnHWorkout.setBounds(280, 26, 109, 30);
+        contentPane.add(btnHWorkout);
         if(backupExito.equals("Backup y xml creados con éxito")) {
             lblBackupExito.setText(backupExito);
             lblBackupExito.setForeground(Color.GREEN);
@@ -230,6 +239,14 @@ public class ListadoWorkouts extends JFrame {
         	modUsuario.setVisible(true);
         }
         );
+        
+        btnHWorkout.addActionListener( e-> {
+			this.setVisible(false);
+			HistoricoWorkouts histWorkout = new HistoricoWorkouts(controlador);
+			this.dispose();
+			histWorkout.setVisible(true);
+		}
+		);
         
 	}
 	

@@ -14,4 +14,11 @@
         <tiempoTotal>2</tiempoTotal>
         <completado>2</completado>
     </historico>
+    <historico>
+        <usuario>Ander</usuario>
+        <workout>Entrenamiento de biceps - nivel 0</workout>
+        <fecha>31/10/2025</fecha>
+        <tiempoTotal>3</tiempoTotal>
+        <completado>3</completado>
+    </historico>
 </historicoWorkouts>

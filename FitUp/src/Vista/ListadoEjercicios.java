@@ -35,12 +35,6 @@ public class ListadoEjercicios extends JFrame {
 	private JTable table;
 	private ArrayList<Ejercicio> listaEjercicios = new ArrayList<>();
 
-
-	/**
-	 * Launch the application.
-	 */
-	
-
 	/**
 	 * Create the frame.
 	 * @param idEjercicio 

@@ -5,6 +5,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,7 +31,10 @@ public class Gestor {
 
 	private static final String COLECCION_USUARIOS = "usuarios";
 	private static final String COLECCION_WORKOUTS = "workouts";
+	private static final String COLECCION_HISTORICO = "historicoWorkouts";
 	private static final String SUBCOLECCION_EJERCICIOS = "ejercicios";
+	private static final String COLECCION_SERIES = "series";
+
 
 	private static final String CAMPO_NOMBRE = "nombre";
 	private static final String CAMPO_APELLIDO1 = "apellido1";
@@ -43,12 +47,20 @@ public class Gestor {
 	private static final String CAMPO_VIDEO = "video";
 	private static final String CAMPO_NUM_SERIES = "num_series";
 	private static final String CAMPO_DESCANSO = "descanso";
+	private static final String CAMPO_COMPLETADO = "completado";
+	private static final String CAMPO_FECHA_HIST = "fecha";
+	private static final String CAMPO_TIEMPO_TOTAL = "tiempoTotal";
+	private static final String CAMPO_DURACION = "duracion";
+
+
+
+
 
 	Usuario datos = new Usuario();
 	ArrayList<Workout> workouts = new ArrayList<>();
 	Workout workoutAnadir = new Workout();
 	ArrayList<Ejercicio> ejercicios = new ArrayList<>();
-
+	ArrayList<Historico> historicos = new ArrayList<>();
 	public Usuario getDatos() {
 		return datos;
 	}
@@ -256,6 +268,110 @@ public class Gestor {
 		db.close();
 	}
 
+	public ArrayList<Historico> listarHistorico(int idUsuario) throws Exception {
+	    ArrayList<Historico> historicos = new ArrayList<>(); // Reiniciamos la lista
+
+	    FileInputStream serviceAccount = new FileInputStream(FIREBASE_JSON);
+	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+	            .setProjectId(FIREBASE_PROJECT_ID)
+	            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	            .build();
+	    Firestore db = firestoreOptions.getService();
+
+	    // Referencia al usuario
+	    DocumentReference usuarioRef = db.collection(COLECCION_USUARIOS)
+	                                     .document(String.valueOf(idUsuario));
+
+	    // Solo traemos historicos de este usuario
+	    ApiFuture<QuerySnapshot> futureHistorico = db.collection(COLECCION_HISTORICO)
+	            .whereEqualTo("usuario", usuarioRef)
+	            .get();
+
+	    QuerySnapshot historicoSnapshot = futureHistorico.get();
+
+	    for (QueryDocumentSnapshot historicoDoc : historicoSnapshot.getDocuments()) {
+	        Historico historico = new Historico();
+	        historico.setId(Integer.parseInt(historicoDoc.getId()));
+
+	        // Completado
+	        int completadoRaw = historicoDoc.contains(CAMPO_COMPLETADO) ? historicoDoc.getDouble(CAMPO_COMPLETADO).intValue() : 0;
+	        historico.setCompletado(switch (completadoRaw) {
+	            case 1 -> 33;
+	            case 2 -> 66;
+	            case 3 -> 100;
+	            default -> 0;
+	        });
+
+	        // Fecha
+	        Timestamp fechaTimestamp = historicoDoc.getTimestamp(CAMPO_FECHA_HIST);
+	        historico.setFecha(fechaTimestamp != null ? fechaTimestamp.toDate() : null);
+
+	        // Tiempo total
+	        historico.setTiempoTotal(historicoDoc.getDouble(CAMPO_TIEMPO_TOTAL).intValue());
+
+	        // Usuario
+	        historico.setUsuario(datos); // Usuario actual en sesión
+
+	        // Workout asociado
+	        DocumentReference workoutRef = historicoDoc.get("workout", DocumentReference.class);
+	        if (workoutRef != null) {
+	            DocumentSnapshot workoutDoc = workoutRef.get().get();
+	            if (workoutDoc.exists()) {
+	                Workout workout = new Workout();
+	                workout.setId(workoutDoc.getId());
+	                workout.setNombre(workoutDoc.getString(CAMPO_NOMBRE));
+	                workout.setNivel(workoutDoc.contains(CAMPO_NIVEL) ? workoutDoc.getDouble(CAMPO_NIVEL).intValue() : 0);
+	                historico.setWorkout(workout);
+	            }
+	        }
+
+	        historicos.add(historico);
+	    }
+
+	    db.close();
+	    return historicos;
+	}
+
+
+	// Devuelve el tiempo total en segundos
+	public int conseguirTiempoPrevisto(String idWorkout) throws Exception {
+	    FileInputStream serviceAccount = new FileInputStream(FIREBASE_JSON);
+	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+	            .setProjectId(FIREBASE_PROJECT_ID)
+	            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	            .build();
+	    Firestore db = firestoreOptions.getService();
+
+	    int tiempoPrevisto = 0;
+
+	    ApiFuture<QuerySnapshot> futureEjercicios = db.collection(COLECCION_WORKOUTS)
+	            .document(idWorkout)
+	            .collection(SUBCOLECCION_EJERCICIOS)
+	            .get();
+	    QuerySnapshot ejerciciosSnapshot = futureEjercicios.get();
+
+	    for (QueryDocumentSnapshot ejercicioDoc : ejerciciosSnapshot.getDocuments()) {
+	        int descanso = ejercicioDoc.contains(CAMPO_DESCANSO) ? ejercicioDoc.getDouble(CAMPO_DESCANSO).intValue() : 0;
+	        tiempoPrevisto += descanso;
+
+	        ApiFuture<QuerySnapshot> futureSeries = ejercicioDoc.getReference().collection(COLECCION_SERIES).get();
+	        QuerySnapshot seriesSnapshot = futureSeries.get();
+
+	        for (QueryDocumentSnapshot serieDoc : seriesSnapshot.getDocuments()) {
+	            int duracion = serieDoc.contains(CAMPO_DURACION) ? serieDoc.getDouble(CAMPO_DURACION).intValue() : 0;
+	            tiempoPrevisto += duracion;
+	        }
+	    }
+
+	    db.close();
+	    return tiempoPrevisto;
+	}
+
+
+
+
+	
+	//Validaciones de campos y exportar datos//
 	public boolean exportarDatos() {
 		try {
 			ProcessBuilder builder = new ProcessBuilder("cmd", "/C", "java -jar backups.jar");
