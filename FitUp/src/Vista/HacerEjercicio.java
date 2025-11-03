@@ -54,7 +54,6 @@ public class HacerEjercicio extends JFrame {
         this.ejercicios = (ejercicios != null) ? ejercicios : new ArrayList<>();
         this.nombreWorkout = (nombreWorkout != null && !nombreWorkout.isEmpty()) ? nombreWorkout : "Workout";
 
-        setTitle("FitUp - Hacer Ejercicio");
         setBounds(100, 100, 900, 560);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -82,7 +81,7 @@ public class HacerEjercicio extends JFrame {
 
         lblTituloEjercicio = new JLabel("Ejercicio: -");
         lblTituloEjercicio.setForeground(Color.WHITE);
-        lblTituloEjercicio.setFont(new Font("Tahoma", Font.BOLD, 20));
+        lblTituloEjercicio.setFont(new Font("Tahoma", Font.BOLD, 15));
         lblTituloEjercicio.setBounds(300, 20, 500, 30);
         content.add(lblTituloEjercicio);
 
@@ -346,8 +345,27 @@ public class HacerEjercicio extends JFrame {
         if (cronoEjercicio != null) cronoEjercicio.parar();
         if (cronoSerie != null) cronoSerie.parar();
         if (cronoDescanso != null) cronoDescanso.parar();
+
+        int tiempoTotal = (cronoWorkout != null) ? cronoWorkout.getSegundos() : 0;
+        int totalEj = ejercicios.size();
+        int completados = indiceEjercicio + (indiceSerie > 0 ? 1 : 0);
+
+        try {
+            //Registrar histórico correctamente (a través del controlador)
+            controlador.registrarHistorico(idWorkout, nombreWorkout, tiempoTotal, completados);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al guardar el histórico: " + e.getMessage());
+        }
+
+        // Mostrar pantalla de resultados
+        ResultadoEjercicio resumen = new ResultadoEjercicio(nombreWorkout, tiempoTotal, totalEj, completados, controlador);
+        resumen.setVisible(true);
+
         dispose();
     }
+
+
 
     private String formatHora(int totalSeg) {
         int h = totalSeg / 3600;

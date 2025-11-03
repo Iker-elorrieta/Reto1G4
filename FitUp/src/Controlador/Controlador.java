@@ -1,9 +1,15 @@
 package Controlador; 
 import java.awt.Color; 
+
 import java.util.ArrayList; 
-import javax.swing.JTextField; 
+import javax.swing.JTextField;
+
 import Backup.*; 
-import Modelo.*; 
+import Modelo.*;
+
+import java.time.Instant;   
+import java.util.Date;
+
 public class Controlador { 
 	Gestor gestor1 = new Gestor(); 
 	ExportarDatos backup = new ExportarDatos(); 
@@ -47,5 +53,25 @@ public class Controlador {
 	
 	public boolean formatoFechaValido(String fechaNac) { return gestor1.formatoFechaValido(fechaNac); } 
 	
-	public boolean fechaNoFutura(String fechaNac) { return gestor1.fechaNoFutura(fechaNac); } 
+	public boolean fechaNoFutura(String fechaNac) { return gestor1.fechaNoFutura(fechaNac); }
+
+	public void registrarHistorico(String idWorkout, String nombreWorkout, int tiempoTotal, int completado) throws Exception {
+	    Usuario usuarioActual = gestor1.getDatos();
+
+	    Workout workout = new Workout();
+	    workout.setId(idWorkout);
+	    workout.setNombre(nombreWorkout);
+
+	    Historico historico = new Historico();
+	    historico.setUsuario(usuarioActual);
+	    historico.setWorkout(workout);
+	    historico.setFecha(new Date());
+	    historico.setTiempoTotal(tiempoTotal);
+	    historico.setCompletado(completado);
+
+	    gestor1.escribirHistorico(historico);
+	}
+
+
+
 }

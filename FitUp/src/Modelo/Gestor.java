@@ -55,7 +55,6 @@ public class Gestor {
 
 
 
-
 	Usuario datos = new Usuario();
 	ArrayList<Workout> workouts = new ArrayList<>();
 	Workout workoutAnadir = new Workout();
@@ -452,6 +451,56 @@ public class Gestor {
 	    db.close();
 	    return series;
 	}
+
+	
+	public void escribirHistorico(Historico historico) throws Exception {
+	    try (FileInputStream serviceAccount = new FileInputStream(FIREBASE_JSON)) {
+	        FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+	            .setProjectId(FIREBASE_PROJECT_ID)
+	            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	            .build();
+
+	        Firestore db = firestoreOptions.getService();
+
+	        CollectionReference historicoCol = db.collection(COLECCION_HISTORICO);
+
+	        //Obtener todos los IDs existentes de documentos
+	        ApiFuture<QuerySnapshot> futureDocs = historicoCol.get();
+	        List<QueryDocumentSnapshot> documentos = futureDocs.get().getDocuments();
+
+	        int nuevoId = 100;
+	        for (QueryDocumentSnapshot doc : documentos) {
+	            try {
+	                int idExistente = Integer.parseInt(doc.getId());
+	                if (idExistente >= nuevoId) {
+	                    nuevoId = idExistente + 100;
+	                }
+	            } catch (NumberFormatException e) {
+	                
+	            }
+	        }
+
+	        //Referencias
+	        DocumentReference workoutRef = db.collection(COLECCION_WORKOUTS)
+	                                         .document(historico.getWorkout().getId());
+	        DocumentReference usuarioRef = db.collection(COLECCION_USUARIOS)
+	                                         .document(String.valueOf(historico.getUsuario().getId()));
+
+	        Map<String, Object> histMap = new HashMap<>();
+	        histMap.put("id", nuevoId);
+	        histMap.put("completado", historico.getCompletado());
+	        histMap.put("fecha", historico.getFecha());
+	        histMap.put("tiempoTotal", historico.getTiempoTotal());
+	        histMap.put("workout", workoutRef);
+	        histMap.put("usuario", usuarioRef);
+
+	        //Guardar con ID único
+	        historicoCol.document(String.valueOf(nuevoId)).set(histMap).get();
+
+	        db.close();
+	    }
+	}
+
 
 	
 	//Validaciones de campos y exportar datos//
