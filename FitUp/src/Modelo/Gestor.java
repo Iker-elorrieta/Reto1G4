@@ -369,6 +369,89 @@ public class Gestor {
 
 
 
+	public Ejercicio obtenerEjercicioConSeries(String idWorkout, String idEjercicio) throws Exception {
+	    FileInputStream serviceAccount = new FileInputStream("fitUp.json");
+	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+	            .setProjectId("fitup-8e726")
+	            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	            .build();
+	    Firestore db = firestoreOptions.getService();
+
+	    DocumentReference ejercicioRef = db.collection("workouts")
+	            .document(idWorkout)
+	            .collection("ejercicios")
+	            .document(idEjercicio);
+
+	    DocumentSnapshot doc = ejercicioRef.get().get();
+
+	    Ejercicio ejercicio = new Ejercicio();
+	    if (doc.exists()) {
+	        ejercicio.setId(Integer.parseInt(doc.getId()));
+	        ejercicio.setNombre(doc.getString("nombre"));
+	        ejercicio.setDescanso(doc.getDouble("descanso").intValue());
+	        ejercicio.setNumSeries(doc.getDouble("num_series").intValue());
+	        ejercicio.setFoto(doc.contains("foto") ? doc.getString("foto") : "");
+
+	        // Cargar las series
+	        ArrayList<Series> listaSeries = new ArrayList<>();
+	        ApiFuture<QuerySnapshot> futureSeries = ejercicioRef.collection("series").get();
+	        QuerySnapshot seriesSnapshot = futureSeries.get();
+	        for (QueryDocumentSnapshot serieDoc : seriesSnapshot.getDocuments()) {
+	            Series serie = new Series();
+	            serie.setId(serieDoc.getId());
+	            serie.setDuracion(serieDoc.getDouble("duracion").intValue());
+	            serie.setRepeticiones(serieDoc.getDouble("repeticiones").intValue());
+	            listaSeries.add(serie);
+	        }
+	        ejercicio.setSeries(listaSeries);
+	    }
+
+	    db.close();
+	    return ejercicio;
+	}
+
+	public ArrayList<Series> listarSeries(String idWorkout, String idEjercicio) throws Exception {
+	    ArrayList<Series> series = new ArrayList<>();
+
+	    FileInputStream serviceAccount = new FileInputStream(FIREBASE_JSON);
+	    FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+	            .setProjectId(FIREBASE_PROJECT_ID)
+	            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	            .build();
+	    Firestore db = firestoreOptions.getService();
+
+	    CollectionReference colecSeries = db.collection(COLECCION_WORKOUTS)
+	            .document(idWorkout)
+	            .collection(SUBCOLECCION_EJERCICIOS)
+	            .document(idEjercicio)
+	            .collection(COLECCION_SERIES);
+
+	    ApiFuture<QuerySnapshot> future = colecSeries.get();
+	    QuerySnapshot snapshot = future.get();
+	    List<QueryDocumentSnapshot> docs = snapshot.getDocuments();
+
+	    for (QueryDocumentSnapshot d : docs) {
+	        Series s = new Series();
+	        if (d.contains(CAMPO_DURACION))
+	            s.setDuracion(d.getDouble(CAMPO_DURACION).intValue());
+	        else if (d.contains("duracion"))
+	            s.setDuracion(d.getDouble("duracion").intValue());
+
+	        if (d.contains("repeticiones"))
+	            s.setRepeticiones(d.getDouble("repeticiones").intValue());
+
+	        if (d.contains("foto")) {
+	            s.setId(d.getId());
+	        } else {
+	            s.setId(d.getId());
+	        }
+
+	        series.add(s);
+	    }
+
+	    db.close();
+	    return series;
+	}
 
 	
 	//Validaciones de campos y exportar datos//
@@ -488,37 +571,5 @@ public class Gestor {
 	    return !fechaNacimiento.isAfter(LocalDate.now());
 	}
 
+
 }
-
-// Metodo que servira en un futuro para las series de los ejercicios
-
-/*
- * public ArrayList<Series> listarSeries( String idEjercicio) throws Exception {
- * ArrayList<Series> series = new ArrayList<>();
- * 
- * 
- * FileInputStream serviceAccount = new FileInputStream("fitUp.json");
- * FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance()
- * .toBuilder() .setProjectId("fitup-8e726")
- * .setCredentials(GoogleCredentials.fromStream(serviceAccount)) .build();
- * 
- * Firestore db = firestoreOptions.getService();
- * 
- * ApiFuture<QuerySnapshot> future = db.collection("workouts")
- * .document(idEjercicio)
- * .collection("ejercicios").document().collection("series") .get();
- * 
- * QuerySnapshot querySnapshot = future.get(); List<QueryDocumentSnapshot>
- * documentos = querySnapshot.getDocuments();
- * 
- * for (QueryDocumentSnapshot doc : documentos) { Series serieAnadir = new
- * Series(); serieAnadir.setId(doc.getId());
- * serieAnadir.setDuracion(Integer.parseInt(doc.getString("duracion")));
- * serieAnadir.setRepeticiones(doc.getDouble("repeticiones").intValue());
- * 
- * series.add(serieAnadir); System.out.println(series); }
- * 
- * db.close(); return series;
- * 
- * }
- */

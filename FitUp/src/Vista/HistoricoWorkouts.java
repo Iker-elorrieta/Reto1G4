@@ -64,9 +64,15 @@ public class HistoricoWorkouts extends JFrame {
         btnVolver.setFont(new Font("Tahoma", Font.BOLD, 13));
         btnVolver.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
         btnVolver.addActionListener(e -> {
-            // Cerrar la ventana actual
+            this.setVisible(false);
+            try {
+				ListadoWorkouts listado = new ListadoWorkouts(controlador, " ");
+	            listado.setVisible(true);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
             dispose();
-            // Aquí puedes abrir otra ventana si quieres
         });
         contentPane.add(btnVolver);
 
