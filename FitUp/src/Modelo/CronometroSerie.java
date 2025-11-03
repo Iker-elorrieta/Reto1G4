@@ -2,9 +2,7 @@ package Modelo;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Cronómetro de una serie específica (cuenta regresiva).
- */
+
 public class CronometroSerie implements Runnable {
 
     private int duracion;

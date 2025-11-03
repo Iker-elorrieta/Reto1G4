@@ -2,9 +2,7 @@ package Modelo;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Cronómetro individual para cada ejercicio (cuenta hacia adelante).
- */
+
 public class CronometroEjercicio implements Runnable {
 
     private int segundos;

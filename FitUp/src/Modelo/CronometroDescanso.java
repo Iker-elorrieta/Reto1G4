@@ -2,9 +2,7 @@ package Modelo;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Cronómetro del descanso (cuenta hacia adelante hasta alcanzar la duración del descanso).
- */
+
 public class CronometroDescanso implements Runnable {
 
     private int duracion;
