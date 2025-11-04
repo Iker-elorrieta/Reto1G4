@@ -44,8 +44,11 @@ public class HacerEjercicio extends JFrame {
     // Estado
     private int indiceEjercicio = 0;
     private int indiceSerie = 0;
-    private boolean workoutEnCurso = false;
+    @SuppressWarnings("unused")
+	private boolean workoutEnCurso = false;
+    @SuppressWarnings("unused")
     private boolean pausado = false;
+    @SuppressWarnings("unused")
     private boolean enDescanso = false;
 
     public HacerEjercicio(Controlador controlador, String idWorkout, ArrayList<Ejercicio> ejercicios, String nombreWorkout) {
@@ -60,7 +63,12 @@ public class HacerEjercicio extends JFrame {
         setResizable(false);
 
         JPanel content = new JPanel() {
-            @Override protected void paintComponent(Graphics g) {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
                 int h = getHeight();
@@ -116,7 +124,7 @@ public class HacerEjercicio extends JFrame {
         content.add(panelSeries);
 
         btnIniciar = new JButton("Iniciar");
-        btnIniciar.setBounds(320, 450, 120, 36);
+        btnIniciar.setBounds(312, 450, 156, 36);
         btnIniciar.setBackground(new Color(60, 120, 180));
         btnIniciar.setForeground(Color.WHITE);
         content.add(btnIniciar);
@@ -187,7 +195,8 @@ public class HacerEjercicio extends JFrame {
         lblCronoDescanso.setText("Descanso: -");
     }
 
-    private void cargarFotoDesdeURL(JLabel lbl, String urlFoto) {
+    @SuppressWarnings("deprecation")
+	private void cargarFotoDesdeURL(JLabel lbl, String urlFoto) {
         if (urlFoto == null || urlFoto.isEmpty()) {
             lbl.setText("Sin foto");
             lbl.setForeground(Color.LIGHT_GRAY);

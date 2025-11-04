@@ -7,7 +7,6 @@ import javax.swing.JTextField;
 import Backup.*; 
 import Modelo.*;
 
-import java.time.Instant;   
 import java.util.Date;
 
 public class Controlador { 
@@ -37,6 +36,27 @@ public class Controlador {
 	    return gestor1.listarSeries(idWorkout, idEjercicio);
 	}
 	
+	public void registrarHistorico(String idWorkout, String nombreWorkout, int tiempoTotal, int completado) throws Exception {
+	    Usuario usuarioActual = gestor1.getDatos();
+
+	    Workout workout = new Workout();
+	    workout.setId(idWorkout);
+	    workout.setNombre(nombreWorkout);
+
+	    Historico historico = new Historico();
+	    historico.setUsuario(usuarioActual);
+	    historico.setWorkout(workout);
+	    historico.setFecha(new Date());
+	    historico.setTiempoTotal(tiempoTotal);
+	    historico.setCompletado(completado);
+
+	    gestor1.escribirHistorico(historico);
+	}
+	
+	public String cambiarNivel() throws Exception {
+	    return gestor1.cambiarNivel();
+	}
+
 	//Exportar datos y validaciones 
 	
 	public boolean ejecutarExportacion() throws Exception { return gestor1.exportarDatos(); } 
@@ -55,22 +75,7 @@ public class Controlador {
 	
 	public boolean fechaNoFutura(String fechaNac) { return gestor1.fechaNoFutura(fechaNac); }
 
-	public void registrarHistorico(String idWorkout, String nombreWorkout, int tiempoTotal, int completado) throws Exception {
-	    Usuario usuarioActual = gestor1.getDatos();
-
-	    Workout workout = new Workout();
-	    workout.setId(idWorkout);
-	    workout.setNombre(nombreWorkout);
-
-	    Historico historico = new Historico();
-	    historico.setUsuario(usuarioActual);
-	    historico.setWorkout(workout);
-	    historico.setFecha(new Date());
-	    historico.setTiempoTotal(tiempoTotal);
-	    historico.setCompletado(completado);
-
-	    gestor1.escribirHistorico(historico);
-	}
+	
 
 
 

@@ -5,10 +5,11 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -502,8 +503,75 @@ public class Gestor {
 	}
 
 
+	public String cambiarNivel() throws Exception {
+	    StringBuilder mensaje = new StringBuilder();
+	    StringBuilder mensaje2 = new StringBuilder();
+	    try (FileInputStream serviceAccount = new FileInputStream(FIREBASE_JSON)) {
+	        FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+	                .setProjectId(FIREBASE_PROJECT_ID)
+	                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	                .build();
+	        Firestore db = firestoreOptions.getService();
+
+	        int nivelActual = datos.getNivel();
+	        DocumentReference usuarioRef = db.collection(COLECCION_USUARIOS)
+	                .document(String.valueOf(datos.getId()));
+
+	        ApiFuture<QuerySnapshot> workoutsFuture = db.collection(COLECCION_WORKOUTS)
+	                .whereEqualTo(CAMPO_NIVEL, nivelActual)
+	                .get();
+	        List<QueryDocumentSnapshot> workoutsNivel = workoutsFuture.get().getDocuments();
+	        int totalWorkoutsNivel = workoutsNivel.size();
+
+	        ApiFuture<QuerySnapshot> historicoFuture = db.collection(COLECCION_HISTORICO)
+	                .whereEqualTo("usuario", usuarioRef)
+	                .get();
+	        List<QueryDocumentSnapshot> historicosUsuario = historicoFuture.get().getDocuments();
+
+	        int workoutsCompletos = 0;
+
+	        for (QueryDocumentSnapshot histDoc : historicosUsuario) {
+	            Number completado = histDoc.getDouble("completado");
+	            if (completado == null || completado.intValue() != 3) continue;
+
+	            DocumentReference workoutRef = histDoc.get("workout", DocumentReference.class);
+	            if (workoutRef == null) continue;
+
+	            DocumentSnapshot workoutSnap = workoutRef.get().get();
+	            if (!workoutSnap.exists()) continue;
+
+	            Number nivelWorkout = workoutSnap.getDouble(CAMPO_NIVEL);
+	            if (nivelWorkout != null && nivelWorkout.intValue() == nivelActual) {
+	                workoutsCompletos++;
+	            }
+	        }
+
+	        mensaje.append("Workouts completados del nivel ").append(nivelActual)
+	                .append(": ").append(workoutsCompletos)
+	                .append(" / ").append(totalWorkoutsNivel).append("\n");
+
+	        if (workoutsCompletos >= totalWorkoutsNivel) {
+	            int nuevoNivel = nivelActual + 1;
+	            usuarioRef.update(CAMPO_NIVEL, nuevoNivel).get();
+	            datos.setNivel(nuevoNivel);
+
+	            mensaje.append("¡Felicidades! Has subido al nivel ").append(nuevoNivel);
+	        } else {
+	            mensaje2.append("Aún te faltan workouts por completar para subir de nivel.");
+	            return mensaje2.toString();
+	        }
+
+	        db.close();
+	    }
+
+	    return mensaje.toString();
+	}
+
+
+
+
 	
-	//Validaciones de campos y exportar datos//
+///////////////Validaciones de campos y exportar datos/////////////////////////////////////////////////////////
 	public boolean exportarDatos() {
 		try {
 			ProcessBuilder builder = new ProcessBuilder("cmd", "/C", "java -jar backups.jar");
@@ -621,4 +689,32 @@ public class Gestor {
 	}
 
 
+	 
+	 
+	 
+	 //////////////////////////////////FUNCIONALIDAD OFFLINE/////////////////////////////////////////////////
+	 
+	 
+	 public boolean checkInternetConnection() {
+		    boolean status = false;
+		    Socket sock = new Socket();
+		    InetSocketAddress address = new InetSocketAddress("www.google.com", 80);
+		    try {
+		        sock.connect(address, 3000); // Tiempo de espera de 3 segundos
+		        if (sock.isConnected()) {
+		            status = true;
+		        }
+		    } catch (Exception e) {
+		        status = false;
+		    } finally {
+		        try {
+		            sock.close();
+		        } catch (Exception e) {
+		            // Ignorar errores al cerrar
+		        }
+		    }
+		    return status;
+		}   
+	 
+	 
 }

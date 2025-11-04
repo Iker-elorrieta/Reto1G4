@@ -5,34 +5,34 @@
         <workout>Entrenamiento de espalda - nivel 1</workout>
         <fecha>03/11/2025</fecha>
         <tiempoTotal>3</tiempoTotal>
+        <completado>1</completado>
+    </historico>
+    <historico>
+        <usuario>Juan</usuario>
+        <workout>Entrenamiento de pecho - nivel 1</workout>
+        <fecha>04/11/2025</fecha>
+        <tiempoTotal>69</tiempoTotal>
         <completado>0</completado>
     </historico>
     <historico>
         <usuario>Juan</usuario>
-        <workout>Entrenamiento de triceps - nivel 0</workout>
-        <fecha>17/02/2005</fecha>
+        <workout>Entrenamiento de pecho - nivel 1</workout>
+        <fecha>04/11/2025</fecha>
         <tiempoTotal>2</tiempoTotal>
-        <completado>2</completado>
+        <completado>0</completado>
     </historico>
     <historico>
-        <usuario>Ander</usuario>
+        <usuario>Juan</usuario>
         <workout>Entrenamiento de biceps - nivel 0</workout>
-        <fecha>31/10/2025</fecha>
-        <tiempoTotal>3</tiempoTotal>
+        <fecha>04/11/2025</fecha>
+        <tiempoTotal>2368</tiempoTotal>
         <completado>3</completado>
     </historico>
     <historico>
-        <usuario>Juan</usuario>
-        <workout>Entrenamiento de pecho - nivel 1</workout>
-        <fecha>03/11/2025</fecha>
-        <tiempoTotal>4</tiempoTotal>
-        <completado>0</completado>
-    </historico>
-    <historico>
-        <usuario>Juan</usuario>
-        <workout>Entrenamiento de pecho - nivel 1</workout>
-        <fecha>03/11/2025</fecha>
-        <tiempoTotal>3</tiempoTotal>
-        <completado>0</completado>
+        <usuario>test</usuario>
+        <workout>Entrenamiento de biceps - nivel 0</workout>
+        <fecha>04/11/2025</fecha>
+        <tiempoTotal>396</tiempoTotal>
+        <completado>3</completado>
     </historico>
 </historicoWorkouts>

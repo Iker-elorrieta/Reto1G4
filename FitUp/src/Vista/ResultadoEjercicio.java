@@ -10,7 +10,6 @@ import java.awt.event.*;
 public class ResultadoEjercicio extends JFrame {
 
     private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
 
     public ResultadoEjercicio(String nombreWorkout, int tiempoTotalSeg, int totalEjercicios, int ejerciciosCompletados, Controlador controlador) {
         setTitle("Resultado del Workout");
@@ -20,7 +19,12 @@ public class ResultadoEjercicio extends JFrame {
         setResizable(false);
 
         JPanel content = new JPanel() {
-            @Override protected void paintComponent(Graphics g) {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 8224966868817033636L;
+
+			@Override protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
                 int h = getHeight();
@@ -74,16 +78,22 @@ public class ResultadoEjercicio extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                ListadoWorkouts listado;
-				try {
-					listado = new ListadoWorkouts(controlador, " ");
-	                listado.setVisible(true);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+                try {
+                    ListadoWorkouts listado = new ListadoWorkouts(controlador, " ");
+                    listado.setVisible(true);
+
+                    // Obtener mensaje del cambio de nivel
+                    String mensajeNivel = controlador.cambiarNivel();
+                    String mensajeNivel2 = controlador.cambiarNivel();
+                    //Mostrarlo en el label del ListadoWorkouts
+                    listado.mostrarMensajeNivel(mensajeNivel, mensajeNivel2);
+
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         });
+
     }
 
     private String obtenerMensajeMotivacional(int porcentaje) {

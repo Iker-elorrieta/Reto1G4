@@ -1,7 +1,6 @@
 package Vista;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -19,7 +18,8 @@ public class ListadoEjercicios extends JFrame {
     private JTable table;
     private ArrayList<Ejercicio> listaEjercicios = new ArrayList<>();
 
-    private String idWorkout;
+    @SuppressWarnings("unused")
+	private String idWorkout;
     private String nombreWorkout;
 
     public ListadoEjercicios(Controlador controlador, String idWorkout) throws Exception {
