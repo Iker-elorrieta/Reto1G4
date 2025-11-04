@@ -35,4 +35,11 @@
         <tiempoTotal>396</tiempoTotal>
         <completado>3</completado>
     </historico>
+    <historico>
+        <usuario>test</usuario>
+        <workout>Entrenamiento de triceps - nivel 0</workout>
+        <fecha>04/11/2025</fecha>
+        <tiempoTotal>45</tiempoTotal>
+        <completado>3</completado>
+    </historico>
 </historicoWorkouts>

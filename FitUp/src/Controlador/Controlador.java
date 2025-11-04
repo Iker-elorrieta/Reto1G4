@@ -14,21 +14,63 @@ public class Controlador {
 	ExportarDatos backup = new ExportarDatos(); 
 	
 	
-	public boolean inicioSesion(Usuario usuario) throws Exception { return gestor1.inicioSesion(usuario); } 
+	public boolean inicioSesion(Usuario usuario) throws Exception { 
+		if(gestor1.checkInternetConnection()) {
+			return gestor1.inicioSesion(usuario); 
+			} else {
+			return gestor1.inicioSesionOffline(usuario);
+			}
+		} 
 	
-	public Usuario getUsuarioActual() { return gestor1.getDatos(); } 
+	public Usuario getUsuarioActual() { 
+		return gestor1.getDatos(); 
+		} 
 	
-	public ArrayList<Workout> listarWorkouts() throws Exception { return gestor1.listarworkouts(); } 
+	public ArrayList<Workout> listarWorkouts() throws Exception { 
+		if(gestor1.checkInternetConnection()) {
+			return gestor1.listarworkouts(); 
+			} else {
+			return gestor1.listarworkoutsOffline();
+			}
+		} 
 	
-	public void nuevoUsuario(Usuario usuario) throws Exception { gestor1.nuevoUsuario(usuario); } 
+	public void nuevoUsuario(Usuario usuario) throws Exception { 
+		if(gestor1.checkInternetConnection()) {
+			gestor1.nuevoUsuario(usuario); 
+			} else {
+				gestor1.nuevoUsuarioOffline(usuario);;
+			}
+		}  
 	
-	public boolean correoExiste(String correo) throws Exception { return gestor1.correoExiste(correo); } 
+	public boolean correoExiste(String correo) throws Exception { 
+		return gestor1.correoExiste(correo);
+		} 
 	
-	public ArrayList<Ejercicio> listarEjercicios(String idEjercicio) throws Exception { return gestor1.listarEjercicios(idEjercicio); } 
+	public ArrayList<Ejercicio> listarEjercicios(String idEjercicio) throws Exception { 
+		
+		if(gestor1.checkInternetConnection()) {
+			return gestor1.listarEjercicios(idEjercicio); 
+			} else {
+				//Hacerlo
+			return gestor1.listarEjerciciosOffline(idEjercicio);
+			}
+		} 
 	
-	public void modificarUsuario(Usuario usuario) throws Exception { gestor1.modificarUsuario(usuario); } 
+	public void modificarUsuario(Usuario usuario) throws Exception { 
+		if(gestor1.checkInternetConnection()) {
+			gestor1.modificarUsuario(usuario); 
+			} else {
+				gestor1.modificarUsuariOffline(usuario);
+			}
+		} 
 	
-	public ArrayList<Historico> listarHistorico(int idUsuario) throws Exception { return gestor1.listarHistorico(idUsuario); } 
+	public ArrayList<Historico> listarHistorico(int idUsuario) throws Exception { 
+		if(gestor1.checkInternetConnection()) {
+			return gestor1.listarHistorico(idUsuario); 
+			} else {
+				return gestor1.listarHistoricoOffline(idUsuario); 
+			}
+		} 
 	
 	public int conseguirTiempoPrevisto(String idWorkout) throws Exception { return gestor1.conseguirTiempoPrevisto(idWorkout); } 
 	
@@ -76,7 +118,6 @@ public class Controlador {
 	public boolean fechaNoFutura(String fechaNac) { return gestor1.fechaNoFutura(fechaNac); }
 
 	
-
 
 
 }

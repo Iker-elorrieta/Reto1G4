@@ -1,25 +1,29 @@
 package Modelo;
 
 import java.awt.Color;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.*;
+import java.util.*;
 
 import javax.swing.JTextField;
+import javax.xml.parsers.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -717,4 +721,211 @@ public class Gestor {
 		}   
 	 
 	 
+	 public boolean inicioSesionOffline(Usuario usuario) throws Exception {
+		    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuarios.dat"))) {
+		        @SuppressWarnings("unchecked")
+				ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) ois.readObject();
+
+		        for (Usuario usu : listaUsuarios) {
+		            if (usuario.getCorreo().equals(usu.getCorreo()) &&
+		                usuario.getContraseña().equals(usu.getContraseña())) {
+
+		                datos = usu;
+		                return true;
+		            }
+		        }
+		    } catch (IOException | ClassNotFoundException e) {
+		        e.printStackTrace();
+		    }
+		    return false;
+		}
+
+	 
+	 public ArrayList<Workout> listarworkoutsOffline() throws Exception {
+		    ArrayList<Workout> resultado = new ArrayList<>();
+
+		    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("workouts.dat"))) {
+		        @SuppressWarnings("unchecked")
+				ArrayList<Workout> listaWorkouts = (ArrayList<Workout>) ois.readObject();
+
+		        for (Workout w : listaWorkouts) {
+		            if (w.getNivel() <= datos.getNivel()) {
+		                resultado.add(w);
+		            }
+		        }
+		    } catch (IOException | ClassNotFoundException e) {
+		        e.printStackTrace();
+		    }
+
+		    return resultado;
+		}
+
+	 public void nuevoUsuarioOffline(Usuario usuario) throws Exception {
+		    ArrayList<Usuario> listaUsuarios = new ArrayList<>();
+
+		    // Leer usuarios actuales
+		    File archivo = new File("usuarios.dat");
+		    if (archivo.exists()) {
+		        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
+		            listaUsuarios = (ArrayList<Usuario>) ois.readObject();
+		        } catch (IOException | ClassNotFoundException e) {
+		            e.printStackTrace();
+		        }
+		    }
+
+		    // Asignar nuevo ID
+		    int nuevoId = 100;
+		    for (Usuario u : listaUsuarios) {
+		        if (u.getId() >= nuevoId) {
+		            nuevoId = u.getId() + 100;
+		        }
+		    }
+
+		    usuario.setId(nuevoId);
+		    listaUsuarios.add(usuario);
+
+		    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("usuarios.dat"))) {
+		        oos.writeObject(listaUsuarios);
+		    }
+		}
+
+	 public boolean correoExisteOffline(String correo) throws Exception {
+		    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuarios.dat"))) {
+		        ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) ois.readObject();
+		        for (Usuario usu : listaUsuarios) {
+		            if (usu.getCorreo().equalsIgnoreCase(correo)) {
+		                return true;
+		            }
+		        }
+		    } catch (IOException | ClassNotFoundException e) {
+		        e.printStackTrace();
+		    }
+		    return false;
+		}
+
+	 public ArrayList<Historico> listarHistoricoOffline(int idUsuario) throws Exception {
+		    ArrayList<Historico> historicos = new ArrayList<>();
+
+		    try {
+		        File xmlFile = new File("historico.xml");
+		        if (!xmlFile.exists()) return historicos;
+
+		        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		        Document doc = dBuilder.parse(xmlFile);
+		        doc.getDocumentElement().normalize();
+
+		        NodeList lista = doc.getElementsByTagName("historico");
+
+		        for (int i = 0; i < lista.getLength(); i++) {
+		            Node nodo = lista.item(i);
+		            if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+		                Element e = (Element) nodo;
+
+		                int usuarioId = Integer.parseInt(e.getElementsByTagName("usuarioId").item(0).getTextContent());
+		                if (usuarioId == idUsuario) {
+		                    Historico h = new Historico();
+		                    h.setId(Integer.parseInt(e.getAttribute("id")));
+		                    h.setCompletado(Integer.parseInt(e.getElementsByTagName("completado").item(0).getTextContent()));
+		                    h.setTiempoTotal(Integer.parseInt(e.getElementsByTagName("tiempoTotal").item(0).getTextContent()));
+
+		                    String fechaStr = e.getElementsByTagName("fecha").item(0).getTextContent();
+		                    h.setFecha(new SimpleDateFormat("dd/MM/yyyy").parse(fechaStr));
+
+		                    // Recuperar workout asociado
+		                    Workout w = new Workout();
+		                    w.setId(e.getElementsByTagName("workoutId").item(0).getTextContent());
+		                    h.setWorkout(w);
+
+		                    historicos.add(h);
+		                }
+		            }
+		        }
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+
+		    return historicos;
+		}
+	 
+	 public void escribirHistoricoOffline(Historico historico) throws Exception {
+		    File xmlFile = new File("historico.xml");
+		    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		    Document doc;
+
+		    if (xmlFile.exists()) {
+		        doc = dBuilder.parse(xmlFile);
+		        doc.getDocumentElement().normalize();
+		    } else {
+		        doc = dBuilder.newDocument();
+		        Element root = doc.createElement("historicos");
+		        doc.appendChild(root);
+		    }
+
+		    Element root = doc.getDocumentElement();
+		    Element nuevoHist = doc.createElement("historico");
+
+		    nuevoHist.setAttribute("id", String.valueOf(historico.getId()));
+
+		    Element usuarioId = doc.createElement("usuarioId");
+		    usuarioId.setTextContent(String.valueOf(historico.getUsuario().getId()));
+		    nuevoHist.appendChild(usuarioId);
+
+		    Element workoutId = doc.createElement("workoutId");
+		    workoutId.setTextContent(historico.getWorkout().getId());
+		    nuevoHist.appendChild(workoutId);
+
+		    Element completado = doc.createElement("completado");
+		    completado.setTextContent(String.valueOf(historico.getCompletado()));
+		    nuevoHist.appendChild(completado);
+
+		    Element tiempoTotal = doc.createElement("tiempoTotal");
+		    tiempoTotal.setTextContent(String.valueOf(historico.getTiempoTotal()));
+		    nuevoHist.appendChild(tiempoTotal);
+
+		    Element fecha = doc.createElement("fecha");
+		    fecha.setTextContent(new SimpleDateFormat("dd/MM/yyyy").format(historico.getFecha()));
+		    nuevoHist.appendChild(fecha);
+
+		    root.appendChild(nuevoHist);
+
+		    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		    Transformer transformer = transformerFactory.newTransformer();
+		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		    DOMSource source = new DOMSource(doc);
+		    StreamResult result = new StreamResult(xmlFile);
+		    transformer.transform(source, result);
+		}
+
+	 public void modificarUsuariOffline(Usuario usuario) throws Exception {
+		    ArrayList<Usuario> listaUsuarios;
+
+		    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuarios.dat"))) {
+		        listaUsuarios = (ArrayList<Usuario>) ois.readObject();
+		    }
+
+		    for (Usuario u : listaUsuarios) {
+		        if (u.getCorreo().equalsIgnoreCase(datos.getCorreo())) {
+		            if (usuario.getNombre() != null && !usuario.getNombre().isEmpty()) u.setNombre(usuario.getNombre());
+		            if (usuario.getApellido1() != null && !usuario.getApellido1().isEmpty()) u.setApellido1(usuario.getApellido1());
+		            if (usuario.getApellido2() != null && !usuario.getApellido2().isEmpty()) u.setApellido2(usuario.getApellido2());
+		            if (usuario.getContraseña() != null && !usuario.getContraseña().isEmpty()) u.setContraseña(usuario.getContraseña());
+		            if (usuario.getFechaNac() != null) u.setFechaNac(usuario.getFechaNac());
+		            break;
+		        }
+		    }
+
+		    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("usuarios.dat"))) {
+		        oos.writeObject(listaUsuarios);
+		    }
+		}
+
+
+	public ArrayList<Ejercicio> listarEjerciciosOffline(String idEjercicio) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
