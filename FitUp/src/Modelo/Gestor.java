@@ -726,7 +726,7 @@ public class Gestor {
 	 
 	 
 	 public boolean inicioSesionOffline(Usuario usuario) throws Exception {
-        ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
+        ArrayList<Usuario> listaUsuarios = leerDesdeArchivo(getUsuariosPath(), Usuario.class);
         for (Usuario usu : listaUsuarios) {
             if (usuario.getCorreo().equals(usu.getCorreo()) && usuario.getContraseña().equals(usu.getContraseña())) {
                 datos = usu;
@@ -739,7 +739,7 @@ public class Gestor {
 
     public ArrayList<Workout> listarworkoutsOffline() throws Exception {
         ArrayList<Workout> resultado = new ArrayList<>();
-        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        ArrayList<Workout> listaWorkouts = leerDesdeArchivo(getWorkoutsPath(), Workout.class);
         for (Workout w : listaWorkouts) {
             if (w != null && w.getNivel() <= datos.getNivel()) resultado.add(w);
         }
@@ -747,7 +747,7 @@ public class Gestor {
     }
 
     public void nuevoUsuarioOffline(Usuario usuario) throws Exception {
-        ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
+        ArrayList<Usuario> listaUsuarios = leerDesdeArchivo(getUsuariosPath(), Usuario.class);
 
         int nuevoId = 100;
         for (Usuario u : listaUsuarios) {
@@ -763,7 +763,7 @@ public class Gestor {
     }
 
     public boolean correoExisteOffline(String correo) throws Exception {
-        ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
+        ArrayList<Usuario> listaUsuarios = leerDesdeArchivo(getUsuariosPath(), Usuario.class);
         for (Usuario usu : listaUsuarios) {
             if (usu.getCorreo() != null && usu.getCorreo().equalsIgnoreCase(correo)) return true;
         }
@@ -783,8 +783,8 @@ public class Gestor {
 
         NodeList lista = doc.getElementsByTagName("historico");
 
-        ArrayList<Usuario> usuariosList = readListFromFile(getUsuariosPath(), Usuario.class);
-        ArrayList<Workout> workoutsList = readListFromFile(getWorkoutsPath(), Workout.class);
+        ArrayList<Usuario> usuariosList = leerDesdeArchivo(getUsuariosPath(), Usuario.class);
+        ArrayList<Workout> workoutsList = leerDesdeArchivo(getWorkoutsPath(), Workout.class);
 
         for (int i = 0; i < lista.getLength(); i++) {
             Node nodo = lista.item(i);
@@ -854,7 +854,7 @@ public class Gestor {
 
     public ArrayList<Ejercicio> listarEjerciciosOffline(String idEjercicio) {
         ArrayList<Ejercicio> ejercicios = new ArrayList<>();
-        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        ArrayList<Workout> listaWorkouts = leerDesdeArchivo(getWorkoutsPath(), Workout.class);
         for (Workout w : listaWorkouts) {
             if (w != null && w.getId() != null && w.getId().equals(idEjercicio)) {
                 return w.getEjercicio() != null ? new ArrayList<>(w.getEjercicio()) : new ArrayList<>();
@@ -865,7 +865,7 @@ public class Gestor {
 
     public int conseguirTiempoPrevistoOffline(String idWorkout) {
         int tiempoPrevisto = 0;
-        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        ArrayList<Workout> listaWorkouts = leerDesdeArchivo(getWorkoutsPath(), Workout.class);
         for (Workout w : listaWorkouts) {
             if (w != null && w.getId() != null && w.getId().equals(idWorkout)) {
                 if (w.getEjercicio() == null) break;
@@ -882,7 +882,7 @@ public class Gestor {
 
     public ArrayList<Series> listarSeriesOffline(String idWorkout, String idEjercicio) {
         ArrayList<Series> resultado = new ArrayList<>();
-        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        ArrayList<Workout> listaWorkouts = leerDesdeArchivo(getWorkoutsPath(), Workout.class);
         for (Workout w : listaWorkouts) {
             if (w != null && w.getId() != null && w.getId().equals(idWorkout)) {
                 if (w.getEjercicio() == null) break;
@@ -895,7 +895,7 @@ public class Gestor {
     }
 
     public void modificarUsuariOffline(Usuario usuario) throws Exception {
-        ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
+        ArrayList<Usuario> listaUsuarios = leerDesdeArchivo(getUsuariosPath(), Usuario.class);
         for (Usuario u : listaUsuarios) {
             if (u.getCorreo() != null && datos.getCorreo() != null && u.getCorreo().equalsIgnoreCase(datos.getCorreo())) {
                 if (usuario.getNombre() != null && !usuario.getNombre().isEmpty()) u.setNombre(usuario.getNombre());
@@ -911,7 +911,7 @@ public class Gestor {
 
     public String cambiarNivelOffline() throws Exception {
         StringBuilder mensaje = new StringBuilder();
-        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        ArrayList<Workout> listaWorkouts = leerDesdeArchivo(getWorkoutsPath(), Workout.class);
         ArrayList<Historico> listaHistoricos = listarHistoricoOffline(datos.getId());
 
         int nivelActual = datos.getNivel();
@@ -933,7 +933,7 @@ public class Gestor {
         if (totalWorkoutsNivel > 0 && workoutsCompletos >= totalWorkoutsNivel) {
             int nuevoNivel = nivelActual + 1;
             try {
-                ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
+                ArrayList<Usuario> listaUsuarios = leerDesdeArchivo(getUsuariosPath(), Usuario.class);
                 for (Usuario u : listaUsuarios) { if (u.getId() == datos.getId()) { u.setNivel(nuevoNivel); break; } }
                 try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(getUsuariosPath()))) { oos.writeObject(listaUsuarios); }
             } catch (Exception ex) { ex.printStackTrace(); }
@@ -946,7 +946,6 @@ public class Gestor {
         return mensaje.toString();
     }
 
-    // Overloads to ensure compatibility with different call sites
     public ArrayList<Historico> listarHistoricoOffline() throws Exception {
         if (datos != null) return listarHistoricoOffline(datos.getId());
         return new ArrayList<>();
@@ -957,7 +956,6 @@ public class Gestor {
         return listarHistoricoOffline(idUsuario.intValue());
     }
 
-    // Helper methods to prefer files in backups/ when available
     private String getUsuariosPath() {
         File f = new File("backups/usuarios.dat");
         if (f.exists()) return f.getPath();
@@ -967,10 +965,10 @@ public class Gestor {
     private String getWorkoutsPath() {
         File f = new File("backups/workouts.dat");
         if (f.exists()) return f.getPath();
-        // also check backups folder without extension
+       
         f = new File("workouts.dat");
         if (f.exists()) return f.getPath();
-        return "workouts.dat"; // fallback
+        return "workouts.dat"; 
     }
 
     private String getHistoricoPath() {
@@ -981,9 +979,8 @@ public class Gestor {
         return "historico.xml";
     }
 
-    // Generic safe reader for ArrayList<T> from a file using ObjectInputStream.
-    // It checks runtime types and only returns items that are instances of the requested class.
-    private <T> ArrayList<T> readListFromFile(String path, Class<T> cls) {
+   
+    private <T> ArrayList<T> leerDesdeArchivo(String path, Class<T> cls) {
         ArrayList<T> result = new ArrayList<>();
         File f = new File(path);
         if (!f.exists()) return result;
@@ -997,7 +994,7 @@ public class Gestor {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            // Log and return empty list — caller handles absence
+            
             e.printStackTrace();
         }
         return result;
@@ -1024,7 +1021,7 @@ public class Gestor {
         Element nuevoHist = doc.createElement("historico");
 
         if ("historicoWorkouts".equals(rootName)) {
-            // legacy format: usuario, workout, fecha, tiempoTotal, completado
+            
             Element usuarioElem = doc.createElement("usuario");
             Usuario u = historico.getUsuario();
             String usuarioText = (u != null && u.getNombre() != null && !u.getNombre().isEmpty()) ? u.getNombre()
@@ -1052,7 +1049,7 @@ public class Gestor {
 
             root.appendChild(nuevoHist);
         } else {
-            // structured format with ids
+            
             nuevoHist.setAttribute("id", String.valueOf(historico.getId()));
 
             Element usuarioId = doc.createElement("usuarioId");
