@@ -576,6 +576,11 @@ public class Gestor {
 	
 ///////////////Validaciones de campos y exportar datos/////////////////////////////////////////////////////////
 	public boolean exportarDatos() {
+		// Si no hay conexión, no intentamos exportar (evita intentos sobre la BD cuando estamos offline)
+		if (!checkInternetConnection()) {
+			System.out.println("No hay conexión a Internet: se omite exportarDatos().");
+			return false;
+		}
 		try {
 			ProcessBuilder builder = new ProcessBuilder("cmd", "/C", "java -jar backups.jar");
 
@@ -721,371 +726,363 @@ public class Gestor {
 	 
 	 
 	 public boolean inicioSesionOffline(Usuario usuario) throws Exception {
-		    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuarios.dat"))) {
-		        @SuppressWarnings("unchecked")
-				ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) ois.readObject();
-
-		        for (Usuario usu : listaUsuarios) {
-		            if (usuario.getCorreo().equals(usu.getCorreo()) &&
-		                usuario.getContraseña().equals(usu.getContraseña())) {
-
-		                datos = usu;
-		                return true;
-		            }
-		        }
-		    } catch (IOException | ClassNotFoundException e) {
-		        e.printStackTrace();
-		    }
-		    return false;
-		}
-
-	 
-	 public ArrayList<Workout> listarworkoutsOffline() throws Exception {
-		    ArrayList<Workout> resultado = new ArrayList<>();
-
-		    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("workouts.dat"))) {
-		        @SuppressWarnings("unchecked")
-				ArrayList<Workout> listaWorkouts = (ArrayList<Workout>) ois.readObject();
-
-		        for (Workout w : listaWorkouts) {
-		            if (w.getNivel() <= datos.getNivel()) {
-		                resultado.add(w);
-		            }
-		        }
-		    } catch (IOException | ClassNotFoundException e) {
-		        e.printStackTrace();
-		    }
-
-		    return resultado;
-		}
-
-	 public void nuevoUsuarioOffline(Usuario usuario) throws Exception {
-		    ArrayList<Usuario> listaUsuarios = new ArrayList<>();
-
-		    // Leer usuarios actuales
-		    File archivo = new File("usuarios.dat");
-		    if (archivo.exists()) {
-		        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
-		            listaUsuarios = (ArrayList<Usuario>) ois.readObject();
-		        } catch (IOException | ClassNotFoundException e) {
-		            e.printStackTrace();
-		        }
-		    }
-
-		    // Asignar nuevo ID
-		    int nuevoId = 100;
-		    for (Usuario u : listaUsuarios) {
-		        if (u.getId() >= nuevoId) {
-		            nuevoId = u.getId() + 100;
-		        }
-		    }
-
-		    usuario.setId(nuevoId);
-		    listaUsuarios.add(usuario);
-
-		    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("usuarios.dat"))) {
-		        oos.writeObject(listaUsuarios);
-		    }
-		}
-
-	 public boolean correoExisteOffline(String correo) throws Exception {
-		    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuarios.dat"))) {
-		        ArrayList<Usuario> listaUsuarios = (ArrayList<Usuario>) ois.readObject();
-		        for (Usuario usu : listaUsuarios) {
-		            if (usu.getCorreo().equalsIgnoreCase(correo)) {
-		                return true;
-		            }
-		        }
-		    } catch (IOException | ClassNotFoundException e) {
-		        e.printStackTrace();
-		    }
-		    return false;
-		}
-
-	 public ArrayList<Historico> listarHistoricoOffline(int idUsuario) throws Exception {
-		    ArrayList<Historico> historicos = new ArrayList<>();
-
-		    try {
-		        File xmlFile = new File("historico.xml");
-		        if (!xmlFile.exists()) return historicos;
-
-		        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		        Document doc = dBuilder.parse(xmlFile);
-		        doc.getDocumentElement().normalize();
-
-		        NodeList lista = doc.getElementsByTagName("historico");
-
-		        for (int i = 0; i < lista.getLength(); i++) {
-		            Node nodo = lista.item(i);
-		            if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-		                Element e = (Element) nodo;
-
-		                int usuarioId = Integer.parseInt(e.getElementsByTagName("usuarioId").item(0).getTextContent());
-		                if (usuarioId == idUsuario) {
-		                    Historico h = new Historico();
-		                    h.setId(Integer.parseInt(e.getAttribute("id")));
-		                    h.setCompletado(Integer.parseInt(e.getElementsByTagName("completado").item(0).getTextContent()));
-		                    h.setTiempoTotal(Integer.parseInt(e.getElementsByTagName("tiempoTotal").item(0).getTextContent()));
-
-		                    String fechaStr = e.getElementsByTagName("fecha").item(0).getTextContent();
-		                    h.setFecha(new SimpleDateFormat("dd/MM/yyyy").parse(fechaStr));
-
-		                    // Recuperar workout asociado
-		                    Workout w = new Workout();
-		                    w.setId(e.getElementsByTagName("workoutId").item(0).getTextContent());
-		                    h.setWorkout(w);
-
-		                    historicos.add(h);
-		                }
-		            }
-		        }
-
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
-
-		    return historicos;
-		}
-	 
-	 public void escribirHistoricoOffline(Historico historico) throws Exception {
-		    File xmlFile = new File("historico.xml");
-		    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		    Document doc;
-
-		    if (xmlFile.exists()) {
-		        doc = dBuilder.parse(xmlFile);
-		        doc.getDocumentElement().normalize();
-		    } else {
-		        doc = dBuilder.newDocument();
-		        Element root = doc.createElement("historicos");
-		        doc.appendChild(root);
-		    }
-
-		    Element root = doc.getDocumentElement();
-		    Element nuevoHist = doc.createElement("historico");
-
-		    nuevoHist.setAttribute("id", String.valueOf(historico.getId()));
-
-		    Element usuarioId = doc.createElement("usuarioId");
-		    usuarioId.setTextContent(String.valueOf(historico.getUsuario().getId()));
-		    nuevoHist.appendChild(usuarioId);
-
-		    Element workoutId = doc.createElement("workoutId");
-		    workoutId.setTextContent(historico.getWorkout().getId());
-		    nuevoHist.appendChild(workoutId);
-
-		    Element completado = doc.createElement("completado");
-		    completado.setTextContent(String.valueOf(historico.getCompletado()));
-		    nuevoHist.appendChild(completado);
-
-		    Element tiempoTotal = doc.createElement("tiempoTotal");
-		    tiempoTotal.setTextContent(String.valueOf(historico.getTiempoTotal()));
-		    nuevoHist.appendChild(tiempoTotal);
-
-		    Element fecha = doc.createElement("fecha");
-		    fecha.setTextContent(new SimpleDateFormat("dd/MM/yyyy").format(historico.getFecha()));
-		    nuevoHist.appendChild(fecha);
-
-		    root.appendChild(nuevoHist);
-
-		    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		    Transformer transformer = transformerFactory.newTransformer();
-		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		    DOMSource source = new DOMSource(doc);
-		    StreamResult result = new StreamResult(xmlFile);
-		    transformer.transform(source, result);
-		}
-
-	 public void modificarUsuariOffline(Usuario usuario) throws Exception {
-		    ArrayList<Usuario> listaUsuarios;
-
-		    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuarios.dat"))) {
-		        listaUsuarios = (ArrayList<Usuario>) ois.readObject();
-		    }
-
-		    for (Usuario u : listaUsuarios) {
-		        if (u.getCorreo().equalsIgnoreCase(datos.getCorreo())) {
-		            if (usuario.getNombre() != null && !usuario.getNombre().isEmpty()) u.setNombre(usuario.getNombre());
-		            if (usuario.getApellido1() != null && !usuario.getApellido1().isEmpty()) u.setApellido1(usuario.getApellido1());
-		            if (usuario.getApellido2() != null && !usuario.getApellido2().isEmpty()) u.setApellido2(usuario.getApellido2());
-		            if (usuario.getContraseña() != null && !usuario.getContraseña().isEmpty()) u.setContraseña(usuario.getContraseña());
-		            if (usuario.getFechaNac() != null) u.setFechaNac(usuario.getFechaNac());
-		            break;
-		        }
-		    }
-
-		    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("usuarios.dat"))) {
-		        oos.writeObject(listaUsuarios);
-		    }
-		}
+        ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
+        for (Usuario usu : listaUsuarios) {
+            if (usuario.getCorreo().equals(usu.getCorreo()) && usuario.getContraseña().equals(usu.getContraseña())) {
+                datos = usu;
+                return true;
+            }
+        }
+        return false;
+    }
 
 
-	public ArrayList<Ejercicio> listarEjerciciosOffline(String idEjercicio) {
-		ArrayList<Ejercicio> ejercicios = new ArrayList<>();
-		try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("workouts.dat"))) {
-			ArrayList<Workout> listaWorkouts = (ArrayList<Workout>) ois.readObject();
-			for(Workout w : listaWorkouts) {
-				if(w.getId().equals(idEjercicio)) {
-					return w.getEjercicio();
-				}
-			}
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();	
-		}
-		return null;
-	}
-	
-	
-	public int conseguirTiempoPrevistoOffline(String idWorkout) {
-		int tiempoPrevisto = 0;
-		try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("workouts.dat"))) {
-			ArrayList<Workout> listaWorkouts = (ArrayList<Workout>) ois.readObject();
-			for(Workout w : listaWorkouts) {
-				if(w.getId().equals(idWorkout)) {
-					 for(Ejercicio e : w.getEjercicio()) {
-						tiempoPrevisto += e.getDescanso();
-						for(Series s : e.getSeries()) {
-							tiempoPrevisto += s.getDuracion();
-							return tiempoPrevisto;
-						}
-					}
-				}
-			}
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();	
-		} return tiempoPrevisto;
-	}
-	
-	public ArrayList<Series> listarSeriesOffline(String idWorkout, String idEjercicio) {
-		try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("workouts.dat"))) {
-			ArrayList<Workout> listaWorkouts = (ArrayList<Workout>) ois.readObject();
-			for(Workout w : listaWorkouts) {
-				if(w.getId().equals(idWorkout)) {
-					for(Ejercicio e : w.getEjercicio()) {
-						if(String.valueOf(e.getId()).equals(idEjercicio)) {
-							return e.getSeries();
-						}
-					}
-				}
-			}
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();	
-		} return null;
-	}
-	
-	public void registrarHistoricoOffline(Historico historico) throws Exception {
-		File xmlFile = new File("historico.xml");
-	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	    Document doc;
-	    if (xmlFile.exists()) {
-	        doc = dBuilder.parse(xmlFile);
-	        doc.getDocumentElement().normalize();
-	    } else {
-	        doc = dBuilder.newDocument();
-	        Element root = doc.createElement("historicos");
-	        doc.appendChild(root);
-	    }
-	    
-	    Element root = doc.getDocumentElement();
-	    Element nuevoHist = doc.createElement("historico");
-	    nuevoHist.setAttribute("id", String.valueOf(historico.getId()));
-	    Element usuarioId = doc.createElement("usuarioId");
-	    usuarioId.setTextContent(String.valueOf(historico.getUsuario().getId()));
-	    nuevoHist.appendChild(usuarioId);
-	    Element workoutId = doc.createElement("workoutId");
-	    workoutId.setTextContent(historico.getWorkout().getId());
-	    nuevoHist.appendChild(workoutId);
-	    Element completado = doc.createElement("completado");
-	    completado.setTextContent(String.valueOf(historico.getCompletado()));
-	    nuevoHist.appendChild(completado);
-	    Element tiempoTotal = doc.createElement("tiempoTotal");
-	    tiempoTotal.setTextContent(String.valueOf(historico.getTiempoTotal()));
-	    nuevoHist.appendChild(tiempoTotal);
-	    Element fecha = doc.createElement("fecha");
-	    fecha.setTextContent(new SimpleDateFormat("dd/MM/yyyy").format(historico.getFecha()));
-	    nuevoHist.appendChild(fecha);
-	    root.appendChild(nuevoHist);
-	    
-	    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	    Transformer transformer = transformerFactory.newTransformer();
-	    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-	    DOMSource source = new DOMSource(doc);
-	    StreamResult result = new StreamResult(xmlFile);
-	    transformer.transform(source, result);
-	}
-	
-	
-	public String cambiarNivelOffline() throws Exception {
-	    StringBuilder mensaje = new StringBuilder();
-	    ArrayList<Workout> listaWorkouts = new ArrayList<>();
-	    ArrayList<Historico> listaHistoricos = new ArrayList<>();
+    public ArrayList<Workout> listarworkoutsOffline() throws Exception {
+        ArrayList<Workout> resultado = new ArrayList<>();
+        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        for (Workout w : listaWorkouts) {
+            if (w != null && w.getNivel() <= datos.getNivel()) resultado.add(w);
+        }
+        return resultado;
+    }
 
-	    // Cargar workouts desde archivo
-	    try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("workouts.dat"))) {
-	        listaWorkouts = (ArrayList<Workout>) ois.readObject();
-	    } catch (IOException | ClassNotFoundException e) {
-	        e.printStackTrace();
-	    }
+    public void nuevoUsuarioOffline(Usuario usuario) throws Exception {
+        ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
 
-	    // Cargar historicos desde archivo
-	    try {
-	        File xmlFile = new File("historico.xml");
-	        if (xmlFile.exists()) {
-	            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	            Document doc = dBuilder.parse(xmlFile);
-	            doc.getDocumentElement().normalize();
+        int nuevoId = 100;
+        for (Usuario u : listaUsuarios) {
+            if (u.getId() >= nuevoId) nuevoId = u.getId() + 100;
+        }
 
-	            NodeList lista = doc.getElementsByTagName("historico");
+        usuario.setId(nuevoId);
+        listaUsuarios.add(usuario);
 
-	            for (int i = 0; i < lista.getLength(); i++) {
-	                Node nodo = lista.item(i);
-	                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-	                    Element e = (Element) nodo;
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(getUsuariosPath()))) {
+            oos.writeObject(listaUsuarios);
+        }
+    }
 
-	                    int usuarioId = Integer.parseInt(e.getElementsByTagName("usuarioId").item(0).getTextContent());
-	                    if (usuarioId == datos.getId()) {
-	                        Historico h = new Historico();
-	                        h.setId(Integer.parseInt(e.getAttribute("id")));
-	                        h.setCompletado(Integer.parseInt(e.getElementsByTagName("completado").item(0).getTextContent()));
+    public boolean correoExisteOffline(String correo) throws Exception {
+        ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
+        for (Usuario usu : listaUsuarios) {
+            if (usu.getCorreo() != null && usu.getCorreo().equalsIgnoreCase(correo)) return true;
+        }
+        return false;
+    }
 
-	                        // Recuperar workout asociado
-	                        Workout w = new Workout();
-	                        w.setId(e.getElementsByTagName("workoutId").item(0).getTextContent());
-	                        h.setWorkout(w);
+    public ArrayList<Historico> listarHistoricoOffline(int idUsuario) throws Exception {
+        ArrayList<Historico> historicos = new ArrayList<>();
 
-	                        listaHistoricos.add(h);
-	                    }
-	                }
-	            }
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+        File xmlFile = new File(getHistoricoPath());
+        if (!xmlFile.exists()) return historicos;
 
-	    int nivelActual = datos.getNivel();
-	    int totalWorkoutsNivel = 0;
-	    for (Workout w : listaWorkouts) {
-	        if (w.getNivel() == nivelActual) {
-	        	
-	        	if(w.getNivel() <= datos.getNivel()) {
-	        			            boolean completado = false;
-	            for (Historico h : listaHistoricos) {
-	                if (h.getWorkout().getId().equals(w.getId()) && h.getCompletado() == 2) {
-	                    completado = true;
-	                    break;
-	                }
-	            }
-	            if (completado) {
-	                totalWorkoutsNivel++;
-	            }
-	        	}
-	            totalWorkoutsNivel++;
-	        }
-	    }
-		return null;
-	}
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(xmlFile);
+        doc.getDocumentElement().normalize();
+
+        NodeList lista = doc.getElementsByTagName("historico");
+
+        ArrayList<Usuario> usuariosList = readListFromFile(getUsuariosPath(), Usuario.class);
+        ArrayList<Workout> workoutsList = readListFromFile(getWorkoutsPath(), Workout.class);
+
+        for (int i = 0; i < lista.getLength(); i++) {
+            Node nodo = lista.item(i);
+            if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                Element e = (Element) nodo;
+
+                String usuarioIdStr = null;
+                if (e.getElementsByTagName("usuarioId").getLength() > 0)
+                    usuarioIdStr = e.getElementsByTagName("usuarioId").item(0).getTextContent();
+                else if (e.getElementsByTagName("usuario").getLength() > 0)
+                    usuarioIdStr = e.getElementsByTagName("usuario").item(0).getTextContent();
+
+                int usuarioId = -1;
+                if (usuarioIdStr != null) {
+                    try { usuarioId = Integer.parseInt(usuarioIdStr); }
+                    catch (NumberFormatException nfe) {
+                        for (Usuario u : usuariosList) {
+                            if (usuarioIdStr.equalsIgnoreCase(u.getNombre()) || usuarioIdStr.equalsIgnoreCase(u.getCorreo())) { usuarioId = u.getId(); break; }
+                        }
+                        if (usuarioId == -1 && datos != null && usuarioIdStr.equalsIgnoreCase(datos.getNombre())) usuarioId = datos.getId();
+                    }
+                }
+
+                if (usuarioId != idUsuario) continue;
+
+                Historico h = new Historico();
+
+                if (e.getAttribute("id") != null && !e.getAttribute("id").isEmpty()) {
+                    try { h.setId(Integer.parseInt(e.getAttribute("id"))); } catch (NumberFormatException ex) { }
+                } else {
+                    h.setId((int) (System.currentTimeMillis() % Integer.MAX_VALUE));
+                }
+
+                if (e.getElementsByTagName("completado").getLength() > 0) {
+                    try { h.setCompletado(Integer.parseInt(e.getElementsByTagName("completado").item(0).getTextContent())); } catch (Exception ex) { h.setCompletado(0); }
+                }
+
+                if (e.getElementsByTagName("tiempoTotal").getLength() > 0) {
+                    try { h.setTiempoTotal(Integer.parseInt(e.getElementsByTagName("tiempoTotal").item(0).getTextContent())); } catch (Exception ex) { h.setTiempoTotal(0); }
+                }
+
+                if (e.getElementsByTagName("fecha").getLength() > 0) {
+                    try { h.setFecha(new SimpleDateFormat("dd/MM/yyyy").parse(e.getElementsByTagName("fecha").item(0).getTextContent())); } catch (Exception ex) { h.setFecha(null); }
+                }
+
+                String workoutIdStr = null;
+                if (e.getElementsByTagName("workoutId").getLength() > 0) workoutIdStr = e.getElementsByTagName("workoutId").item(0).getTextContent();
+                else if (e.getElementsByTagName("workout").getLength() > 0) workoutIdStr = e.getElementsByTagName("workout").item(0).getTextContent();
+
+                Workout w = new Workout();
+                if (workoutIdStr != null) {
+                    boolean assigned = false;
+                    for (Workout ww : workoutsList) {
+                        if (workoutIdStr.equals(ww.getId()) || workoutIdStr.equalsIgnoreCase(ww.getNombre())) { w.setId(ww.getId()); w.setNombre(ww.getNombre()); w.setNivel(ww.getNivel()); assigned = true; break; }
+                    }
+                    if (!assigned) w.setId(workoutIdStr);
+                }
+                h.setWorkout(w);
+
+                Usuario uobj = new Usuario(); uobj.setId(idUsuario); h.setUsuario(uobj);
+                historicos.add(h);
+            }
+        }
+
+        return historicos;
+    }
+
+    public ArrayList<Ejercicio> listarEjerciciosOffline(String idEjercicio) {
+        ArrayList<Ejercicio> ejercicios = new ArrayList<>();
+        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        for (Workout w : listaWorkouts) {
+            if (w != null && w.getId() != null && w.getId().equals(idEjercicio)) {
+                return w.getEjercicio() != null ? new ArrayList<>(w.getEjercicio()) : new ArrayList<>();
+            }
+        }
+        return ejercicios;
+    }
+
+    public int conseguirTiempoPrevistoOffline(String idWorkout) {
+        int tiempoPrevisto = 0;
+        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        for (Workout w : listaWorkouts) {
+            if (w != null && w.getId() != null && w.getId().equals(idWorkout)) {
+                if (w.getEjercicio() == null) break;
+                for (Ejercicio e : w.getEjercicio()) {
+                    tiempoPrevisto += e.getDescanso();
+                    if (e.getSeries() == null) continue;
+                    for (Series s : e.getSeries()) tiempoPrevisto += s.getDuracion();
+                }
+                break;
+            }
+        }
+        return tiempoPrevisto;
+    }
+
+    public ArrayList<Series> listarSeriesOffline(String idWorkout, String idEjercicio) {
+        ArrayList<Series> resultado = new ArrayList<>();
+        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        for (Workout w : listaWorkouts) {
+            if (w != null && w.getId() != null && w.getId().equals(idWorkout)) {
+                if (w.getEjercicio() == null) break;
+                for (Ejercicio e : w.getEjercicio()) {
+                    if (String.valueOf(e.getId()).equals(idEjercicio)) return e.getSeries() != null ? new ArrayList<>(e.getSeries()) : new ArrayList<>();
+                }
+            }
+        }
+        return resultado;
+    }
+
+    public void modificarUsuariOffline(Usuario usuario) throws Exception {
+        ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
+        for (Usuario u : listaUsuarios) {
+            if (u.getCorreo() != null && datos.getCorreo() != null && u.getCorreo().equalsIgnoreCase(datos.getCorreo())) {
+                if (usuario.getNombre() != null && !usuario.getNombre().isEmpty()) u.setNombre(usuario.getNombre());
+                if (usuario.getApellido1() != null && !usuario.getApellido1().isEmpty()) u.setApellido1(usuario.getApellido1());
+                if (usuario.getApellido2() != null && !usuario.getApellido2().isEmpty()) u.setApellido2(usuario.getApellido2());
+                if (usuario.getContraseña() != null && !usuario.getContraseña().isEmpty()) u.setContraseña(usuario.getContraseña());
+                if (usuario.getFechaNac() != null) u.setFechaNac(usuario.getFechaNac());
+                break;
+            }
+        }
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(getUsuariosPath()))) { oos.writeObject(listaUsuarios); }
+    }
+
+    public String cambiarNivelOffline() throws Exception {
+        StringBuilder mensaje = new StringBuilder();
+        ArrayList<Workout> listaWorkouts = readListFromFile(getWorkoutsPath(), Workout.class);
+        ArrayList<Historico> listaHistoricos = listarHistoricoOffline(datos.getId());
+
+        int nivelActual = datos.getNivel();
+        int totalWorkoutsNivel = 0;
+        int workoutsCompletos = 0;
+        for (Workout w : listaWorkouts) {
+            if (w.getNivel() == nivelActual) {
+                totalWorkoutsNivel++;
+                for (Historico h : listaHistoricos) {
+                    if (h.getWorkout() != null && h.getWorkout().getId() != null && h.getWorkout().getId().equals(w.getId()) && h.getCompletado() == 3) {
+                        workoutsCompletos++; break;
+                    }
+                }
+            }
+        }
+
+        mensaje.append("Workouts completados del nivel ").append(nivelActual).append(": ").append(workoutsCompletos).append(" / ").append(totalWorkoutsNivel).append("\n");
+
+        if (totalWorkoutsNivel > 0 && workoutsCompletos >= totalWorkoutsNivel) {
+            int nuevoNivel = nivelActual + 1;
+            try {
+                ArrayList<Usuario> listaUsuarios = readListFromFile(getUsuariosPath(), Usuario.class);
+                for (Usuario u : listaUsuarios) { if (u.getId() == datos.getId()) { u.setNivel(nuevoNivel); break; } }
+                try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(getUsuariosPath()))) { oos.writeObject(listaUsuarios); }
+            } catch (Exception ex) { ex.printStackTrace(); }
+            datos.setNivel(nuevoNivel);
+            mensaje.append("¡Felicidades! Has subido al nivel ").append(nuevoNivel);
+        } else {
+            mensaje.append("Aún te faltan workouts por completar para subir de nivel.");
+        }
+
+        return mensaje.toString();
+    }
+
+    // Overloads to ensure compatibility with different call sites
+    public ArrayList<Historico> listarHistoricoOffline() throws Exception {
+        if (datos != null) return listarHistoricoOffline(datos.getId());
+        return new ArrayList<>();
+    }
+
+    public ArrayList<Historico> listarHistoricoOffline(Integer idUsuario) throws Exception {
+        if (idUsuario == null) return new ArrayList<>();
+        return listarHistoricoOffline(idUsuario.intValue());
+    }
+
+    // Helper methods to prefer files in backups/ when available
+    private String getUsuariosPath() {
+        File f = new File("backups/usuarios.dat");
+        if (f.exists()) return f.getPath();
+        return "usuarios.dat";
+    }
+
+    private String getWorkoutsPath() {
+        File f = new File("backups/workouts.dat");
+        if (f.exists()) return f.getPath();
+        // also check backups folder without extension
+        f = new File("workouts.dat");
+        if (f.exists()) return f.getPath();
+        return "workouts.dat"; // fallback
+    }
+
+    private String getHistoricoPath() {
+        File f = new File("backups/historicoWorkouts.xml");
+        if (f.exists()) return f.getPath();
+        f = new File("historico.xml");
+        if (f.exists()) return f.getPath();
+        return "historico.xml";
+    }
+
+    // Generic safe reader for ArrayList<T> from a file using ObjectInputStream.
+    // It checks runtime types and only returns items that are instances of the requested class.
+    private <T> ArrayList<T> readListFromFile(String path, Class<T> cls) {
+        ArrayList<T> result = new ArrayList<>();
+        File f = new File(path);
+        if (!f.exists()) return result;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
+            Object obj = ois.readObject();
+            if (obj instanceof ArrayList) {
+                for (Object item : (ArrayList<?>) obj) {
+                    if (cls.isInstance(item)) {
+                        result.add(cls.cast(item));
+                    }
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            // Log and return empty list — caller handles absence
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public void escribirHistoricoOffline(Historico historico) throws Exception {
+        File xmlFile = new File(getHistoricoPath());
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc;
+
+        if (xmlFile.exists()) {
+            doc = dBuilder.parse(xmlFile);
+            doc.getDocumentElement().normalize();
+        } else {
+            doc = dBuilder.newDocument();
+            Element root = doc.createElement("historicos");
+            doc.appendChild(root);
+        }
+
+        Element root = doc.getDocumentElement();
+        String rootName = root.getNodeName();
+
+        Element nuevoHist = doc.createElement("historico");
+
+        if ("historicoWorkouts".equals(rootName)) {
+            // legacy format: usuario, workout, fecha, tiempoTotal, completado
+            Element usuarioElem = doc.createElement("usuario");
+            Usuario u = historico.getUsuario();
+            String usuarioText = (u != null && u.getNombre() != null && !u.getNombre().isEmpty()) ? u.getNombre()
+                    : (u != null ? String.valueOf(u.getId()) : "");
+            usuarioElem.setTextContent(usuarioText);
+            nuevoHist.appendChild(usuarioElem);
+
+            Element workoutElem = doc.createElement("workout");
+            String workoutText = (historico.getWorkout() != null && historico.getWorkout().getNombre() != null && !historico.getWorkout().getNombre().isEmpty())
+                    ? historico.getWorkout().getNombre() : (historico.getWorkout() != null ? historico.getWorkout().getId() : "");
+            workoutElem.setTextContent(workoutText);
+            nuevoHist.appendChild(workoutElem);
+
+            Element fechaElem = doc.createElement("fecha");
+            fechaElem.setTextContent(new SimpleDateFormat("dd/MM/yyyy").format(historico.getFecha()));
+            nuevoHist.appendChild(fechaElem);
+
+            Element tiempoElem = doc.createElement("tiempoTotal");
+            tiempoElem.setTextContent(String.valueOf(historico.getTiempoTotal()));
+            nuevoHist.appendChild(tiempoElem);
+
+            Element completadoElem = doc.createElement("completado");
+            completadoElem.setTextContent(String.valueOf(historico.getCompletado()));
+            nuevoHist.appendChild(completadoElem);
+
+            root.appendChild(nuevoHist);
+        } else {
+            // structured format with ids
+            nuevoHist.setAttribute("id", String.valueOf(historico.getId()));
+
+            Element usuarioId = doc.createElement("usuarioId");
+            usuarioId.setTextContent(String.valueOf(historico.getUsuario().getId()));
+            nuevoHist.appendChild(usuarioId);
+
+            Element workoutId = doc.createElement("workoutId");
+            workoutId.setTextContent(historico.getWorkout().getId());
+            nuevoHist.appendChild(workoutId);
+
+            Element completado = doc.createElement("completado");
+            completado.setTextContent(String.valueOf(historico.getCompletado()));
+            nuevoHist.appendChild(completado);
+
+            Element tiempoTotal = doc.createElement("tiempoTotal");
+            tiempoTotal.setTextContent(String.valueOf(historico.getTiempoTotal()));
+            nuevoHist.appendChild(tiempoTotal);
+
+            Element fecha = doc.createElement("fecha");
+            fecha.setTextContent(new SimpleDateFormat("dd/MM/yyyy").format(historico.getFecha()));
+            nuevoHist.appendChild(fecha);
+
+            root.appendChild(nuevoHist);
+        }
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(xmlFile);
+        transformer.transform(source, result);
+    }
 }

@@ -42,4 +42,11 @@
         <tiempoTotal>45</tiempoTotal>
         <completado>3</completado>
     </historico>
+    <historico>
+        <usuario>Juan</usuario>
+        <workout>Entrenamiento de biceps - nivel 0</workout>
+        <fecha>05/11/2025</fecha>
+        <tiempoTotal>93</tiempoTotal>
+        <completado>3</completado>
+    </historico>
 </historicoWorkouts>

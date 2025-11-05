@@ -14,6 +14,10 @@ public class Controlador {
 	ExportarDatos backup = new ExportarDatos(); 
 	
 	
+	public boolean isOnline() {
+		return gestor1.checkInternetConnection();
+	}
+	
 	public boolean inicioSesion(Usuario usuario) throws Exception { 
 		if(gestor1.checkInternetConnection()) {
 			return gestor1.inicioSesion(usuario); 
@@ -109,7 +113,7 @@ public class Controlador {
 		 if(gestor1.checkInternetConnection()) {
 			 gestor1.escribirHistorico(historico);
 		 }else {
-			gestor1.registrarHistoricoOffline(historico);
+			gestor1.escribirHistoricoOffline(historico);
 			}
 	}
 	
@@ -135,7 +139,7 @@ public class Controlador {
 	
 	public boolean fechaNoFutura(String fechaNac) { return gestor1.fechaNoFutura(fechaNac); }
 
-	
+
 
 
 }
