@@ -195,7 +195,6 @@ public class HacerEjercicio extends JFrame {
         lblCronoDescanso.setText("Descanso: -");
     }
 
-    @SuppressWarnings("deprecation")
 	private void cargarFotoDesdeURL(JLabel lbl, String urlFoto) {
         if (urlFoto == null || urlFoto.isEmpty()) {
             lbl.setText("Sin foto");

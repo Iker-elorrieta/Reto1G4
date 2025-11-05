@@ -43,7 +43,11 @@ public class Controlador {
 		}  
 	
 	public boolean correoExiste(String correo) throws Exception { 
-		return gestor1.correoExiste(correo);
+		if(gestor1.checkInternetConnection()) {
+			return gestor1.correoExiste(correo); 
+			} else {
+			return gestor1.correoExisteOffline(correo);
+			}
 		} 
 	
 	public ArrayList<Ejercicio> listarEjercicios(String idEjercicio) throws Exception { 
@@ -51,7 +55,6 @@ public class Controlador {
 		if(gestor1.checkInternetConnection()) {
 			return gestor1.listarEjercicios(idEjercicio); 
 			} else {
-				//Hacerlo
 			return gestor1.listarEjerciciosOffline(idEjercicio);
 			}
 		} 
@@ -72,27 +75,42 @@ public class Controlador {
 			}
 		} 
 	
-	public int conseguirTiempoPrevisto(String idWorkout) throws Exception { return gestor1.conseguirTiempoPrevisto(idWorkout); } 
+	public int conseguirTiempoPrevisto(String idWorkout) throws Exception { 
+		if(gestor1.checkInternetConnection()) {
+			return gestor1.conseguirTiempoPrevisto(idWorkout); 
+			} else {
+			return gestor1.conseguirTiempoPrevistoOffline(idWorkout); 
+			}
+		
+		} 
 	
 	public ArrayList<Series> listarSeries(String idWorkout, String idEjercicio) throws Exception {
-	    return gestor1.listarSeries(idWorkout, idEjercicio);
+		if(gestor1.checkInternetConnection()) {
+			return gestor1.listarSeries(idWorkout, idEjercicio);
+		} else {
+			return gestor1.listarSeriesOffline(idWorkout, idEjercicio);
+		}
 	}
 	
 	public void registrarHistorico(String idWorkout, String nombreWorkout, int tiempoTotal, int completado) throws Exception {
-	    Usuario usuarioActual = gestor1.getDatos();
+		 Usuario usuarioActual = gestor1.getDatos();
+		 
+		 Workout workout = new Workout();
+		 workout.setId(idWorkout);
+		 workout.setNombre(nombreWorkout);
 
-	    Workout workout = new Workout();
-	    workout.setId(idWorkout);
-	    workout.setNombre(nombreWorkout);
+		 Historico historico = new Historico();
+		 historico.setUsuario(usuarioActual);
+		 historico.setWorkout(workout);
+		 historico.setFecha(new Date());
+		 historico.setTiempoTotal(tiempoTotal);
+		 historico.setCompletado(completado);
 
-	    Historico historico = new Historico();
-	    historico.setUsuario(usuarioActual);
-	    historico.setWorkout(workout);
-	    historico.setFecha(new Date());
-	    historico.setTiempoTotal(tiempoTotal);
-	    historico.setCompletado(completado);
-
-	    gestor1.escribirHistorico(historico);
+		 if(gestor1.checkInternetConnection()) {
+			 gestor1.escribirHistorico(historico);
+		 }else {
+			gestor1.registrarHistoricoOffline(historico);
+			}
 	}
 	
 	public String cambiarNivel() throws Exception {
