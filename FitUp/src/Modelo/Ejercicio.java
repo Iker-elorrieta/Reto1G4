@@ -13,19 +13,21 @@ public class Ejercicio  implements Serializable {
     private String foto;
     ArrayList<Series> series;
 
-    public Ejercicio() {}
+
+    public Ejercicio() {
+        this.series = new ArrayList<>();
+    }
 
 	
-	
-	public Ejercicio(int id, String nombre, int numSeries, int descanso, String foto, ArrayList<Series> series) {
-		super();
-		this.id = id;
-		this.nombre = nombre;
-		this.numSeries = numSeries;
-		this.descanso = descanso;
-		this.foto = foto;
-		this.series = series;
-	}
+    public Ejercicio(int id, String nombre, int numSeries, int descanso, String foto, ArrayList<Series> series) {
+        this.id = id;
+        this.nombre = nombre;
+        this.numSeries = numSeries;
+        this.descanso = descanso;
+        this.foto = foto;
+        this.series = (series != null) ? series : new ArrayList<>();
+    }
+
 
 
 

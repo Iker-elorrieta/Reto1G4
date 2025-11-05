@@ -138,26 +138,33 @@ public class InicioSesion extends JFrame {
 					usuario1.setCorreo(correo);
 					usuario1.setContraseña(contraseña);
 					 
-			
+				
 					if (controlador.inicioSesion(usuario1)) {
-						if(controlador.ejecutarExportacion() == true) {
-							this.setVisible(false);
-							ListadoWorkouts nuevo = new ListadoWorkouts(controlador, "Backup y xml creados con éxito");
-	
-							nuevo.setVisible(true);
-						} else {
-							this.setVisible(false);
-							ListadoWorkouts nuevo = new ListadoWorkouts(controlador, "Fallo en la creación del backup y xml");
-							nuevo.setVisible(true);
+						// Solo ejecutar exportación si hay conexión. En modo offline se omite porque exportarDatos usa la BD.
+						if (controlador.isOnline()) {
+							if(controlador.ejecutarExportacion() == true) {
+								this.setVisible(false);
+								ListadoWorkouts nuevo = new ListadoWorkouts(controlador, "Backup y xml creados con éxito");
+								nuevo.setVisible(true);
+							} else {
+								this.setVisible(false);
+								ListadoWorkouts nuevo = new ListadoWorkouts(controlador, "Fallo en la creación del backup y xml");
+								nuevo.setVisible(true);
 							}
-						
+						} else {
+							// Offline: no intentamos exportar (no hay acceso a la BD)
+							this.setVisible(false);
+							ListadoWorkouts nuevo = new ListadoWorkouts(controlador, "Modo offline: no se ha ejecutado backup");
+							nuevo.setVisible(true);
+						}
 					}else {
 						lblError.setText("Correo o contraseña incorrectos");
 						}
 					}catch(Exception e1) {
-				e1.printStackTrace();
+					e1.printStackTrace();
+				}
 			}
-		}});
+		});
 	}
 	
 

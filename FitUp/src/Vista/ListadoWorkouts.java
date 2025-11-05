@@ -36,6 +36,9 @@ public class ListadoWorkouts extends JFrame {
 	private JTable table;
 	private DefaultTableModel modeloTabla; 
 	private ArrayList<Workout> listaWorkouts = new ArrayList<>();
+    JLabel lblBackupExito = new JLabel("");
+    JLabel lblHistorico = new JLabel("");
+
 
 	/**
 	 * Create the frame.
@@ -71,7 +74,7 @@ public class ListadoWorkouts extends JFrame {
         JLabel lblWorkout = new JLabel("Lista de tus workouts, selecciona el deseado");
         lblWorkout.setFont(new Font("Tahoma", Font.BOLD, 18));
         lblWorkout.setForeground(Color.WHITE);
-        lblWorkout.setBounds(36, 82, 540, 30);
+        lblWorkout.setBounds(38, 123, 540, 30);
         contentPane.add(lblWorkout);
         
         JButton btnCerrarSesion = new JButton("Cerrar sesión");
@@ -135,7 +138,7 @@ public class ListadoWorkouts extends JFrame {
 		table.setSelectionForeground(Color.WHITE);
 		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(36, 123, 565, 294);
+		scrollPane.setBounds(36, 164, 565, 253);
 		contentPane.add(scrollPane);
         
 		
@@ -208,20 +211,35 @@ public class ListadoWorkouts extends JFrame {
         btnModificar.setFocusPainted(false);
         btnModificar.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
         btnModificar.setBackground(new Color(50, 50, 50));
-        btnModificar.setBounds(185, 26, 109, 30);
+        btnModificar.setBounds(150, 26, 109, 30);
         contentPane.add(btnModificar);
         
-        JLabel lblBackupExito = new JLabel("");
-        lblBackupExito.setBounds(35, 67, 259, 14);
+        lblBackupExito = new JLabel("");
+        lblBackupExito.setBounds(35, 67, 430, 23);
         contentPane.add(lblBackupExito);
+        
+        JButton btnHWorkout = new JButton("Histórico");
+        btnHWorkout.setForeground(Color.WHITE);
+        btnHWorkout.setFont(new Font("Tahoma", Font.BOLD, 13));
+        btnHWorkout.setFocusPainted(false);
+        btnHWorkout.setBorder(BorderFactory.createLineBorder(new Color(120, 120, 120), 1));
+        btnHWorkout.setBackground(new Color(50, 50, 50));
+        btnHWorkout.setBounds(280, 26, 109, 30);
+        contentPane.add(btnHWorkout);
+        
+        lblHistorico = new JLabel("");
+        lblHistorico.setBounds(35, 104, 430, 23);
+        contentPane.add(lblHistorico);
+        
+        
         if(backupExito.equals("Backup y xml creados con éxito")) {
             lblBackupExito.setText(backupExito);
             lblBackupExito.setForeground(Color.GREEN);
 
-		} else {
+		} else if(backupExito.equals("Error al crear el backup")) {
 			lblBackupExito.setText(backupExito);
 			lblBackupExito.setForeground(Color.RED);
-		}
+		} 
         
         btnModificar.addActionListener( e-> {
         	this.setVisible(false);
@@ -230,6 +248,14 @@ public class ListadoWorkouts extends JFrame {
         	modUsuario.setVisible(true);
         }
         );
+        
+        btnHWorkout.addActionListener( e-> {
+			this.setVisible(false);
+			HistoricoWorkouts histWorkout = new HistoricoWorkouts(controlador);
+			this.dispose();
+			histWorkout.setVisible(true);
+		}
+		);
         
 	}
 	
@@ -246,6 +272,19 @@ public class ListadoWorkouts extends JFrame {
 	            "URL tutorial"
 	        };
 	        modeloTabla.addRow(fila);
+	        }
 	    }
- }
+	
+	public void mostrarMensajeNivel(String mensaje, String mensaje2) {
+	    if (mensaje.contains("¡Felicidades!")) {
+	        lblBackupExito.setText(mensaje);
+	        lblBackupExito.setForeground(Color.GREEN);
+	    } else if (mensaje2.contains("Aún te faltan workouts")) {
+	        lblHistorico.setText(mensaje);
+	        lblHistorico.setForeground(Color.ORANGE);
+	    } else {
+	        lblBackupExito.setText("");
+	        lblHistorico.setText("");
+	    }
+	}
 }
